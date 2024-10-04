@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SalesAndPurchaseManagement.Models;
 
 namespace SalesAndPurchaseManagement.Data
@@ -27,17 +26,21 @@ namespace SalesAndPurchaseManagement.Data
         public DbSet<Job> Jobs { get; set; }
         public DbSet<Feature> Features { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<Account> Accounts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Employee>()
-                .HasOne(e => e.Account)
-                .WithOne(a => a.Employee)
-                .HasForeignKey<Account>(a => a.EmployeeId)
+                .HasOne(e => e.Job) // Nếu Employee có Job
+                .WithMany(j => j.Employees) // Job có nhiều Employees
+                .HasForeignKey(e => e.JobId) // Khóa ngoại là JobId trong Employee
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // Đảm bảo rằng Email là duy nhất
+            modelBuilder.Entity<Employee>()
+                .HasIndex(e => e.Email)
+                .IsUnique(); // Ràng buộc duy nhất cho Email
 
             modelBuilder.Entity<Product>()
                 .HasOne(p => p.Size)
@@ -86,11 +89,6 @@ namespace SalesAndPurchaseManagement.Data
                 .WithMany(f => f.Products)
                 .HasForeignKey(p => p.FeatureId)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            // Đảm bảo rằng Username là duy nhất
-            modelBuilder.Entity<Account>()
-                .HasIndex(a => a.Username)
-                .IsUnique(); // Ràng buộc duy nhất cho Username
         }
     }
 }

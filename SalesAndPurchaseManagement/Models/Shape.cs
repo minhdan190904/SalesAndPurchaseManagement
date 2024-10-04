@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SalesAndPurchaseManagement.Models
 {
+    //
     public class Shape
     {
         [Key] // Đánh dấu ShapeId là khóa chính

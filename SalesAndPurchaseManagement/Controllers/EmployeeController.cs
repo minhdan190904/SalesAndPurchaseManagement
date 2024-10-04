@@ -27,36 +27,25 @@ namespace SalesAndPurchaseManagement.Controllers
 
         public IActionResult Create()
         {
-            ViewBag.JobList = new SelectList(_context.Jobs.ToList(), "JobId", "JobTitle");
-            ViewBag.GenderList = new SelectList(new List<SelectListItem>
-            {
-                new SelectListItem { Text = "Nam", Value = "Male" },
-                new SelectListItem { Text = "Nữ", Value = "Female" }
-            }, "Value", "Text");
-
+            SetViewBagData();
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Employee employee, Account account)
+        public async Task<IActionResult> Create(Employee employee)
         {
             if (ModelState.IsValid)
             {
-                // Kiểm tra xem tài khoản đã tồn tại chưa
-                if (_context.Accounts.Any(a => a.Username == account.Username))
+                // Kiểm tra xem email đã tồn tại chưa
+                if (_context.Employees.Any(e => e.Email == employee.Email))
                 {
-                    ModelState.AddModelError("Account.Username", "Tài khoản đã tồn tại.");
+                    ModelState.AddModelError("Email", "Email này đã được sử dụng.");
                     SetViewBagData();
                     return View(employee);
                 }
 
                 // Lưu nhân viên
                 _context.Employees.Add(employee);
-                await _context.SaveChangesAsync();
-
-                // Lưu tài khoản
-                account.EmployeeId = employee.EmployeeId;
-                _context.Accounts.Add(account);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction("Index");
@@ -74,17 +63,7 @@ namespace SalesAndPurchaseManagement.Controllers
                 return NotFound();
             }
 
-            ViewBag.JobList = new SelectList(_context.Jobs.ToList(), "JobId", "JobTitle", employee.JobId);
-            ViewBag.GenderList = new SelectList(new List<SelectListItem>
-            {
-                new SelectListItem { Text = "Nam", Value = "Male" },
-                new SelectListItem { Text = "Nữ", Value = "Female" }
-            }, "Value", "Text", employee.Gender.ToString());
-
-            // Truy xuất thông tin tài khoản
-            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.EmployeeId == employee.EmployeeId);
-            ViewBag.Username = account?.Username; // Lưu tên đăng nhập để hiển thị trong View
-
+            SetViewBagData(employee);
             return View(employee);
         }
 
@@ -101,13 +80,13 @@ namespace SalesAndPurchaseManagement.Controllers
             {
                 try
                 {
+                    // Cập nhật thông tin nhân viên
                     _context.Update(employee);
 
-                    var account = await _context.Accounts.FirstOrDefaultAsync(a => a.EmployeeId == employee.EmployeeId);
-                    if (account != null && !string.IsNullOrWhiteSpace(password))
+                    // Nếu mật khẩu không rỗng, cập nhật mật khẩu
+                    if (!string.IsNullOrWhiteSpace(password))
                     {
-                        account.Password = password; // Cập nhật mật khẩu mới
-                        _context.Update(account);
+                        employee.Password = password;
                     }
 
                     await _context.SaveChangesAsync();
@@ -156,7 +135,6 @@ namespace SalesAndPurchaseManagement.Controllers
         {
             var employee = _context.Employees
                 .Include(e => e.Job)
-                .Include(e => e.Account)
                 .FirstOrDefault(e => e.EmployeeId == id);
 
             if (employee == null)

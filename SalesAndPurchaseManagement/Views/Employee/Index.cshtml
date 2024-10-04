@@ -8,41 +8,54 @@
 <div class="ms-2 mx-2">
     <h1>Danh Sách Nhân Viên</h1>
     <a asp-controller="Employee" asp-action="Create" class="btn btn-primary">Tạo Nhân Viên Mới</a>
-    <table class="table mt-3">
-        <thead>
-            <tr>
-                <th>@Html.DisplayNameFor(model => model.First().EmployeeId)</th>
-                <th>@Html.DisplayNameFor(model => model.First().EmployeeName)</th>
-                <th>@Html.DisplayNameFor(model => model.First().PhoneNumber)</th>
-                <th>@Html.DisplayNameFor(model => model.First().Gender)</th>
-                <th class="text-center">Hành Động</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var employee in Model)
-            {
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning mt-3">
+            Không có nhân viên nào trong danh sách.
+        </div>
+    }
+    else
+    {
+        <table class="table mt-3">
+            <thead>
                 <tr>
-                    <td>@Html.DisplayFor(modelItem => employee.EmployeeId)</td>
-                    <td>@Html.DisplayFor(modelItem => employee.EmployeeName)</td>
-                    <td>@Html.DisplayFor(modelItem => employee.PhoneNumber)</td>
-                    <td>
-                        @switch (employee.Gender)
-                        {
-                            case Gender.Male:
-                                <span>Nam</span>
-                                break;
-                            case Gender.Female:
-                                <span>Nữ</span>
-                                break;
-                        }
-                    </td>
-                    <td class="text-center">
-                        <a asp-action="Edit" asp-route-id="@employee.EmployeeId" class="btn btn-warning btn-sm">Sửa</a> | 
-                        <a asp-action="Delete" asp-route-id="@employee.EmployeeId" class="btn btn-danger btn-sm">Xóa</a> | 
-                        <a asp-action="ViewDetail" asp-route-id="@employee.EmployeeId" class="btn btn-info btn-sm">Chi Tiết</a>
-                    </td>
+                    <th>@Html.DisplayNameFor(model => model.First().EmployeeId)</th>
+                    <th>@Html.DisplayNameFor(model => model.First().EmployeeName)</th>
+                    <th>@Html.DisplayNameFor(model => model.First().PhoneNumber)</th>
+                    <th>@Html.DisplayNameFor(model => model.First().Gender)</th>
+                    <th class="text-center">Hành Động</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var employee in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => employee.EmployeeId)</td>
+                        <td>@Html.DisplayFor(modelItem => employee.EmployeeName)</td>
+                        <td>@Html.DisplayFor(modelItem => employee.PhoneNumber)</td>
+                        <td>
+                            @switch (employee.Gender)
+                            {
+                                case Gender.Male:
+                                    <span>Nam</span>
+                                    break;
+                                case Gender.Female:
+                                    <span>Nữ</span>
+                                    break;
+                                default:
+                                    <span>Không xác định</span>
+                                    break;
+                            }
+                        </td>
+                        <td class="text-center">
+                            <a asp-action="Edit" asp-route-id="@employee.EmployeeId" class="btn btn-warning btn-sm me-1">Sửa</a>
+                            <a asp-action="Delete" asp-route-id="@employee.EmployeeId" class="btn btn-danger btn-sm me-1">Xóa</a>
+                            <a asp-action="ViewDetail" asp-route-id="@employee.EmployeeId" class="btn btn-info btn-sm">Chi Tiết</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 </div>

@@ -16,7 +16,6 @@ namespace SalesAndPurchaseManagement.Controllers
             _context = context;
         }
 
-        // Hiển thị danh sách công việc
         public IActionResult Index()
         {
             var jobs = _context.Jobs.ToList();
