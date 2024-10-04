@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using SalesAndPurchaseManagement.Models.SalesAndPurchaseManagement.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -47,6 +46,8 @@ namespace SalesAndPurchaseManagement.Models
         [Display(Name = "Quyền Admin")]
         public bool IsAdmin { get; set; }
 
-        public virtual Account? Account { get; set; }
+        // Có thể thêm thuộc tính khác nếu cần
     }
 }
+
+//awhbdhjawdhawhjadhwdhjawdhawd

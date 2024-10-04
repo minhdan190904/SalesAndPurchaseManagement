@@ -12,7 +12,7 @@ public static class DbInitializer
             if (!context.Database.EnsureCreated()) 
             {
                 Console.WriteLine("Database already exists.");
-                return; 
+                    return;
             }
         }
     }
