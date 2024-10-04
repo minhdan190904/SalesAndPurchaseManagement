@@ -1,0 +1,35 @@
+﻿@model SalesAndPurchaseManagement.Models.Job
+
+@{
+    ViewData["Title"] = "Thêm Công Việc Mới";
+    Layout = "~/Views/Shared/MyLayout.cshtml";
+}
+
+<div class="ms-2 mx-2">
+    <h1>Thêm Công Việc Mới</h1>
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <form asp-controller="Job" asp-action="Create" method="post" class="mt-3">
+        <div class="form-group row mb-3">
+            <label asp-for="JobTitle" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <input asp-for="JobTitle" class="form-control" placeholder="Nhập chức danh công việc" />
+                <span asp-validation-for="JobTitle" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label asp-for="Salary" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <input asp-for="Salary" class="form-control" placeholder="Nhập mức lương" />
+                <span asp-validation-for="Salary" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group row mt-4">
+            <div class="col-sm-10">
+                <button type="submit" class="btn btn-primary">Tạo Công Việc</button>
+            </div>
+        </div>
+    </form>
+</div>
