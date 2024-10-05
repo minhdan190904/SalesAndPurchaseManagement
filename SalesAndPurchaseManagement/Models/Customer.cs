@@ -5,18 +5,18 @@ namespace SalesAndPurchaseManagement.Models
 {
     public class Customer
     {
-        [Key] // Đánh dấu CustomerId là khóa chính
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // ID tự động sinh
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CustomerId { get; set; }
 
-        [Required] // Đánh dấu CustomerName là thuộc tính bắt buộc
-        [StringLength(100)] // Đặt độ dài tối đa cho CustomerName
+        [Required] 
+        [StringLength(100)] 
         public string CustomerName { get; set; }
 
-        [StringLength(250)] // Đặt độ dài tối đa cho Address
+        [StringLength(250)] 
         public string Address { get; set; }
 
-        [StringLength(15)] // Đặt độ dài tối đa cho PhoneNumber
+        [StringLength(15)] 
         public string PhoneNumber { get; set; }
     }
 }

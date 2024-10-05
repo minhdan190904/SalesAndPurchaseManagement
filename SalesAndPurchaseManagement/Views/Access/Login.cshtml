@@ -1,0 +1,42 @@
+﻿@model SalesAndPurchaseManagement.Models.LoginViewModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Đăng Nhập</title>
+</head>
+<body>
+    <form asp-controller="Access" asp-action="Login" method="post">
+        <h1>Đăng Nhập</h1>
+        <div>
+            <label asp-for="Email"></label>
+            <input type="email" asp-for="Email" placeholder="Email" />
+            <span asp-validation-for="Email" style="color:red;"></span>
+        </div>
+        <div>
+            <label asp-for="Password"></label>
+            <input type="password" asp-for="Password" placeholder="Mật khẩu" />
+            <span asp-validation-for="Password" style="color:red;"></span>
+        </div>
+        <div>
+            <label>
+                <input type="checkbox" asp-for="KeepLoggedIn" />
+                Giữ tôi đăng nhập
+            </label>
+        </div>
+        <button type="submit">Đăng Nhập</button>
+
+        @if (ViewData["ValidateMessage"] != null)
+        {
+            <br />
+            <br />
+            <label style="color:red;">@ViewData["ValidateMessage"]</label>
+        }
+    </form>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>

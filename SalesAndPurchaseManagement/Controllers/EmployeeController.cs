@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace SalesAndPurchaseManagement.Controllers
 {
+    [Authorize]
     public class EmployeeController : Controller
     {
         private readonly SAPManagementContext _context;
@@ -34,6 +35,43 @@ namespace SalesAndPurchaseManagement.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Employee employee, IFormFile? imageFile)
+        {
+            // Kiểm tra mật khẩu không chứa khoảng trắng
+            if (employee.Password.Contains(" "))
+            {
+                ModelState.AddModelError("Password", "Mật khẩu không được có khoảng trắng.");
+                SetViewBagData(employee);
+                return View(employee);
+            }
+
+            if (ModelState.IsValid)
+            {
+                // Xử lý ảnh nếu có
+                if (imageFile != null && imageFile.Length > 0)
+                {
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", imageFile.FileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await imageFile.CopyToAsync(stream);
+                    }
+                    employee.Image = imageFile.FileName;
+                }
+
+
+                _context.Add(employee);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+
+            SetViewBagData(employee);
+            return View(employee);
+        }
+        
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Employee employee, IFormFile? imageFile, string oldImage)
         {
             if (id != employee.EmployeeId)
@@ -41,7 +79,6 @@ namespace SalesAndPurchaseManagement.Controllers
                 return NotFound();
             }
 
-            // Kiểm tra nếu mật khẩu chứa khoảng trắng
             if (employee.Password.Contains(" "))
             {
                 ModelState.AddModelError("Password", "Mật khẩu không được có khoảng trắng.");
@@ -53,10 +90,8 @@ namespace SalesAndPurchaseManagement.Controllers
             {
                 try
                 {
-                    // Xử lý ảnh mới nếu có
                     if (imageFile != null && imageFile.Length > 0)
                     {
-                        // Xóa ảnh cũ nếu có và nếu ảnh mới được tải lên
                         if (!string.IsNullOrEmpty(oldImage))
                         {
                             var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", oldImage);
@@ -66,7 +101,7 @@ namespace SalesAndPurchaseManagement.Controllers
                             }
                         }
 
-                        // Lưu ảnh mới
+                  
                         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", imageFile.FileName);
                         using (var stream = new FileStream(filePath, FileMode.Create))
                         {
@@ -76,11 +111,10 @@ namespace SalesAndPurchaseManagement.Controllers
                     }
                     else
                     {
-                        // Nếu không có ảnh mới, giữ lại ảnh cũ
+ 
                         employee.Image = oldImage;
                     }
 
-                    // Cập nhật thông tin nhân viên
                     _context.Update(employee);
                     await _context.SaveChangesAsync();
                 }

@@ -4,12 +4,14 @@ namespace SalesAndPurchaseManagement.Models
 {
     public class LoginViewModel
     {
-        [Required(ErrorMessage = "Tài khoản không được để trống.")]
-        public string Username { get; set; }
+        [Required(ErrorMessage = "Email không được để trống.")]
+        public string Email { get; set; } // username unique
 
         [Required(ErrorMessage = "Mật khẩu không được để trống.")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        public bool KeepLoggedIn { get; set; }
     }
 
 }
