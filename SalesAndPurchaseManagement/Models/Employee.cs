@@ -22,28 +22,33 @@ namespace SalesAndPurchaseManagement.Models
 
         [Required(ErrorMessage = "Giới tính là bắt buộc.")]
         [Display(Name = "Giới Tính")]
-        public Gender Gender { get; set; } 
+        public Gender Gender { get; set; }
 
-        [Required(ErrorMessage = "Ngày sinh là bắt buộc.")]
+        [Required(ErrorMessage = "Ngày sinh bắt buộc phải nhập")]
+        [Range(typeof(DateTime), "1/2/1950", "12/31/2006", ErrorMessage = "Ngày sinh phải trong khoảng từ 1963 đến 2005")]
         [DataType(DataType.Date)]
-        [Range(typeof(DateTime), "1900-01-01", "2005-12-31", ErrorMessage = "Ngày sinh phải trong khoảng từ 01/01/1900 đến 12/31/2005.")]
-        [Display(Name = "Ngày Sinh")]
-        public DateTime DateOfBirth { get; set; } 
+        [Display(Name = "Ngày sinh")]
+        public DateTime DateOfBirth { get; set; }
 
+        [Required(ErrorMessage = "Số điện thoại là bắt buộc.")]
         [Display(Name = "Số Điện Thoại")]
         [RegularExpression(@"^\d{10}$", ErrorMessage = "Số điện thoại phải bao gồm 10 chữ số.")]
-        public string PhoneNumber { get; set; } 
+        public string PhoneNumber { get; set; }
+        //
 
+        [Required(ErrorMessage = "Địa chỉ là bắt buộc.")]
         [StringLength(200, ErrorMessage = "Địa chỉ không được vượt quá 200 ký tự.")]
         [Display(Name = "Địa Chỉ")]
         public string Address { get; set; } 
 
         [Display(Name = "Ảnh")]
-        public string Image { get; set; }  
+        public string? Image { get; set; }
 
+        [Required(ErrorMessage = "Bạn nên thêm công việc trước.")]
         [Display(Name = "Công Việc")]
-        public int JobId { get; set; }  
+        public int JobId { get; set; }
 
+        [Required(ErrorMessage = "Mật khẩu là bắt buộc")]
         [Display(Name = "Mật Khẩu")]
         public string Password { get; set; }  
 
@@ -54,7 +59,7 @@ namespace SalesAndPurchaseManagement.Models
         [Required(ErrorMessage = "Email là bắt buộc.")]
         [EmailAddress(ErrorMessage = "Email không hợp lệ.")]
         [Display(Name = "Email")]
-        public string Email { get; set; } 
+        public string Email { get; set; }
 
         [ForeignKey("JobId")]
         public virtual Job? Job { get; set; }

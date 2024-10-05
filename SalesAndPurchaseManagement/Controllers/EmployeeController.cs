@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using SalesAndPurchaseManagement.Data;
 using SalesAndPurchaseManagement.Models;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -32,63 +33,55 @@ namespace SalesAndPurchaseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Employee employee)
-        {
-            if (ModelState.IsValid)
-            {
-                // Kiểm tra xem email đã tồn tại chưa
-                if (_context.Employees.Any(e => e.Email == employee.Email))
-                {
-                    ModelState.AddModelError("Email", "Email này đã được sử dụng.");
-                    SetViewBagData();
-                    return View(employee);
-                }
-
-                // Lưu nhân viên
-                _context.Employees.Add(employee);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction("Index");
-            }
-
-            SetViewBagData();
-            return View(employee);
-        }
-
-        public async Task<IActionResult> Edit(int id)
-        {
-            var employee = await _context.Employees.Include(e => e.Job).FirstOrDefaultAsync(e => e.EmployeeId == id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
-
-            SetViewBagData(employee);
-            return View(employee);
-        }
-
-        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Employee employee, string password)
+        public async Task<IActionResult> Edit(int id, Employee employee, IFormFile? imageFile, string oldImage)
         {
             if (id != employee.EmployeeId)
             {
                 return NotFound();
             }
 
+            // Kiểm tra nếu mật khẩu chứa khoảng trắng
+            if (employee.Password.Contains(" "))
+            {
+                ModelState.AddModelError("Password", "Mật khẩu không được có khoảng trắng.");
+                SetViewBagData(employee);
+                return View(employee);
+            }
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    // Cập nhật thông tin nhân viên
-                    _context.Update(employee);
-
-                    // Nếu mật khẩu không rỗng, cập nhật mật khẩu
-                    if (!string.IsNullOrWhiteSpace(password))
+                    // Xử lý ảnh mới nếu có
+                    if (imageFile != null && imageFile.Length > 0)
                     {
-                        employee.Password = password;
+                        // Xóa ảnh cũ nếu có và nếu ảnh mới được tải lên
+                        if (!string.IsNullOrEmpty(oldImage))
+                        {
+                            var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", oldImage);
+                            if (System.IO.File.Exists(oldImagePath))
+                            {
+                                System.IO.File.Delete(oldImagePath);
+                            }
+                        }
+
+                        // Lưu ảnh mới
+                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", imageFile.FileName);
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await imageFile.CopyToAsync(stream);
+                        }
+                        employee.Image = imageFile.FileName;
+                    }
+                    else
+                    {
+                        // Nếu không có ảnh mới, giữ lại ảnh cũ
+                        employee.Image = oldImage;
                     }
 
+                    // Cập nhật thông tin nhân viên
+                    _context.Update(employee);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -105,6 +98,20 @@ namespace SalesAndPurchaseManagement.Controllers
             SetViewBagData(employee);
             return View(employee);
         }
+
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var employee = await _context.Employees.Include(e => e.Job).FirstOrDefaultAsync(e => e.EmployeeId == id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            SetViewBagData(employee);
+            return View(employee);
+        }
+
 
         public async Task<IActionResult> Delete(int id)
         {

@@ -8,48 +8,80 @@
 <div class="ms-2 mx-2">
     <h1>Chi Tiết Nhân Viên</h1>
 
-    <dl class="row">
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.EmployeeId)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.EmployeeId)</dd>
+    <div class="row">
+        <div class="col-sm-6 text-center">
+            <dt>@Html.DisplayName("Ảnh")</dt>
+            <dd>
+                @if (!string.IsNullOrEmpty(Model.Image))
+                {
+                    <img id="avatarPreview" src="~/images/@Model.Image" alt="Ảnh Nhân Viên" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;" />
+                }
+                else
+                {
+                    <span>Chưa có ảnh</span>
+                }
+            </dd>
+        </div>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.EmployeeName)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.EmployeeName)</dd>
+        <div class="col-sm-6">
+            <dl class="row">
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.EmployeeId)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.EmployeeId)</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.PhoneNumber)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.PhoneNumber)</dd>
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.EmployeeName)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.EmployeeName)</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Gender)</dt>
-        <dd class="col-sm-10">
-            @switch (Model.Gender)
-            {
-                case Gender.Male:
-                    <span>Nam</span>
-                    break;
-                case Gender.Female:
-                    <span>Nữ</span>
-                    break;
-                default:
-                    <span>Không xác định</span>
-                    ;
-                    break;
-            }
-        </dd>
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.PhoneNumber)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.PhoneNumber)</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.DateOfBirth)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.DateOfBirth)</dd>
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Gender)</dt>
+                <dd class="col-sm-8">
+                    @switch (Model.Gender)
+                    {
+                        case Gender.Male:
+                            <span>Nam</span>
+                            break;
+                        case Gender.Female:
+                            <span>Nữ</span>
+                            break;
+                        default:
+                            <span>Không xác định</span>
+                            break;
+                    }
+                </dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Address)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Address)</dd>
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.DateOfBirth)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.DateOfBirth)</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Job)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Job.JobTitle)</dd>
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Address)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Address)</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Email)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Email)</dd>
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Job)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Job.JobTitle)</dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Password)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Password)</dd>
-    </dl>
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Email)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Email)</dd>
+
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Password)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Password)</dd>
+            </dl>
+        </div>
+    </div>
 
     <a asp-action="Index" class="btn btn-secondary">Quay Lại</a>
 </div>
+
+@section Scripts {
+    @Html.RenderPartialAsync("_ValidationScriptsPartial");
+    <script>
+        function previewImage(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const avatarPreview = document.getElementById('avatarPreview');
+                avatarPreview.src = e.target.result; // Hiển thị ảnh vừa chọn
+            }
+            reader.readAsDataURL(file);
+        }
+    </script>
+}

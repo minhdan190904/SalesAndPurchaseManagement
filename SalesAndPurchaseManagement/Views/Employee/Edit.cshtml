@@ -9,15 +9,16 @@
     <h1>Chỉnh Sửa Nhân Viên</h1>
     <div asp-validation-summary="All" class="text-danger"></div>
 
-    <form asp-controller="Employee" asp-action="Edit" asp-route-id="@Model.EmployeeId" method="post" class="mt-3">
-        @Html.AntiForgeryToken()
-
+    <form asp-controller="Employee" asp-action="Edit" method="post" class="mt-3" enctype="multipart/form-data">
+        <!-- Thêm trường hidden cho EmployeeId -->
         <input type="hidden" asp-for="EmployeeId" />
+        <!-- Thêm trường hidden cho Image để giữ tên hình ảnh cũ -->
+        <input type="hidden" name="oldImage" value="@Model.Image" />
 
         <div class="form-group row mb-3">
             <label asp-for="EmployeeName" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-10">
-                <input asp-for="EmployeeName" class="form-control" placeholder="Nhập tên nhân viên" />
+                <input asp-for="EmployeeName" class="form-control" />
                 <span asp-validation-for="EmployeeName" class="text-danger"></span>
             </div>
         </div>
@@ -25,7 +26,7 @@
         <div class="form-group row mb-3">
             <label asp-for="PhoneNumber" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-10">
-                <input asp-for="PhoneNumber" class="form-control" placeholder="Nhập số điện thoại" />
+                <input asp-for="PhoneNumber" class="form-control" />
                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
         </div>
@@ -33,9 +34,7 @@
         <div class="form-group row mb-3">
             <label asp-for="Gender" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-10">
-                <select asp-for="Gender" class="form-control" asp-items="@ViewBag.GenderList">
-                    <option value="">Chọn giới tính</option>
-                </select>
+                <select asp-for="Gender" class="form-control" asp-items="@ViewBag.GenderList"></select>
                 <span asp-validation-for="Gender" class="text-danger"></span>
             </div>
         </div>
@@ -51,41 +50,79 @@
         <div class="form-group row mb-3">
             <label asp-for="Address" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-10">
-                <input asp-for="Address" class="form-control" placeholder="Nhập địa chỉ" />
+                <input asp-for="Address" class="form-control" />
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
         </div>
 
         <div class="form-group row mb-3">
-            <label for="JobId" class="col-sm-2 col-form-label">Công Việc</label>
+            <label asp-for="JobId" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-10">
-                <select asp-for="JobId" class="custom-select mr-sm-2" asp-items="@ViewBag.JobList">
-                    <option value="">Chọn công việc</option>
-                </select>
+                <select asp-for="JobId" class="custom-select mr-sm-2" asp-items="@ViewBag.JobList"></select>
                 <span asp-validation-for="JobId" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label asp-for="IsAdmin" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <input asp-for="IsAdmin" class="form-check-input" type="checkbox" />
+                <span asp-validation-for="IsAdmin" class="text-danger"></span>
+                <label class="form-check-label" for="IsAdmin">Quyền Admin</label>
+            </div>
+        </div>
+
+        <h3>Cập Nhật Tài Khoản</h3>
+        <div class="form-group row mb-3">
+            <label asp-for="Email" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
             </div>
         </div>
 
         <div class="form-group row mb-3">
             <label asp-for="Password" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-10">
-                <input asp-for="Password" type="password" class="form-control" placeholder="Nhập mật khẩu mới" />
+                <input asp-for="Password" class="form-control" placeholder="Nhập Mật Khẩu Mới (nếu có)" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
         </div>
 
+        <h3>Ảnh Nhân Viên</h3>
         <div class="form-group row mb-3">
-            <label asp-for="Email" class="col-sm-2 col-form-label"></label>
+            <label class="col-sm-2 col-form-label"></label>
             <div class="col-sm-10">
-                <input asp-for="Email" class="form-control" readonly />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <!-- Hiển thị ảnh hiện tại -->
+                <div class="avatar-container mb-2">
+                    <img id="avatarPreview" src="~/images/@Model.Image" alt="Ảnh Nhân Viên" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;" />
+                </div>
+
+                <!-- Tải ảnh mới lên -->
+                <input type="file" name="imageFile" class="form-control" accept="image/*" onchange="previewImage(event)" />
+                <span asp-validation-for="Image" class="text-danger"></span>
             </div>
         </div>
 
-        <div class="form-group row mt-4">
-            <div class="col-sm-10">
-                <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>
+        <div class="form-group mb-3">
+            <div class="col-sm-10 offset-sm-2">
+                <button type="submit" class="btn btn-primary">Cập Nhật Nhân Viên</button>
             </div>
         </div>
     </form>
 </div>
+
+@section Scripts {
+    @Html.RenderPartialAsync("_ValidationScriptsPartial");
+    <script>
+        function previewImage(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const avatarPreview = document.getElementById('avatarPreview');
+                avatarPreview.src = e.target.result; // Hiển thị ảnh vừa chọn
+            }
+            reader.readAsDataURL(file);
+        }
+    </script>
+}

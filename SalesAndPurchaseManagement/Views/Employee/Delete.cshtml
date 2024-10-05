@@ -5,83 +5,43 @@
     Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
 }
 
+<h1>Xóa Nhân Viên</h1>
 <div class="ms-2 mx-2">
-    <h1>Xóa Nhân Viên</h1>
-    <h3>Bạn có chắc chắn muốn xóa nhân viên này không?</h3>
+    <h4>Nhân viên</h4>
     <hr />
-
     <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.EmployeeId)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.EmployeeId)
-        </dd>
+        <dt class="col-sm-2">Tên Nhân Viên</dt>
+        <dd class="col-sm-10">@Model.EmployeeName</dd>
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.EmployeeName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.EmployeeName)
-        </dd>
+        <dt class="col-sm-2">Email</dt>
+        <dd class="col-sm-10">@Model.Email</dd>
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.PhoneNumber)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.PhoneNumber)
-        </dd>
+        <dt class="col-sm-2">Số Điện Thoại</dt>
+        <dd class="col-sm-10">@Model.PhoneNumber</dd>
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Gender)
-        </dt>
-        <dd class="col-sm-10">
-            @switch (Model.Gender)
-            {
-                case Gender.Male:
-                    <span>Nam</span>
-                    break;
-                case Gender.Female:
-                    <span>Nữ</span>
-                    break;
-                default:
-                    <span>Không xác định</span>
-                    break;
-            }
-        </dd>
+        <dt class="col-sm-2">Địa Chỉ</dt>
+        <dd class="col-sm-10">@Model.Address</dd>
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DateOfBirth)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DateOfBirth)
-        </dd>
+        <dt class="col-sm-2">Giới Tính</dt>
+        <dd class="col-sm-10">@Model.Gender</dd>
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Address)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Address)
-        </dd>
+        <dt class="col-sm-2">Công Việc</dt>
+        <dd class="col-sm-10">@Model.Job?.JobTitle</dd>
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.JobId)
-        </dt>
+        <dt class="col-sm-2">Ảnh</dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.JobId)
-        </dd>
-
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Email)
+            <img src="@Url.Content("~/images/" + Model.Image)" alt="Ảnh Nhân Viên" width="150" />
         </dd>
     </dl>
 
-    <form asp-controller="Employee" asp-action="DeleteConfirmed" method="post">
+    <form asp-action="DeleteConfirmed" method="post">
         <input type="hidden" asp-for="EmployeeId" />
-        <button type="submit" class="btn btn-danger">Xóa</button>
-        <a asp-action="Index" class="btn btn-secondary">Trở Lại Danh Sách</a>
+        <div class="form-group mb-3">
+            <div class="col-sm-10">
+                <p>Bạn có chắc chắn muốn xóa nhân viên này không?</p>
+                <button type="submit" class="btn btn-danger">Xóa</button>
+                <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+            </div>
+        </div>
     </form>
 </div>
