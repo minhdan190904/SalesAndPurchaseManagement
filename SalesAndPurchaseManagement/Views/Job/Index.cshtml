@@ -1,41 +1,45 @@
 ﻿@model IEnumerable<SalesAndPurchaseManagement.Models.Job>
 
 @{
-    ViewData["Title"] = "Jobs List";
+    ViewData["Title"] = "Danh Sách Công Việc";
     Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
 }
 
 <div class="ms-2 mx-2">
-    <h1>Jobs List</h1>
-    <a asp-controller="Job" asp-action="Create" class="btn btn-primary">Create New Job</a>
-    <table class="table mt-3">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.First().JobId)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.First().JobTitle)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.First().Salary)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var job in Model)
-            {
+    <h1>Danh Sách Công Việc</h1>
+    <a asp-controller="Job" asp-action="Create" class="btn btn-primary">Tạo Công Việc Mới</a>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning mt-3">
+            Không có công việc nào trong danh sách.
+        </div>
+    }
+    else
+    {
+        <table class="table mt-3">
+            <thead>
                 <tr>
-                    <td>@Html.DisplayFor(modelItem => job.JobId)</td>
-                    <td>@Html.DisplayFor(modelItem => job.JobTitle)</td>
-                    <td>@Html.DisplayFor(modelItem => job.Salary)</td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@job.JobId" class="btn btn-warning">Edit</a> |
-                        <a asp-action="Delete" asp-route-id="@job.JobId" class="btn btn-danger">Delete</a>
-                    </td>
+                    <th>@Html.DisplayNameFor(model => model.First().JobId)</th>
+                    <th>@Html.DisplayNameFor(model => model.First().JobTitle)</th>
+                    <th>@Html.DisplayNameFor(model => model.First().Salary)</th>
+                    <th class="text-center">Hành Động</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var job in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => job.JobId)</td>
+                        <td>@Html.DisplayFor(modelItem => job.JobTitle)</td>
+                        <td>@Html.DisplayFor(modelItem => job.Salary)</td>
+                        <td class="text-center">
+                            <a asp-action="Edit" asp-route-id="@job.JobId" class="btn btn-warning btn-sm me-1">Sửa</a>
+                            <a asp-action="Delete" asp-route-id="@job.JobId" class="btn btn-danger btn-sm">Xóa</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 </div>

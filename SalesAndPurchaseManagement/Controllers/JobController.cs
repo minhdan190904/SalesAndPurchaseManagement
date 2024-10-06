@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace SalesAndPurchaseManagement.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     public class JobController : Controller
     {
         private readonly SAPManagementContext _context;
@@ -24,7 +24,6 @@ namespace SalesAndPurchaseManagement.Controllers
             return View(jobs);
         }
 
-        // Hiển thị form để tạo công việc mới
         public IActionResult Create()
         {
             return View();
@@ -43,7 +42,6 @@ namespace SalesAndPurchaseManagement.Controllers
             return View(job);
         }
 
-        // Hiển thị form để chỉnh sửa công việc
         public IActionResult Edit(int id)
         {
             var job = _context.Jobs.Find(id);
@@ -83,7 +81,6 @@ namespace SalesAndPurchaseManagement.Controllers
             return View(job);
         }
 
-        // Hiển thị form để xác nhận xóa công việc
         public IActionResult Delete(int id)
         {
             var job = _context.Jobs.Find(id);

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SalesAndPurchaseManagement.Models
+namespace SalesAndPurchaseManagement.ViewModels
 {
     public class LoginViewModel
     {

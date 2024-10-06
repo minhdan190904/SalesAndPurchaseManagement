@@ -1,22 +1,18 @@
 ﻿.container-fluid {
     background-image: linear-gradient(to bottom right, #f1d6d0, #d8e2c6);
-    height: auto;
+    height: 100%;
 }
 
 .main-content {
     width: 400px;
-    padding-top: 40px;
-    padding-bottom: 70px;
+    padding-top: 20px;
+    padding-bottom: 150px;
 }
 
 .name-system{
     text-align: center;
     padding-top: 40px;
 }
-
-/*.title{
-    text-align: center;
-}*/
 
 .user-icon {
     width: 30%;

@@ -1,14 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using SalesAndPurchaseManagement.Data;
+using SalesAndPurchaseManagement.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddTransient<IEmailService, EmailService>();
+
 builder.Services.AddDbContext<SAPManagementContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DANContext")));
 
-// Thêm xác thực và policy
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
