@@ -1,42 +1,53 @@
 ﻿@model SalesAndPurchaseManagement.Models.LoginViewModel
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/login-form.css">
     <title>Đăng Nhập</title>
 </head>
 <body>
-    <form asp-controller="Access" asp-action="Login" method="post">
-        <h1>Đăng Nhập</h1>
-        <div>
-            <label asp-for="Email"></label>
-            <input type="email" asp-for="Email" placeholder="Email" />
-            <span asp-validation-for="Email" style="color:red;"></span>
+    <div class="container-fluid">
+        <div class="name-system">
+            <h1 class="title">HỆ THỐNG QUẢN LÝ ĐỒ NỘI THẤT</h1>
         </div>
-        <div>
-            <label asp-for="Password"></label>
-            <input type="password" asp-for="Password" placeholder="Mật khẩu" />
-            <span asp-validation-for="Password" style="color:red;"></span>
-        </div>
-        <div>
-            <label>
-                <input type="checkbox" asp-for="KeepLoggedIn" />
-                Giữ tôi đăng nhập
-            </label>
-        </div>
-        <button type="submit">Đăng Nhập</button>
+        <div class="container main-content">
+            <img class="user-icon" src="~/images/user.png" alt="user icon">
+            <a class="google-account-login" href="#">
+                <img src="~/images/google.png" class="google-image" alt="">
+                ĐĂNG NHẬP
+            </a>
+            <form asp-action="Login" method="post" class="login-form">
+                <div class="main-form">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" name="Email" id="name" asp-for="Email" placeholder="Email" />
+                        <label for="user-name">Email</label>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" name="Password" id="password" asp-for="Password" placeholder="Mật khẩu" />
+                        <label for="password">Mật khẩu</label>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <input type="checkbox" name="KeepLoggedIn" id="save-button" asp-for="KeepLoggedIn" />
+                    <label for="save">Lưu thông tin đăng nhập</label>
+                    <button type="submit" class="login" disabled>ĐĂNG NHẬP</button>
 
-        @if (ViewData["ValidateMessage"] != null)
-        {
-            <br />
-            <br />
-            <label style="color:red;">@ViewData["ValidateMessage"]</label>
-        }
-    </form>
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+                    @if (ViewData["ValidateMessage"] != null)
+                    {
+                        <label style="color:red; margin-left:25px">@ViewData["ValidateMessage"]</label>
+                    }
+                </div>
+                <div class="footer">
+                    <a href="#">Quên mật khẩu? </a>
+                    <p>Nếu nhân viên quên mật khẩu thì bạn có thể nhấn vào "Quên mật khẩu?" để lấy lại mật khẩu</p>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="~/js/login-form.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SalesAndPurchaseManagement.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     public class EmployeeController : Controller
     {
         private readonly SAPManagementContext _context;

@@ -2,11 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using SalesAndPurchaseManagement.Data;
 using SalesAndPurchaseManagement.Models;
+using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace SalesAndPurchaseManagement.Controllers
 {
+    [Authorize]
     public class JobController : Controller
     {
         private readonly SAPManagementContext _context;

@@ -21,15 +21,19 @@ namespace SalesAndPurchaseManagement.Controllers
 
         public IActionResult Login()
         {
+            //if (User.Identity.IsAuthenticated)
+            //{
+            //    return RedirectToAction("Index", "Employee");
+            //}
             return View();
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel modelLogin)
         {
             if (ModelState.IsValid)
             {
-                // Kiểm tra thông tin đăng nhập trong cơ sở dữ liệu
                 var employee = await _context.Employees
                     .SingleOrDefaultAsync(e => e.Email == modelLogin.Email && e.Password == modelLogin.Password);
 
