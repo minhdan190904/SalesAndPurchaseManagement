@@ -37,7 +37,6 @@ namespace SalesAndPurchaseManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Employee employee, IFormFile? imageFile)
         {
-            // Kiểm tra mật khẩu không chứa khoảng trắng
             if (employee.Password.Contains(" "))
             {
                 ModelState.AddModelError("Password", "Mật khẩu không được có khoảng trắng.");
@@ -47,7 +46,6 @@ namespace SalesAndPurchaseManagement.Controllers
 
             if (ModelState.IsValid)
             {
-                // Xử lý ảnh nếu có
                 if (imageFile != null && imageFile.Length > 0)
                 {
                     var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", imageFile.FileName);
@@ -58,6 +56,10 @@ namespace SalesAndPurchaseManagement.Controllers
                     employee.Image = imageFile.FileName;
                 }
 
+                else
+                {
+                    employee.Image = "user_default.png";
+                }
 
                 _context.Add(employee);
                 await _context.SaveChangesAsync();
