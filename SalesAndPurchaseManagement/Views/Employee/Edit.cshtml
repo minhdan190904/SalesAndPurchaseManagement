@@ -10,9 +10,9 @@
     <div asp-validation-summary="All" class="text-danger"></div>
 
     <form asp-controller="Employee" asp-action="Edit" method="post" class="mt-3" enctype="multipart/form-data">
-        <!-- Thêm trường hidden cho EmployeeId -->
+
         <input type="hidden" asp-for="EmployeeId" />
-        <!-- Thêm trường hidden cho Image để giữ tên hình ảnh cũ -->
+
         <input type="hidden" name="oldImage" value="@Model.Image" />
 
         <div class="form-group row mb-3">

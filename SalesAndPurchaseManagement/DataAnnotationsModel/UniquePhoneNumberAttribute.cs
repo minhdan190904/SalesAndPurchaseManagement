@@ -12,7 +12,6 @@ namespace SalesAndPurchaseManagement.DataAnnotationsModel
             var context = (SAPManagementContext)validationContext.GetService(typeof(SAPManagementContext));
             var employeeId = (int)validationContext.ObjectType.GetProperty("EmployeeId").GetValue(validationContext.ObjectInstance);
 
-            // Kiểm tra số điện thoại trong cơ sở dữ liệu, ngoại trừ nhân viên hiện tại
             var phoneExists = context.Employees.Any(e => e.PhoneNumber == value.ToString() && e.EmployeeId != employeeId);
 
             if (phoneExists)

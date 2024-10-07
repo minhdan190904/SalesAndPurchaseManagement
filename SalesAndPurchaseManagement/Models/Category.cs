@@ -6,11 +6,11 @@ namespace SalesAndPurchaseManagement.Models
 {
     public class Category
     {
-        [Key] // Đánh dấu CategoryId là khóa chính
+        [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // ID tự động sinh
         public int CategoryId { get; set; }
 
-        [Required] // Đánh dấu CategoryName là thuộc tính bắt buộc
+        [Required] 
         [StringLength(100)] // Đặt độ dài tối đa cho CategoryName
         public string CategoryName { get; set; }
 

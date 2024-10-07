@@ -15,7 +15,7 @@ namespace SalesAndPurchaseManagement.Controllers
     {
         private readonly SAPManagementContext _context;
         private readonly IEmailService _emailService;
-        private static string OTPCodeTemp = ""; // Thay đổi từ instance thành static
+        private static string OTPCodeTemp = "";
 
         public AccessController(SAPManagementContext context, IEmailService emailService)
         {
@@ -108,9 +108,9 @@ namespace SalesAndPurchaseManagement.Controllers
                 var employee = await _context.Employees.SingleOrDefaultAsync(e => e.Email == model.Email);
                 if (employee != null)
                 {
-                    if (model.OtpCode == OTPCodeTemp) // Kiểm tra OTP
+                    if (model.OtpCode == OTPCodeTemp) 
                     {
-                        employee.Password = model.NewPassword; // Cập nhật mật khẩu
+                        employee.Password = model.NewPassword; 
                         _context.Employees.Update(employee);
                         await _context.SaveChangesAsync();
 

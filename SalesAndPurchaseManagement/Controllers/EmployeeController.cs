@@ -37,13 +37,6 @@ namespace SalesAndPurchaseManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Employee employee, IFormFile? imageFile)
         {
-            if (employee.Password.Contains(" "))
-            {
-                ModelState.AddModelError("Password", "Mật khẩu không được có khoảng trắng.");
-                SetViewBagData(employee);
-                return View(employee);
-            }
-
             if (ModelState.IsValid)
             {
                 if (imageFile != null && imageFile.Length > 0)
@@ -69,7 +62,7 @@ namespace SalesAndPurchaseManagement.Controllers
             SetViewBagData(employee);
             return View(employee);
         }
-        
+
 
 
         [HttpPost]
@@ -79,13 +72,6 @@ namespace SalesAndPurchaseManagement.Controllers
             if (id != employee.EmployeeId)
             {
                 return NotFound();
-            }
-
-            if (employee.Password.Contains(" "))
-            {
-                ModelState.AddModelError("Password", "Mật khẩu không được có khoảng trắng.");
-                SetViewBagData(employee);
-                return View(employee);
             }
 
             if (ModelState.IsValid)
@@ -103,17 +89,15 @@ namespace SalesAndPurchaseManagement.Controllers
                             }
                         }
 
-                  
                         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", imageFile.FileName);
                         using (var stream = new FileStream(filePath, FileMode.Create))
                         {
                             await imageFile.CopyToAsync(stream);
                         }
-                        employee.Image = imageFile.FileName;
+                        employee.Image = imageFile.FileName; 
                     }
                     else
                     {
- 
                         employee.Image = oldImage;
                     }
 
@@ -130,10 +114,15 @@ namespace SalesAndPurchaseManagement.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            else
+            {
+                employee.Image = oldImage;
+            }
 
             SetViewBagData(employee);
             return View(employee);
         }
+
 
 
         public async Task<IActionResult> Edit(int id)

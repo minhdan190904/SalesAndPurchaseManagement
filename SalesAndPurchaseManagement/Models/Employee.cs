@@ -52,6 +52,7 @@ namespace SalesAndPurchaseManagement.Models
 
         [Required(ErrorMessage = "Mật khẩu là bắt buộc")]
         [Display(Name = "Mật Khẩu")]
+        [PasswordValidation]
         public string Password { get; set; }  
 
         [Required(ErrorMessage = "Thông tin quản trị viên là bắt buộc.")]

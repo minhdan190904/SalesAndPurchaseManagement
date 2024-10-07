@@ -8,6 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\build\**" />
+    <Compile Remove="wwwroot\docs\**" />
+    <Content Remove="wwwroot\build\**" />
+    <Content Remove="wwwroot\docs\**" />
+    <EmbeddedResource Remove="wwwroot\build\**" />
+    <EmbeddedResource Remove="wwwroot\docs\**" />
+    <None Remove="wwwroot\build\**" />
+    <None Remove="wwwroot\docs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MailKit" Version="4.8.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.33" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.33" />
@@ -17,6 +28,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.17" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Shared\Components\SlidebarMenu\" />
   </ItemGroup>
 
 </Project>
