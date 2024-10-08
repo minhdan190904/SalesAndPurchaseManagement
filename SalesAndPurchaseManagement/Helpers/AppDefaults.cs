@@ -10,6 +10,7 @@
         public const string PasswordUpdatedMessage = "Mật khẩu đã được cập nhật thành công.";
         public const string InvalidOtpMessage = "Mã OTP không hợp lệ.";
         public const string ResetPasswordOtpMessage = "Mã OTP Đặt Lại Mật Khẩu";
+        public const int TimeOut = 20;
         public static string GetOtpMessage(string otpCode)
         {
             return $"Mã OTP của bạn là: {otpCode}";

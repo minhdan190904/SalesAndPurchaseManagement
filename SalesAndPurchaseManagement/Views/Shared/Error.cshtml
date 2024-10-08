@@ -1,25 +1,126 @@
-﻿@model ErrorViewModel
+﻿@model SalesAndPurchaseManagement.Models.Employee
+
 @{
-    ViewData["Title"] = "Error";
+    ViewData["Title"] = "Chỉnh Sửa Nhân Viên";
+    Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<div class="ms-2 mx-2">
+    <h1>Chỉnh Sửa Nhân Viên</h1>
+    <div asp-validation-summary="All" class="text-danger"></div>
 
-@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
+    <form asp-controller="Employee" asp-action="Edit" method="post" class="mt-3" enctype="multipart/form-data">
+
+        <input type="hidden" asp-for="EmployeeId" />
+
+        <input type="hidden" name="oldImage" value="@Model.Image" />
+
+        <div class="form-group row mb-3">
+            <label asp-for="EmployeeName" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <input asp-for="EmployeeName" class="form-control" />
+                <span asp-validation-for="EmployeeName" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label asp-for="PhoneNumber" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label asp-for="Gender" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <select asp-for="Gender" class="form-control" asp-items="@ViewBag.GenderList"></select>
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label asp-for="DateOfBirth" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <input asp-for="DateOfBirth" class="form-control" type="date" />
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label asp-for="Address" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label asp-for="JobId" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <select asp-for="JobId" class="custom-select mr-sm-2" asp-items="@ViewBag.JobList"></select>
+                <span asp-validation-for="JobId" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label asp-for="IsAdmin" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <input asp-for="IsAdmin" class="form-check-input" type="checkbox" />
+                <span asp-validation-for="IsAdmin" class="text-danger"></span>
+                <label class="form-check-label" for="IsAdmin">Quyền Admin</label>
+            </div>
+        </div>
+
+        <h3>Cập Nhật Tài Khoản</h3>
+        <div class="form-group row mb-3">
+            <label asp-for="Email" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label asp-for="Password" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <input asp-for="Password" class="form-control" placeholder="Nhập Mật Khẩu Mới (nếu có)" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+        </div>
+
+        <h3>Ảnh Nhân Viên</h3>
+        <div class="form-group row mb-3">
+            <label class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <div class="avatar-container mb-2">
+                    <img id="avatarPreview" src="~/images/@Model.Image" alt="Ảnh Nhân Viên" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;" />
+                </div>
+
+                <input type="file" name="imageFile" class="form-control" accept="image/*" onchange="previewImage(event)" />
+                <span asp-validation-for="Image" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <div class="col-sm-10 offset-sm-2">
+                <button type="submit" class="btn btn-primary">Cập Nhật Nhân Viên</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @Html.RenderPartialAsync("_ValidationScriptsPartial");
+    <script>
+        function previewImage(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const avatarPreview = document.getElementById('avatarPreview');
+                avatarPreview.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    </script>
 }
-
-<h3>Development Mode</h3>
-<p>
-    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
-</p>
-<p>
-    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
-    It can result in displaying sensitive information from exceptions to end users.
-    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
-    and restarting the app.
-</p>

@@ -34,7 +34,7 @@ namespace SalesAndPurchaseManagement.Controllers
             return View();
         }
 
-        [HttpPost]
+        [HttpPost]  
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Employee employee, IFormFile? imageFile)
         {
@@ -64,7 +64,17 @@ namespace SalesAndPurchaseManagement.Controllers
             return View(employee);
         }
 
+        public async Task<IActionResult> Edit(int id)
+        {
+            var employee = await _context.Employees.Include(e => e.Job).FirstOrDefaultAsync(e => e.EmployeeId == id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
 
+            SetViewBagData(employee);
+            return View(employee);
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -81,15 +91,6 @@ namespace SalesAndPurchaseManagement.Controllers
                 {
                     if (imageFile != null && imageFile.Length > 0)
                     {
-                        if (!string.IsNullOrEmpty(oldImage))
-                        {
-                            var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), AppDefaults.DefaultImageFolder, oldImage);
-                            if (System.IO.File.Exists(oldImagePath) && oldImage != AppDefaults.DefaultImageFile)
-                            {
-                                System.IO.File.Delete(oldImagePath);
-                            }
-                        }
-
                         var filePath = Path.Combine(Directory.GetCurrentDirectory(), AppDefaults.DefaultImageFolder, imageFile.FileName);
                         using (var stream = new FileStream(filePath, FileMode.Create))
                         {
@@ -115,28 +116,12 @@ namespace SalesAndPurchaseManagement.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            else
-            {
-                employee.Image = oldImage;
-            }
 
+            employee.Image = oldImage;
             SetViewBagData(employee);
             return View(employee);
         }
 
-
-
-        public async Task<IActionResult> Edit(int id)
-        {
-            var employee = await _context.Employees.Include(e => e.Job).FirstOrDefaultAsync(e => e.EmployeeId == id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
-
-            SetViewBagData(employee);
-            return View(employee);
-        }
 
 
         public async Task<IActionResult> Delete(int id)

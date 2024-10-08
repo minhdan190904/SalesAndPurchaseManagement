@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SalesAndPurchaseManagement.Data;
 using SalesAndPurchaseManagement.Services;
+using SalesAndPurchaseManagement.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +16,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(options =>
     {
         options.LoginPath = "/Access/Login";
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(10); 
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(AppDefaults.TimeOut); 
     });
 
 builder.Services.AddHttpContextAccessor();

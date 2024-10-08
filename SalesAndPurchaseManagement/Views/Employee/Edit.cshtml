@@ -5,113 +5,128 @@
     Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
 }
 
-<div class="ms-2 mx-2">
-    <h1>Chỉnh Sửa Nhân Viên</h1>
-    <div asp-validation-summary="All" class="text-danger"></div>
+<section class="content">
+    <div class="ms-2 mx-2">
+        <div asp-validation-summary="All" class="text-danger"></div>
 
-    <form asp-controller="Employee" asp-action="Edit" method="post" class="mt-3" enctype="multipart/form-data">
+        <form asp-controller="Employee" asp-action="Edit" method="post" class="mt-3" enctype="multipart/form-data">
 
-        <input type="hidden" asp-for="EmployeeId" />
+            <input type="hidden" asp-for="EmployeeId" />
+            <input type="hidden" name="oldImage" value="@Model.Image" />
 
-        <input type="hidden" name="oldImage" value="@Model.Image" />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Thông Tin Cá Nhân</h3>
+                        </div>
+                        <div class="card-body">
 
-        <div class="form-group row mb-3">
-            <label asp-for="EmployeeName" class="col-sm-2 col-form-label"></label>
-            <div class="col-sm-10">
-                <input asp-for="EmployeeName" class="form-control" />
-                <span asp-validation-for="EmployeeName" class="text-danger"></span>
-            </div>
-        </div>
+                            <div class="text-center">
+                                <img id="avatarPreview" class="profile-user-img img-fluid img-circle" src="~/images/@Model.Image" alt="User profile picture">
+                                <div class="form-group">
+                                    <label for="imageFile">Chọn Ảnh</label> 
+                                    <input type="file" id="imageFile" name="imageFile" class="form-control" accept="image/*" onchange="previewImage(event)" style="display:none;" /> <!-- Ẩn input file -->
+                                </div>
+                            </div>
 
-        <div class="form-group row mb-3">
-            <label asp-for="PhoneNumber" class="col-sm-2 col-form-label"></label>
-            <div class="col-sm-10">
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
-        </div>
 
-        <div class="form-group row mb-3">
-            <label asp-for="Gender" class="col-sm-2 col-form-label"></label>
-            <div class="col-sm-10">
-                <select asp-for="Gender" class="form-control" asp-items="@ViewBag.GenderList"></select>
-                <span asp-validation-for="Gender" class="text-danger"></span>
-            </div>
-        </div>
+                            <div class="form-group row mb-3">
+                                <label asp-for="EmployeeName" class="col-sm-4 col-form-label"></label>
+                                <div class="col-sm-8">
+                                    <input asp-for="EmployeeName" class="form-control" />
+                                    <span asp-validation-for="EmployeeName" class="text-danger"></span>
+                                </div>
+                            </div>
 
-        <div class="form-group row mb-3">
-            <label asp-for="DateOfBirth" class="col-sm-2 col-form-label"></label>
-            <div class="col-sm-10">
-                <input asp-for="DateOfBirth" class="form-control" type="date" />
-                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
-            </div>
-        </div>
+                            <div class="form-group row mb-3">
+                                <label asp-for="PhoneNumber" class="col-sm-4 col-form-label"></label>
+                                <div class="col-sm-8">
+                                    <input asp-for="PhoneNumber" class="form-control" />
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+                            </div>
 
-        <div class="form-group row mb-3">
-            <label asp-for="Address" class="col-sm-2 col-form-label"></label>
-            <div class="col-sm-10">
-                <input asp-for="Address" class="form-control" />
-                <span asp-validation-for="Address" class="text-danger"></span>
-            </div>
-        </div>
+                            <div class="form-group row mb-3">
+                                <label asp-for="Gender" class="col-sm-4 col-form-label"></label>
+                                <div class="col-sm-8">
+                                    <select asp-for="Gender" class="form-control" asp-items="@ViewBag.GenderList"></select>
+                                    <span asp-validation-for="Gender" class="text-danger"></span>
+                                </div>
+                            </div>
 
-        <div class="form-group row mb-3">
-            <label asp-for="JobId" class="col-sm-2 col-form-label"></label>
-            <div class="col-sm-10">
-                <select asp-for="JobId" class="custom-select mr-sm-2" asp-items="@ViewBag.JobList"></select>
-                <span asp-validation-for="JobId" class="text-danger"></span>
-            </div>
-        </div>
+                            <div class="form-group row mb-3">
+                                <label asp-for="DateOfBirth" class="col-sm-4 col-form-label"></label>
+                                <div class="col-sm-8">
+                                    <input asp-for="DateOfBirth" class="form-control" type="date" />
+                                    <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                                </div>
+                            </div>
 
-        <div class="form-group row mb-3">
-            <label asp-for="IsAdmin" class="col-sm-2 col-form-label"></label>
-            <div class="col-sm-10">
-                <input asp-for="IsAdmin" class="form-check-input" type="checkbox" />
-                <span asp-validation-for="IsAdmin" class="text-danger"></span>
-                <label class="form-check-label" for="IsAdmin">Quyền Admin</label>
-            </div>
-        </div>
+                            <div class="form-group row mb-3">
+                                <label asp-for="Address" class="col-sm-4 col-form-label"></label>
+                                <div class="col-sm-8">
+                                    <input asp-for="Address" class="form-control" />
+                                    <span asp-validation-for="Address" class="text-danger"></span>
+                                </div>
+                            </div>
 
-        <h3>Cập Nhật Tài Khoản</h3>
-        <div class="form-group row mb-3">
-            <label asp-for="Email" class="col-sm-2 col-form-label"></label>
-            <div class="col-sm-10">
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-        </div>
+                            <div class="form-group row mb-3">
+                                <label asp-for="JobId" class="col-sm-4 col-form-label"></label>
+                                <div class="col-sm-8">
+                                    <select asp-for="JobId" class="form-control" asp-items="@ViewBag.JobList"></select>
+                                    <span asp-validation-for="JobId" class="text-danger"></span>
+                                </div>
+                            </div>
 
-        <div class="form-group row mb-3">
-            <label asp-for="Password" class="col-sm-2 col-form-label"></label>
-            <div class="col-sm-10">
-                <input asp-for="Password" class="form-control" placeholder="Nhập Mật Khẩu Mới (nếu có)" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-        </div>
-
-        <h3>Ảnh Nhân Viên</h3>
-        <div class="form-group row mb-3">
-            <label class="col-sm-2 col-form-label"></label>
-            <div class="col-sm-10">
-                <div class="avatar-container mb-2">
-                    <img id="avatarPreview" src="~/images/@Model.Image" alt="Ảnh Nhân Viên" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;" />
+                            <div class="form-group row mb-3">
+                                <label asp-for="IsAdmin" class="col-sm-4 col-form-label">Quyền Admin</label>
+                                <div class="col-sm-8">
+                                    <input asp-for="IsAdmin" class="form-check-input" type="checkbox" />
+                                    <label class="form-check-label" for="IsAdmin">Quyền Admin</label>
+                                    <span asp-validation-for="IsAdmin" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <input type="file" name="imageFile" class="form-control" accept="image/*" onchange="previewImage(event)" />
-                <span asp-validation-for="Image" class="text-danger"></span>
-            </div>
-        </div>
+                <div class="col-md-6">
+                    <div class="card card-secondary">
+                        <div class="card-header">
+                            <h3 class="card-title">Cập Nhật Tài Khoản</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group row mb-3">
+                                <label asp-for="Email" class="col-sm-4 col-form-label">Email</label>
+                                <div class="col-sm-8">
+                                    <input asp-for="Email" class="form-control" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                            </div>
 
-        <div class="form-group mb-3">
-            <div class="col-sm-10 offset-sm-2">
-                <button type="submit" class="btn btn-primary">Cập Nhật Nhân Viên</button>
+                            <div class="form-group row mb-3">
+                                <label asp-for="Password" class="col-sm-4 col-form-label">Mật Khẩu</label>
+                                <div class="col-sm-8">
+                                    <input asp-for="Password" class="form-control" placeholder="Nhập Mật Khẩu Mới (nếu có)" />
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </form>
-</div>
+            <div class="form-group mb-3">
+                <div class="col-sm-10 offset-sm-2">
+                    <button type="submit" class="btn btn-primary">Cập Nhật Nhân Viên</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
 
 @section Scripts {
-    @Html.RenderPartialAsync("_ValidationScriptsPartial");
+    @Html.Partial("_ValidationScriptsPartial") 
     <script>
         function previewImage(event) {
             const file = event.target.files[0];
