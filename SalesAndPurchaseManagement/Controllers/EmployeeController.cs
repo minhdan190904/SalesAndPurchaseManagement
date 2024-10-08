@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SalesAndPurchaseManagement.Data;
+using SalesAndPurchaseManagement.Helpers;
 using SalesAndPurchaseManagement.Models;
 using System.Collections.Generic;
 using System.IO;
@@ -41,7 +42,7 @@ namespace SalesAndPurchaseManagement.Controllers
             {
                 if (imageFile != null && imageFile.Length > 0)
                 {
-                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", imageFile.FileName);
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), AppDefaults.DefaultImageFolder, imageFile.FileName);
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
                         await imageFile.CopyToAsync(stream);
@@ -51,7 +52,7 @@ namespace SalesAndPurchaseManagement.Controllers
 
                 else
                 {
-                    employee.Image = "user_default.png";
+                    employee.Image = AppDefaults.DefaultImageFile;
                 }
 
                 _context.Add(employee);
@@ -82,14 +83,14 @@ namespace SalesAndPurchaseManagement.Controllers
                     {
                         if (!string.IsNullOrEmpty(oldImage))
                         {
-                            var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", oldImage);
-                            if (System.IO.File.Exists(oldImagePath) && oldImage != "user_default.png")
+                            var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), AppDefaults.DefaultImageFolder, oldImage);
+                            if (System.IO.File.Exists(oldImagePath) && oldImage != AppDefaults.DefaultImageFile)
                             {
                                 System.IO.File.Delete(oldImagePath);
                             }
                         }
 
-                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", imageFile.FileName);
+                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), AppDefaults.DefaultImageFolder, imageFile.FileName);
                         using (var stream = new FileStream(filePath, FileMode.Create))
                         {
                             await imageFile.CopyToAsync(stream);
@@ -162,7 +163,7 @@ namespace SalesAndPurchaseManagement.Controllers
 
             if (employeeToDelete.Email == currentUserEmail)
             {
-                TempData["ErrorMessage"] = "Bạn không thể xóa tài khoản của chính mình.";
+                TempData["ErrorMessage"] = AppDefaults.CannotDeleteSelfMessage;
                 return View("Delete", employeeToDelete);
             }
 

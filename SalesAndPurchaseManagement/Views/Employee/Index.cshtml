@@ -30,6 +30,7 @@
                             <th>@Html.DisplayNameFor(model => model.First().EmployeeName)</th>
                             <th>@Html.DisplayNameFor(model => model.First().PhoneNumber)</th>
                             <th>@Html.DisplayNameFor(model => model.First().Gender)</th>
+                            <th>@Html.DisplayName("Công Việc")</th> <!-- Thêm tiêu đề cho cột công việc -->
                             <th>Sửa</th>
                             <th>Xóa</th>
                             <th>Xem chi tiết</th>
@@ -56,6 +57,7 @@
                                             break;
                                     }
                                 </td>
+                                <td>@employee.Job?.JobTitle</td> 
                                 <td>
                                     <a asp-action="Edit" asp-route-id="@employee.EmployeeId" class="btn btn-warning btn-sm me-1">
                                         <i class="fa fa-pencil-alt"></i> Sửa
@@ -66,7 +68,6 @@
                                     <a asp-action="Delete" asp-route-id="@employee.EmployeeId" class="btn btn-danger btn-sm me-1">
                                         <i class="fa fa-trash"></i> Xóa
                                     </a>
-
                                 </td>
 
                                 <td>

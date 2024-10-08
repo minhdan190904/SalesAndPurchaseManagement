@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using SalesAndPurchaseManagement.Data;
 using SalesAndPurchaseManagement.Services;
 using SalesAndPurchaseManagement.ViewModels;
+using SalesAndPurchaseManagement.Helpers;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -59,7 +60,7 @@ namespace SalesAndPurchaseManagement.Controllers
                     return RedirectToAction("Index", "Dashboard");
                 }
 
-                ViewData["ValidateMessage"] = "Thông tin đăng nhập không chính xác.";
+                ViewData["ValidateMessage"] = AppDefaults.InvalidLoginMessage;
             }
 
             return View(modelLogin);
@@ -80,12 +81,12 @@ namespace SalesAndPurchaseManagement.Controllers
                 if (employee != null)
                 {
                     OTPCodeTemp = GenerateOtp();
-                    await _emailService.SendEmailAsync(employee.Email, "Mã OTP Đặt Lại Mật Khẩu", $"Mã OTP của bạn là: {OTPCodeTemp}");
+                    await _emailService.SendEmailAsync(employee.Email, AppDefaults.ResetPasswordOtpMessage, AppDefaults.GetOtpMessage(OTPCodeTemp));
                     return RedirectToAction("ResetPasswordConfirm", new { email = model.Email });
                 }
                 else
                 {
-                    ViewData["Message"] = "Email không tồn tại trong hệ thống.";
+                    ViewData["Message"] = AppDefaults.EmailNotFoundMessage;
                 }
             }
             return View("ResetPassword", model);
@@ -114,17 +115,17 @@ namespace SalesAndPurchaseManagement.Controllers
                         _context.Employees.Update(employee);
                         await _context.SaveChangesAsync();
 
-                        ViewData["Message"] = "Mật khẩu đã được cập nhật thành công.";
+                        ViewData["Message"] = AppDefaults.PasswordUpdatedMessage;
                         return RedirectToAction("Login");
                     }
                     else
                     {
-                        ViewData["Message"] = "Mã OTP không hợp lệ.";
+                        ViewData["Message"] = AppDefaults.InvalidOtpMessage;
                     }
                 }
                 else
                 {
-                    ViewData["Message"] = "Email không tồn tại trong hệ thống.";
+                    ViewData["Message"] = AppDefaults.EmailNotFoundMessage;
                 }
             }
             return View(model);
