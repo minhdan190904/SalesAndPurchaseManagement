@@ -7,6 +7,7 @@ namespace SalesAndPurchaseManagement.Data
     {
         public SAPManagementContext(DbContextOptions<SAPManagementContext> options) : base(options)
         {
+            Database.EnsureCreated();
         }
 
         public DbSet<Size> Sizes { get; set; }
@@ -32,15 +33,14 @@ namespace SalesAndPurchaseManagement.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Employee>()
-                .HasOne(e => e.Job) // Nếu Employee có Job
-                .WithMany(j => j.Employees) // Job có nhiều Employees
-                .HasForeignKey(e => e.JobId) // Khóa ngoại là JobId trong Employee
+                .HasOne(e => e.Job)     
+                .WithMany(j => j.Employees) 
+                .HasForeignKey(e => e.JobId) 
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Đảm bảo rằng Email là duy nhất
             modelBuilder.Entity<Employee>()
                 .HasIndex(e => e.Email)
-                .IsUnique(); // Ràng buộc duy nhất cho Email
+                .IsUnique(); 
 
             modelBuilder.Entity<Product>()
                 .HasOne(p => p.Size)

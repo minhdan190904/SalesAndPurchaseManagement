@@ -83,7 +83,7 @@ namespace SalesAndPurchaseManagement.Controllers
                         if (!string.IsNullOrEmpty(oldImage))
                         {
                             var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", oldImage);
-                            if (System.IO.File.Exists(oldImagePath))
+                            if (System.IO.File.Exists(oldImagePath) && oldImage != "user_default.png")
                             {
                                 System.IO.File.Delete(oldImagePath);
                             }

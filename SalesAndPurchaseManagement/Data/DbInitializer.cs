@@ -9,7 +9,7 @@ public static class DbInitializer
     {
         using (var context = new SAPManagementContext(
             serviceProvider.GetRequiredService<DbContextOptions<SAPManagementContext>>()))
-            if (!context.Database.EnsureCreated()) 
+            if (!context.Database.EnsureCreated())
             {
                 Console.WriteLine("Database already exists.");
                     return;

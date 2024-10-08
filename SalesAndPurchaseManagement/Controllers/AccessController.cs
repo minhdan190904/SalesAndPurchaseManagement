@@ -27,7 +27,7 @@ namespace SalesAndPurchaseManagement.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Employee");
+                return RedirectToAction("Index", "Dashboard");
             }
             return View();
         }
@@ -56,7 +56,7 @@ namespace SalesAndPurchaseManagement.Controllers
 
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), properties);
 
-                    return RedirectToAction("Index", "Employee");
+                    return RedirectToAction("Index", "Dashboard");
                 }
 
                 ViewData["ValidateMessage"] = "Thông tin đăng nhập không chính xác.";
