@@ -72,7 +72,7 @@ namespace SalesAndPurchaseManagement.Data
                 .HasForeignKey(p => p.CountryOfOriginId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Product>()
+            modelBuilder.Entity<Product>() 
                 .HasOne(p => p.Color)
                 .WithMany(c => c.Products)
                 .HasForeignKey(p => p.ColorId)

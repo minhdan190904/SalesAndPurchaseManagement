@@ -152,16 +152,27 @@ namespace SalesAndPurchaseManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var employee = await _context.Employees.FindAsync(id);
-            if (employee == null)
+            var currentUserEmail = User.Identity.Name;
+            var employeeToDelete = await _context.Employees.FindAsync(id);
+
+            if (employeeToDelete == null)
             {
                 return NotFound();
             }
 
-            _context.Employees.Remove(employee);
+            if (employeeToDelete.Email == currentUserEmail)
+            {
+                TempData["ErrorMessage"] = "Bạn không thể xóa tài khoản của chính mình.";
+                return View("Delete", employeeToDelete);
+            }
+
+            _context.Employees.Remove(employeeToDelete);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+
+
 
         public IActionResult ViewDetail(int id)
         {
