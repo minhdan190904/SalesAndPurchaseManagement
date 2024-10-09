@@ -7,7 +7,6 @@
 
 <section class="content">
     <div class="ms-2 mx-2">
-        <div asp-validation-summary="All" class="text-danger"></div>
 
         <form asp-controller="Employee" asp-action="Edit" method="post" class="mt-3" enctype="multipart/form-data">
 
@@ -16,7 +15,7 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    <div class="card card-primary">
+                    <div class="card card-warning">
                         <div class="card-header">
                             <h3 class="card-title">Thông Tin Cá Nhân</h3>
                         </div>
@@ -50,7 +49,7 @@
                             <div class="form-group row mb-3">
                                 <label asp-for="Gender" class="col-sm-4 col-form-label"></label>
                                 <div class="col-sm-8">
-                                    <select asp-for="Gender" class="form-control" asp-items="@ViewBag.GenderList"></select>
+                                    <select asp-for="Gender" class="form-control select2bs4" asp-items="@ViewBag.GenderList"></select>
                                     <span asp-validation-for="Gender" class="text-danger"></span>
                                 </div>
                             </div>
@@ -74,13 +73,13 @@
                             <div class="form-group row mb-3">
                                 <label asp-for="JobId" class="col-sm-4 col-form-label"></label>
                                 <div class="col-sm-8">
-                                    <select asp-for="JobId" class="form-control" asp-items="@ViewBag.JobList"></select>
+                                    <select asp-for="JobId" class="form-control select2bs4" asp-items="@ViewBag.JobList"></select>
                                     <span asp-validation-for="JobId" class="text-danger"></span>
                                 </div>
                             </div>
 
                             <div class="form-group row mb-3">
-                                <label asp-for="IsAdmin" class="col-sm-4 col-form-label">Quyền Admin</label>
+                                <label asp-for="IsAdmin" class="col-sm-4 col-form-label"></label>
                                 <div class="col-sm-8">
                                     <input asp-for="IsAdmin" class="form-check-input" type="checkbox" />
                                     <label class="form-check-label" for="IsAdmin">Quyền Admin</label>
@@ -98,7 +97,7 @@
                         </div>
                         <div class="card-body">
                             <div class="form-group row mb-3">
-                                <label asp-for="Email" class="col-sm-4 col-form-label">Email</label>
+                                <label asp-for="Email" class="col-sm-4 col-form-label"></label>
                                 <div class="col-sm-8">
                                     <input asp-for="Email" class="form-control" />
                                     <span asp-validation-for="Email" class="text-danger"></span>
@@ -106,7 +105,7 @@
                             </div>
 
                             <div class="form-group row mb-3">
-                                <label asp-for="Password" class="col-sm-4 col-form-label">Mật Khẩu</label>
+                                <label asp-for="Password" class="col-sm-4 col-form-label"></label>
                                 <div class="col-sm-8">
                                     <input asp-for="Password" class="form-control" placeholder="Nhập Mật Khẩu Mới (nếu có)" />
                                     <span asp-validation-for="Password" class="text-danger"></span>
@@ -116,11 +115,14 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group mb-3">
-                <div class="col-sm-10 offset-sm-2">
-                    <button type="submit" class="btn btn-primary">Cập Nhật Nhân Viên</button>
+
+            <div class="row">
+                <div class="col-12">
+                    <a asp-action="Index" class="btn btn-secondary">Quay Lại</a>
+                    <button type="submit" class="btn btn-warning float-right">Cập nhật</button>
                 </div>
             </div>
+
         </form>
     </div>
 </section>

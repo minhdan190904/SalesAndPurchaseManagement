@@ -30,11 +30,16 @@ namespace SalesAndPurchaseManagement.Controllers
 
         public IActionResult Create()
         {
+            var employee = new Employee
+            {
+                Image = AppDefaults.DefaultImageFile
+            };
+
             SetViewBagData();
-            return View();
+            return View(employee);
         }
 
-        [HttpPost]  
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Employee employee, IFormFile? imageFile)
         {
@@ -49,20 +54,20 @@ namespace SalesAndPurchaseManagement.Controllers
                     }
                     employee.Image = imageFile.FileName;
                 }
-
                 else
                 {
-                    employee.Image = AppDefaults.DefaultImageFile;
+                    employee.Image = AppDefaults.DefaultImageFile; 
                 }
 
                 _context.Add(employee);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-
+            employee.Image = AppDefaults.DefaultImageFile;
             SetViewBagData(employee);
             return View(employee);
         }
+
 
         public async Task<IActionResult> Edit(int id)
         {

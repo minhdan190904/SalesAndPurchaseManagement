@@ -1,55 +1,78 @@
 ﻿@model SalesAndPurchaseManagement.Models.Employee
+@using SalesAndPurchaseManagement.Helpers
 
 @{
     ViewData["Title"] = "Xóa Nhân Viên";
     Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
 }
 
-<h1>Xóa Nhân Viên</h1>
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
 
-<div class="ms-2 mx-2">
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger">
-            @TempData["ErrorMessage"]
+<div class="card card-danger">
+    <div class="card-header">
+        <h3 class="card-title">Thông tin nhân viên cần xóa</h3>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <div class="text-center">
+            @if (!string.IsNullOrEmpty(Model.Image))
+            {
+                <img class="profile-user-img img-fluid img-circle" src="~/images/@Model.Image" alt="Ảnh Nhân Viên" style="width: 150px; height: 150px; object-fit: cover;" />
+            }
+            else
+            {
+                <img class="profile-user-img img-fluid img-circle" src="~/images/@AppDefaults.DefaultImageFile" alt="User profile picture">
+            }
         </div>
-    }
 
-    <h4>Nhân viên</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">Tên Nhân Viên</dt>
-        <dd class="col-sm-10">@Model.EmployeeName</dd>
+        <h3 class="profile-username text-center">@Model.EmployeeName</h3>
+        <p class="text-muted text-center">@Model.Job?.JobTitle</p>
 
-        <dt class="col-sm-2">Email</dt>
-        <dd class="col-sm-10">@Model.Email</dd>
+        <strong><i class="fas fa-id-card mr-1"></i> @Html.DisplayNameFor(m => m.EmployeeId)</strong>
+        <p class="text-muted">@Html.DisplayFor(m => m.EmployeeId)</p>
 
-        <dt class="col-sm-2">Số Điện Thoại</dt>
-        <dd class="col-sm-10">@Model.PhoneNumber</dd>
+        <hr>
 
-        <dt class="col-sm-2">Địa Chỉ</dt>
-        <dd class="col-sm-10">@Model.Address</dd>
+        <strong><i class="fas fa-phone-alt mr-1"></i> @Html.DisplayNameFor(m => m.PhoneNumber)</strong>
+        <p class="text-muted">@Html.DisplayFor(m => m.PhoneNumber)</p>
 
-        <dt class="col-sm-2">Giới Tính</dt>
-        <dd class="col-sm-10">@Model.Gender</dd>
+        <hr>
 
-        <dt class="col-sm-2">Công Việc</dt>
-        <dd class="col-sm-10">@Model.Job?.JobTitle</dd>
+        <strong><i class="fas fa-map-marker-alt mr-1"></i> @Html.DisplayNameFor(m => m.Address)</strong>
+        <p class="text-muted">@Html.DisplayFor(m => m.Address)</p>
 
-        <dt class="col-sm-2">Ảnh</dt>
-        <dd class="col-sm-10">
-            <img src="@Url.Content("~/images/" + Model.Image)" alt="Ảnh Nhân Viên" width="150" />
-        </dd>
-    </dl>
+        <hr>
 
-    <form asp-action="Delete" method="post">
-        <input type="hidden" asp-for="EmployeeId" />
-        <div class="form-group mb-3">
-            <div class="col-sm-10">
-                <p>Bạn có chắc chắn muốn xóa nhân viên này không?</p>
-                <button type="submit" class="btn btn-danger">Xóa</button>
-                <a asp-action="Index" class="btn btn-secondary">Hủy</a>
-            </div>
-        </div>
-    </form>
+        <strong><i class="fas fa-calendar-alt mr-1"></i> @Html.DisplayNameFor(m => m.DateOfBirth)</strong>
+        <p class="text-muted">@Model.DateOfBirth.ToString("dd/MM/yyyy")</p>
+
+        <hr>
+
+        <strong><i class="fas fa-envelope mr-1"></i> @Html.DisplayNameFor(m => m.Email)</strong>
+        <p class="text-muted">@Html.DisplayFor(m => m.Email)</p>
+
+        <hr>
+
+        <strong><i class="fas fa-key mr-1"></i> @Html.DisplayNameFor(m => m.Password)</strong>
+        <p class="text-muted">******</p> <!-- Chỉ hiển thị dấu hoa thị cho mật khẩu -->
+
+    </div>
+    <!-- /.card-body -->
 </div>
+<!-- /.card -->
+<!-- Xác nhận xóa -->
+
+
+
+<form asp-action="Delete" method="post">
+    <div class="form-group">
+        <input type="hidden" asp-for="EmployeeId" />
+        <input type="submit" value="Xóa" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Quay Lại</a>
+    </div>
+</form>
