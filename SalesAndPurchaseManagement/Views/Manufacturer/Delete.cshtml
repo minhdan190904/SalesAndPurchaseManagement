@@ -1,0 +1,39 @@
+﻿@model SalesAndPurchaseManagement.Models.Manufacturer
+@using SalesAndPurchaseManagement.Helpers
+
+@{
+    ViewData["Title"] = "Xóa Nhà Sản Xuất";
+    Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="card card-danger">
+    <div class="card-header">
+        <h3 class="card-title">Thông tin nhà sản xuất cần xóa</h3>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <h3 class="profile-username text-center">@Model.ManufacturerName</h3>
+
+        <strong><i class="fas fa-id-card mr-1"></i> @Html.DisplayNameFor(m => m.ManufacturerId)</strong>
+        <p class="text-muted">@Html.DisplayFor(m => m.ManufacturerId)</p>
+
+    </div>
+    <!-- /.card-body -->
+</div>
+<!-- /.card -->
+<!-- Xác nhận xóa -->
+
+<form asp-action="Delete" method="post">
+    <div class="form-group">
+        <input type="hidden" asp-for="ManufacturerId" />
+        <input type="submit" value="Xóa" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Quay Lại</a>
+    </div>
+</form>

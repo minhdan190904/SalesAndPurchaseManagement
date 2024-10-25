@@ -6,14 +6,17 @@ namespace SalesAndPurchaseManagement.Models
 {
     public class Feature
     {
-        [Key] // Đánh dấu FeatureId là khóa chính
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // ID tự động sinh
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Display(Name = "Mã Đặc Tính")]
         public int FeatureId { get; set; }
 
-        [Required] // Đánh dấu FeatureName là thuộc tính bắt buộc
-        [StringLength(100)] // Đặt độ dài tối đa cho FeatureName
+        [Required]
+        [StringLength(100)]
+        [Display(Name = "Tên Đặc Tính")]
         public string FeatureName { get; set; }
 
+        [Display(Name = "Sản Phẩm")]
         public virtual ICollection<Product> Products { get; set; } = new List<Product>();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SalesAndPurchaseManagement.Models;
+using SalesAndPurchaseManagement.Models;
 
 namespace SalesAndPurchaseManagement.Data
 {
@@ -15,6 +16,7 @@ namespace SalesAndPurchaseManagement.Data
         public DbSet<Shape> Shapes { get; set; }
         public DbSet<Material> Materials { get; set; }
         public DbSet<CountryOfOrigin> Countries { get; set; }
+        
         public DbSet<Color> Colors { get; set; }
         public DbSet<Manufacturer> Manufacturers { get; set; }
         public DbSet<Employee> Employees { get; set; }
@@ -27,6 +29,8 @@ namespace SalesAndPurchaseManagement.Data
         public DbSet<Job> Jobs { get; set; }
         public DbSet<Feature> Features { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Characteristic> Characteristics { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

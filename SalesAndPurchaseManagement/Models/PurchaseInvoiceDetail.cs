@@ -5,36 +5,40 @@ namespace SalesAndPurchaseManagement.Models
 {
     public class PurchaseInvoiceDetail
     {
-        [Key] // Đánh dấu PurchaseInvoiceDetailId là khóa chính
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // ID tự động sinh
-        public int PurchaseInvoiceDetailId { get; set; } // Primary key
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Display(Name = "Mã Chi Tiết Hóa Đơn Nhập")]
+        public int PurchaseInvoiceDetailId { get; set; }
 
-        [Required] // Đánh dấu PurchaseInvoiceId là thuộc tính bắt buộc
-        public int PurchaseInvoiceId { get; set; } // Foreign key, Số HDN
+        [Required]
+        [Display(Name = "Số HDN")]
+        public int PurchaseInvoiceId { get; set; }
 
-        [Required] // Đánh dấu ProductId là thuộc tính bắt buộc
-        public int ProductId { get; set; } // Foreign key, Mã hàng
+        [Required]
+        [Display(Name = "Mã Hàng")]
+        public int ProductId { get; set; }
 
-        [Required] // Đánh dấu Quantity là thuộc tính bắt buộc
-        public int Quantity { get; set; } // Số lượng
+        [Required]
+        [Display(Name = "Số Lượng")]
+        public int Quantity { get; set; }
 
-        [Required] // Đánh dấu UnitPrice là thuộc tính bắt buộc
-        [Column(TypeName = "decimal(18, 2)")] // Xác định kiểu dữ liệu cho UnitPrice
-        public decimal UnitPrice { get; set; } // Đơn giá bán (giống như Product)
+        [Required]
+        [Column(TypeName = "decimal(18, 2)")]
+        [Display(Name = "Đơn Giá")]
+        public decimal UnitPrice { get; set; }
 
-        [Required] // Đánh dấu Discount là thuộc tính bắt buộc
-        [Column(TypeName = "decimal(5, 2)")] // Kiểu dữ liệu cho Discount
-        public decimal Discount { get; set; } // Giảm giá (tính theo %)
+        [Required]
+        [Column(TypeName = "decimal(5, 2)")]
+        [Display(Name = "Giảm Giá")]
+        public decimal Discount { get; set; }
 
-        // Thành tiền = Số lượng * Đơn giá * (1 - Giảm giá)
-        [NotMapped] // Không lưu thuộc tính này trong cơ sở dữ liệu
-        public decimal TotalAmount => Quantity * UnitPrice * (1 - Discount / 100); // Thành tiền
+        [NotMapped]
+        [Display(Name = "Thành Tiền")]
+        public decimal TotalAmount => Quantity * UnitPrice * (1 - Discount / 100);
 
-        // Khóa ngoại tới bảng PurchaseInvoice
         [ForeignKey("PurchaseInvoiceId")]
         public virtual PurchaseInvoice PurchaseInvoice { get; set; }
 
-        // Khóa ngoại tới bảng Product
         [ForeignKey("ProductId")]
         public virtual Product Product { get; set; }
     }

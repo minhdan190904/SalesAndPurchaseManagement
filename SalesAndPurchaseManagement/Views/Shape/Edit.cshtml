@@ -1,0 +1,34 @@
+﻿@model SalesAndPurchaseManagement.Models.Shape
+
+@{
+    ViewData["Title"] = "Sửa Hình Dạng";
+    Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
+}
+
+<div class="ms-2 mx-2">
+    <h2 class="text-center">Sửa Hình Dạng</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-12">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="ShapeId" />
+                <div class="form-group">
+                    <label asp-for="ShapeName" class="control-label"></label>
+                    <input asp-for="ShapeName" class="form-control" />
+                    <span asp-validation-for="ShapeName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Lưu thay đổi" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

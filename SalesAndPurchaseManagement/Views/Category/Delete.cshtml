@@ -1,0 +1,43 @@
+﻿@model SalesAndPurchaseManagement.Models.Category
+
+@{
+    ViewData["Title"] = "Xóa Danh Mục";
+    Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="card card-danger">
+    <div class="card-header">
+        <h3 class="card-title">Thông tin danh mục cần xóa</h3>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <h3 class="profile-username text-center">@Model.CategoryName</h3>
+
+        <strong><i class="fas fa-id-card mr-1"></i> @Html.DisplayNameFor(m => m.CategoryId)</strong>
+        <p class="text-muted">@Html.DisplayFor(m => m.CategoryId)</p>
+
+        <hr>
+
+        <strong><i class="fas fa-info mr-1"></i> @Html.DisplayNameFor(m => m.CategoryName)</strong>
+        <p class="text-muted">@Html.DisplayFor(m => m.CategoryName)</p>
+
+    </div>
+    <!-- /.card-body -->
+</div>
+<!-- /.card -->
+<!-- Xác nhận xóa -->
+
+<form asp-action="Delete" method="post">
+    <div class="form-group">
+        <input type="hidden" asp-for="CategoryId" />
+        <input type="submit" value="Xóa" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Quay Lại</a>
+    </div>
+</form>

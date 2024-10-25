@@ -1,0 +1,27 @@
+﻿@model SalesAndPurchaseManagement.Models.Feature
+
+@{
+    ViewData["Title"] = "Xóa Tính Năng";
+    Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
+}
+
+<section class="content">
+    <div class="ms-2 mx-2">
+
+        <h3 class="text-danger">Bạn có chắc chắn muốn xóa tính năng này?</h3>
+        <div>
+            <h4>Tính Năng</h4>
+            <hr />
+            <dl class="row">
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.FeatureName)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.FeatureName)</dd>
+            </dl>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="FeatureId" />
+                <input type="submit" value="Xóa" class="btn btn-danger" />
+                <a asp-action="Index" class="btn btn-secondary">Quay Lại</a>
+            </form>
+        </div>
+    </div>
+</section>

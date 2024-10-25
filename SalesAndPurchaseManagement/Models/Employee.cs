@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using SalesAndPurchaseManagement.DataAnnotationsModel;
-using SalesAndPurchaseManagement.Models.SalesAndPurchaseManagement.Models;
+using SalesAndPurchaseManagement.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;

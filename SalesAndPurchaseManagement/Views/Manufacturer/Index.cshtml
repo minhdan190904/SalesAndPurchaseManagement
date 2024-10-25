@@ -1,0 +1,63 @@
+﻿@model IEnumerable<SalesAndPurchaseManagement.Models.Manufacturer>
+
+@{
+    ViewData["Title"] = "Danh Sách Nhà Sản Xuất";
+    Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
+}
+
+<div class="ms-2 mx-2">
+    <a asp-controller="Manufacturer" asp-action="Create" class="btn btn-primary">
+        <i class="fa fa-plus"></i> Tạo Nhà Sản Xuất Mới
+    </a>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning mt-3">
+            Không có nhà sản xuất nào trong danh sách.
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Danh Sách Nhà Sản Xuất</h3>
+            </div>
+            <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.First().ManufacturerId)</th>
+                            <th>@Html.DisplayNameFor(model => model.First().ManufacturerName)</th>
+                            <th>Sửa</th>
+                            <th>Xóa</th>
+                           
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var manufacturer in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => manufacturer.ManufacturerId)</td>
+                                <td>@Html.DisplayFor(modelItem => manufacturer.ManufacturerName)</td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@manufacturer.ManufacturerId" class="btn btn-warning btn-sm me-1">
+                                        <i class="fa fa-pencil-alt"></i> Sửa
+                                    </a>
+                                </td>
+
+                                <td>
+                                    <a asp-action="Delete" asp-route-id="@manufacturer.ManufacturerId" class="btn btn-danger btn-sm me-1">
+                                        <i class="fa fa-trash"></i> Xóa
+                                    </a>
+                                </td>
+
+                                
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>

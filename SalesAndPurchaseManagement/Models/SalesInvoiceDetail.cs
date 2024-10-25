@@ -5,36 +5,41 @@ namespace SalesAndPurchaseManagement.Models
 {
     public class SalesInvoiceDetail
     {
-        [Key] // Đánh dấu SalesInvoiceDetailId là khóa chính
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // ID tự động sinh
-        public int SalesInvoiceDetailId { get; set; } // Primary key
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Display(Name = "Mã Chi Tiết Hóa Đơn Bán")]
+        public int SalesInvoiceDetailId { get; set; }
 
-        [Required] // Đánh dấu SalesInvoiceId là thuộc tính bắt buộc
-        public int SalesInvoiceId { get; set; } // Foreign key
+        [Required]
+        [Display(Name = "Mã Hóa Đơn Bán")]
+        public int SalesInvoiceId { get; set; }
 
-        [Required] // Đánh dấu ProductId là thuộc tính bắt buộc
-        public int ProductId { get; set; } // Foreign key
+        [Required]
+        [Display(Name = "Mã Sản Phẩm")]
+        public int ProductId { get; set; }
 
-        [Required] // Đánh dấu Quantity là thuộc tính bắt buộc
-        public int Quantity { get; set; } // Số Lượng
+        [Required]
+        [Display(Name = "Số Lượng")]
+        public int Quantity { get; set; }
 
-        [Required] // Đánh dấu UnitPrice là thuộc tính bắt buộc
-        [Column(TypeName = "decimal(18, 2)")] // Xác định kiểu dữ liệu cho UnitPrice
-        public decimal UnitPrice { get; set; } // Đơn Gía
+        [Required]
+        [Column(TypeName = "decimal(18, 2)")]
+        [Display(Name = "Đơn Giá")]
+        public decimal UnitPrice { get; set; }
 
-        [Required] // Đánh dấu Discount là thuộc tính bắt buộc
-        [Column(TypeName = "decimal(18, 2)")] // Xác định kiểu dữ liệu cho Discount
-        public decimal Discount { get; set; } // Giảm Giá
+        [Required]
+        [Column(TypeName = "decimal(18, 2)")]
+        [Display(Name = "Giảm Giá")]
+        public decimal Discount { get; set; }
 
-        [Required] // Đánh dấu TotalPrice là thuộc tính bắt buộc
-        [Column(TypeName = "decimal(18, 2)")] // Xác định kiểu dữ liệu cho TotalPrice
-        public decimal TotalPrice { get; set; } // Thành Tiền
+        [Required]
+        [Column(TypeName = "decimal(18, 2)")]
+        [Display(Name = "Thành Tiền")]
+        public decimal TotalPrice { get; set; }
 
-        // Khóa ngoại tới bảng SalesInvoice
         [ForeignKey("SalesInvoiceId")]
         public virtual SalesInvoice SalesInvoice { get; set; }
 
-        // Khóa ngoại tới bảng Product
         [ForeignKey("ProductId")]
         public virtual Product Product { get; set; }
     }

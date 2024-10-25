@@ -164,7 +164,7 @@ namespace SalesAndPurchaseManagement.Controllers
 
 
 
-
+        [AllowAnonymous]
         public IActionResult ViewDetail(int id)
         {
             var employee = _context.Employees

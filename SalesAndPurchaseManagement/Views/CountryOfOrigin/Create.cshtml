@@ -1,0 +1,47 @@
+﻿@model SalesAndPurchaseManagement.Models.CountryOfOrigin
+
+@{
+    ViewData["Title"] = "Tạo Nước Xuất Xứ Mới";
+    Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
+}
+
+<section class="content">
+    <div class="ms-2 mx-2">
+
+        <form asp-controller="CountryOfOrigin" asp-action="Create" method="post" class="mt-3">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Thông Tin Nước Xuất Xứ</h3>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="form-group row mb-3">
+                                <label asp-for="CountryName" class="col-sm-4 col-form-label"></label>
+                                <div class="col-sm-8">
+                                    <input asp-for="CountryName" class="form-control" />
+                                    <span asp-validation-for="CountryName" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <a asp-action="Index" class="btn btn-secondary">Quay Lại</a>
+                    <button type="submit" class="btn btn-primary float-right">Tạo</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    @Html.Partial("_ValidationScriptsPartial")
+}

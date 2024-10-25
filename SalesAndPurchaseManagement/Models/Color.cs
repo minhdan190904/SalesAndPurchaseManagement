@@ -6,15 +6,17 @@ namespace SalesAndPurchaseManagement.Models
 {
     public class Color
     {
-        [Key] // Đánh dấu ColorId là khóa chính
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // ID tự động sinh
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Display(Name = "Mã Màu")]
         public int ColorId { get; set; }
 
-        [Required] // Đánh dấu ColorName là thuộc tính bắt buộc
-        [StringLength(50)] // Đặt độ dài tối đa cho ColorName
+        [Required]
+        [StringLength(50)]
+        [Display(Name = "Tên Màu")]
         public string ColorName { get; set; }
 
-        // Mối quan hệ một-nhiều với Product
+        [Display(Name = "Sản Phẩm")]
         public virtual ICollection<Product> Products { get; set; } = new List<Product>();
     }
 }

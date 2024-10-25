@@ -1,4 +1,4 @@
-﻿using SalesAndPurchaseManagement.Models.SalesAndPurchaseManagement.Models;
+﻿using SalesAndPurchaseManagement.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,86 +8,109 @@ namespace SalesAndPurchaseManagement.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ProductId { get; set; } // Primary key
+        [Display(Name = "Mã Sản Phẩm")]
+        public int ProductId { get; set; }
 
-        [Required] // Đánh dấu ProductName là thuộc tính bắt buộc
-        [StringLength(100)] // Đặt độ dài tối đa cho ProductName
+        [Required]
+        [StringLength(100)]
+        [Display(Name = "Tên Sản Phẩm")]
         public string ProductName { get; set; }
 
-        [Required] // Đánh dấu SizeId là thuộc tính bắt buộc
-        public int SizeId { get; set; } // Foreign key
+        [Required]
+        [Display(Name = "Kích Thước")]
+        public int SizeId { get; set; }
 
-        [Required] // Đánh dấu CategoryId là thuộc tính bắt buộc
-        public int CategoryId { get; set; } // Foreign key
+        [Required]
+        [Display(Name = "Danh Mục")]
+        public int CategoryId { get; set; }
 
-        [Required] // Đánh dấu ShapeId là thuộc tính bắt buộc
-        public int ShapeId { get; set; } // Foreign key
+        [Required]
+        [Display(Name = "Hình Dạng")]
+        public int ShapeId { get; set; }
 
-        [Required] // Đánh dấu MaterialId là thuộc tính bắt buộc
-        public int MaterialId { get; set; } // Foreign key
+        [Required]
+        [Display(Name = "Chất Liệu")]
+        public int MaterialId { get; set; }
 
-        [Required] // Đánh dấu CountryOfOriginId là thuộc tính bắt buộc
-        public int CountryOfOriginId { get; set; } // Foreign key
+        [Required]
+        [Display(Name = "Xuất Xứ")]
+        public int CountryOfOriginId { get; set; }
 
-        [Required] // Đánh dấu ColorId là thuộc tính bắt buộc
-        public int ColorId { get; set; } // Foreign key
+        [Required]
+        [Display(Name = "Màu Sắc")]
+        public int ColorId { get; set; }
 
-        [Required] // Đánh dấu ManufacturerId là thuộc tính bắt buộc
-        public int ManufacturerId { get; set; } // Foreign key
+        [Required]
+        [Display(Name = "Nhà Sản Xuất")]
+        public int ManufacturerId { get; set; }
 
-        [Required] // Đánh dấu FeatureId là thuộc tính bắt buộc
-        public int FeatureId { get; set; } // Foreign key to Feature
+        [Required]
+        [Display(Name = "Đặc Tính")]
+        public int FeatureId { get; set; }
 
-        [Required] // Đánh dấu CharacteristicId là thuộc tính bắt buộc
-        public int CharacteristicId { get; set; } // Foreign key for characteristics
+        [Required]
+        [Display(Name = "Đặc Điểm")]
+        public int CharacteristicId { get; set; }
 
-        [Required] // Đánh dấu Quantity là thuộc tính bắt buộc
+        [Required]
+        [Display(Name = "Số Lượng")]
         public int Quantity { get; set; }
 
-        [Required] // Đánh dấu PurchasePrice là thuộc tính bắt buộc
-        [Column(TypeName = "decimal(18, 2)")] // Xác định kiểu dữ liệu cho PurchasePrice
+        [Required]
+        [Column(TypeName = "decimal(18, 2)")]
+        [Display(Name = "Giá Nhập")]
         public decimal PurchasePrice { get; set; }
 
-        [Required] // Đánh dấu SellingPrice là thuộc tính bắt buộc
-        [Column(TypeName = "decimal(18, 2)")] // Xác định kiểu dữ liệu cho SellingPrice
+        [Required]
+        [Column(TypeName = "decimal(18, 2)")]
+        [Display(Name = "Giá Bán")]
         public decimal SellingPrice { get; set; }
 
-        [Required] // Đánh dấu WarrantyPeriod là thuộc tính bắt buộc
-        public int WarrantyPeriod { get; set; } // Thời gian bảo hành theo tháng
+        [Required]
+        [Display(Name = "Thời Gian Bảo Hành")]
+        public int WarrantyPeriod { get; set; }
 
-        // Thuộc tính lưu đường dẫn đến ảnh
+        [Display(Name = "Ảnh")]
         public string Image { get; set; }
 
-        // Ghi chú cho sản phẩm
-        [StringLength(500)] // Đặt độ dài tối đa cho Notes
+        [StringLength(500)]
+        [Display(Name = "Ghi Chú")]
         public string Notes { get; set; }
 
-        // Navigation properties
         [ForeignKey("SizeId")]
+        [Display(Name = "Kích Thước")]
         public virtual Size Size { get; set; }
 
         [ForeignKey("CategoryId")]
+        [Display(Name = "Danh Mục")]
         public virtual Category Category { get; set; }
 
         [ForeignKey("ShapeId")]
+        [Display(Name = "Hình Dạng")]
         public virtual Shape Shape { get; set; }
 
         [ForeignKey("MaterialId")]
+        [Display(Name = "Chất Liệu")]
         public virtual Material Material { get; set; }
 
         [ForeignKey("CountryOfOriginId")]
+        [Display(Name = "Xuất Xứ")]
         public virtual CountryOfOrigin Country { get; set; }
 
         [ForeignKey("ColorId")]
+        [Display(Name = "Màu Sắc")]
         public virtual Color Color { get; set; }
 
         [ForeignKey("ManufacturerId")]
+        [Display(Name = "Nhà Sản Xuất")]
         public virtual Manufacturer Manufacturer { get; set; }
 
         [ForeignKey("FeatureId")]
-        public virtual Feature Feature { get; set; } // Navigation property to Feature
+        [Display(Name = "Đặc Tính")]
+        public virtual Feature Feature { get; set; }
 
         [ForeignKey("CharacteristicId")]
-        public virtual Characteristic Characteristic { get; set; } // Navigation property to Characteristic
+        [Display(Name = "Đặc Điểm")]
+        public virtual Characteristic Characteristic { get; set; }
     }
 }

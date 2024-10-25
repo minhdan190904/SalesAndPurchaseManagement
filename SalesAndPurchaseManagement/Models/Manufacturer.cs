@@ -6,15 +6,17 @@ namespace SalesAndPurchaseManagement.Models
 {
     public class Manufacturer
     {
-        [Key] // Đánh dấu ManufacturerId là khóa chính
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // ID tự động sinh
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Display(Name = "Mã Nhà Sản Xuất")]
         public int ManufacturerId { get; set; }
 
-        [Required] // Đánh dấu ManufacturerName là thuộc tính bắt buộc
-        [StringLength(100)] // Đặt độ dài tối đa cho ManufacturerName
+        [Required]
+        [StringLength(100)]
+        [Display(Name = "Tên Nhà Sản Xuất")]
         public string ManufacturerName { get; set; }
 
-        // Mối quan hệ một-nhiều với Product
+        [Display(Name = "Sản Phẩm")]
         public virtual ICollection<Product> Products { get; set; } = new List<Product>();
     }
 }

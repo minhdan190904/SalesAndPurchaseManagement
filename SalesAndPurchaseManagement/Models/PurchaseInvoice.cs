@@ -6,28 +6,31 @@ namespace SalesAndPurchaseManagement.Models
 {
     public class PurchaseInvoice
     {
-        [Key] // Đánh dấu PurchaseInvoiceId là khóa chính
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // ID tự động sinh
-        public int PurchaseInvoiceId { get; set; } // Số HDN
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Display(Name = "Số HDN")]
+        public int PurchaseInvoiceId { get; set; }
 
-        [Required] // Đánh dấu EmployeeId là thuộc tính bắt buộc
-        public int EmployeeId { get; set; } // Mã NV (Foreign key)
+        [Required]
+        [Display(Name = "Mã NV")]
+        public int EmployeeId { get; set; }
 
-        [Required] // Đánh dấu SupplierId là thuộc tính bắt buộc
-        public int SupplierId { get; set; } // Mã NCC (Foreign key)
+        [Required]
+        [Display(Name = "Mã NCC")]
+        public int SupplierId { get; set; }
 
-        [Required] // Đánh dấu InvoiceDate là thuộc tính bắt buộc
-        public DateTime InvoiceDate { get; set; } // Ngày Nhập
+        [Required]
+        [Display(Name = "Ngày Nhập")]
+        public DateTime InvoiceDate { get; set; }
 
-        [Required] // Đánh dấu TotalAmount là thuộc tính bắt buộc
-        [Column(TypeName = "decimal(18, 2)")] // Xác định kiểu dữ liệu cho TotalAmount
-        public decimal TotalAmount { get; set; } // Tổng Tiền
+        [Required]
+        [Column(TypeName = "decimal(18, 2)")]
+        [Display(Name = "Tổng Tiền")]
+        public decimal TotalAmount { get; set; }
 
-        // Khóa ngoại tới bảng Supplier
         [ForeignKey("SupplierId")]
         public virtual Supplier Supplier { get; set; }
 
-        // Khóa ngoại tới bảng Employee
         [ForeignKey("EmployeeId")]
         public virtual Employee Employee { get; set; }
     }

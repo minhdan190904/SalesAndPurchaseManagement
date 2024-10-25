@@ -1,0 +1,67 @@
+﻿@model IEnumerable<SalesAndPurchaseManagement.Models.Customer>
+
+@{
+    ViewData["Title"] = "Danh Sách Khách Hàng";
+    Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
+}
+
+<div class="ms-2 mx-2">
+    <a asp-controller="Customer" asp-action="Create" class="btn btn-primary">
+        <i class="fa fa-user-plus"></i> Tạo Khách Hàng Mới
+    </a>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning mt-3">
+            Không có khách hàng nào trong danh sách.
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Danh Sách Khách Hàng</h3>
+            </div>
+            <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.First().CustomerId)</th>
+                            <th>@Html.DisplayNameFor(model => model.First().CustomerName)</th>
+                            <th>@Html.DisplayNameFor(model => model.First().Address)</th>
+                            <th>@Html.DisplayNameFor(model => model.First().PhoneNumber)</th>
+                            <th>Sửa</th>
+                            <th>Xóa</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var customer in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => customer.CustomerId)</td>
+                                <td>@Html.DisplayFor(modelItem => customer.CustomerName)</td>
+                                <td>@Html.DisplayFor(modelItem => customer.Address)</td>
+                                <td>@Html.DisplayFor(modelItem => customer.PhoneNumber)</td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@customer.CustomerId" class="btn btn-warning btn-sm me-1">
+                                        <i class="fa fa-pencil-alt"></i> Sửa
+                                    </a>
+                                </td>
+
+                                <td>
+                                    <a asp-action="Delete" asp-route-id="@customer.CustomerId" class="btn btn-danger btn-sm me-1">
+                                        <i class="fa fa-trash"></i> Xóa
+                                    </a>
+                                </td>
+
+                                
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>

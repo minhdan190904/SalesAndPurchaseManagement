@@ -1,0 +1,63 @@
+﻿@model IEnumerable<SalesAndPurchaseManagement.Models.Shape>
+
+@{
+    ViewData["Title"] = "Danh Sách Hình Dạng";
+    Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
+}
+
+<div class="ms-2 mx-2">
+    <a asp-controller="Shape" asp-action="Create" class="btn btn-primary">
+        <i class="fa fa-plus"></i> Tạo Hình Dạng Mới
+    </a>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning mt-3">
+            Không có hình dạng nào trong danh sách.
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Danh Sách Hình Dạng</h3>
+            </div>
+            <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.First().ShapeId)</th>
+                            <th>@Html.DisplayNameFor(model => model.First().ShapeName)</th>
+                            <th>Sửa</th>
+                            <th>Xóa</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var shape in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => shape.ShapeId)</td>
+                                <td>@Html.DisplayFor(modelItem => shape.ShapeName)</td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@shape.ShapeId" class="btn btn-warning btn-sm me-1">
+                                        <i class="fa fa-pencil-alt"></i> Sửa
+                                    </a>
+                                </td>
+
+                                <td>
+                                    <a asp-action="Delete" asp-route-id="@shape.ShapeId" class="btn btn-danger btn-sm me-1">
+                                        <i class="fa fa-trash"></i> Xóa
+                                    </a>
+                                </td>
+
+                                
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>

@@ -6,21 +6,24 @@ namespace SalesAndPurchaseManagement.Models
 {
     public class Supplier
     {
-        [Key] // Đánh dấu SupplierId là khóa chính
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // ID tự động sinh
-        public int SupplierId { get; set; } // Primary key
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Display(Name = "Mã Nhà Cung Cấp")]
+        public int SupplierId { get; set; }
 
-        [Required] // Đánh dấu SupplierName là thuộc tính bắt buộc
-        [StringLength(100)] // Đặt độ dài tối đa cho SupplierName
+        [Required]
+        [StringLength(100)]
+        [Display(Name = "Tên Nhà Cung Cấp")]
         public string SupplierName { get; set; }
 
-        [StringLength(200)] // Đặt độ dài tối đa cho Address
+        [StringLength(200)]
+        [Display(Name = "Địa Chỉ")]
         public string Address { get; set; }
 
-        [StringLength(15)] // Đặt độ dài tối đa cho PhoneNumber
+        [StringLength(15)]
+        [Display(Name = "Số Điện Thoại")]
         public string PhoneNumber { get; set; }
 
-        // Mối quan hệ một-nhiều với PurchaseInvoice
         public virtual ICollection<PurchaseInvoice> PurchaseInvoices { get; set; } = new List<PurchaseInvoice>();
     }
 }

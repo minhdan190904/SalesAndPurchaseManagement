@@ -6,14 +6,16 @@ namespace SalesAndPurchaseManagement.Models
 {
     public class CountryOfOrigin
     {
-        [Key] // Đánh dấu CountryOfOriginId là khóa chính
+        [Key]
+        [Display(Name = "Mã Quốc Gia")]
         public int CountryOfOriginId { get; set; }
 
-        [Required] // Đánh dấu CountryName là thuộc tính bắt buộc
-        [StringLength(100)] // Đặt độ dài tối đa cho CountryName
-        public string CountryName { get; set; }
+        [Required]
+        [StringLength(100)]
+        [Display(Name = "Tên Quốc Gia")]
+        public string? CountryName { get; set; }
 
-        // Mối quan hệ một-nhiều với Product
+        [Display(Name = "Sản Phẩm")]
         public virtual ICollection<Product> Products { get; set; } = new List<Product>();
     }
 }

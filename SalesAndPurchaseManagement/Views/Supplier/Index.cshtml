@@ -1,0 +1,67 @@
+﻿@model IEnumerable<SalesAndPurchaseManagement.Models.Supplier>
+
+@{
+    ViewData["Title"] = "Danh Sách Nhà Cung Cấp";
+    Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
+}
+
+<div class="ms-2 mx-2">
+    <a asp-controller="Supplier" asp-action="Create" class="btn btn-primary">
+        <i class="fa fa-user-plus"></i> Tạo Nhà Cung Cấp Mới
+    </a>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning mt-3">
+            Không có nhà cung cấp nào trong danh sách.
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Danh Sách Nhà Cung Cấp</h3>
+            </div>
+            <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.First().SupplierId)</th>
+                            <th>@Html.DisplayNameFor(model => model.First().SupplierName)</th>
+                            <th>@Html.DisplayNameFor(model => model.First().Address)</th>
+                            <th>@Html.DisplayNameFor(model => model.First().PhoneNumber)</th>
+                            <th>Sửa</th>
+                            <th>Xóa</th>
+                           
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var supplier in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => supplier.SupplierId)</td>
+                                <td>@Html.DisplayFor(modelItem => supplier.SupplierName)</td>
+                                <td>@Html.DisplayFor(modelItem => supplier.Address)</td>
+                                <td>@Html.DisplayFor(modelItem => supplier.PhoneNumber)</td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@supplier.SupplierId" class="btn btn-warning btn-sm me-1">
+                                        <i class="fa fa-pencil-alt"></i> Sửa
+                                    </a>
+                                </td>
+
+                                <td>
+                                    <a asp-action="Delete" asp-route-id="@supplier.SupplierId" class="btn btn-danger btn-sm me-1">
+                                        <i class="fa fa-trash"></i> Xóa
+                                    </a>
+                                </td>
+
+                               
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>

@@ -6,15 +6,17 @@ namespace SalesAndPurchaseManagement.Models
 {
     public class Material
     {
-        [Key] // Đánh dấu MaterialId là khóa chính
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // ID tự động sinh
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Display(Name = "Mã Chất Liệu")]
         public int MaterialId { get; set; }
 
-        [Required] // Đánh dấu MaterialName là thuộc tính bắt buộc
-        [StringLength(100)] // Đặt độ dài tối đa cho MaterialName
+        [Required]
+        [StringLength(100)]
+        [Display(Name = "Tên Chất Liệu")]
         public string MaterialName { get; set; }
 
-        // Mối quan hệ một-nhiều với Product
+        [Display(Name = "Sản Phẩm")]
         public virtual ICollection<Product> Products { get; set; } = new List<Product>();
     }
 }

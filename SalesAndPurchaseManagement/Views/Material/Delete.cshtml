@@ -1,0 +1,38 @@
+﻿@model SalesAndPurchaseManagement.Models.Material
+
+@{
+    ViewData["Title"] = "Xóa Nguyên Liệu";
+    Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="card card-danger">
+    <div class="card-header">
+        <h3 class="card-title">Thông tin nguyên liệu cần xóa</h3>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <h3 class="profile-username text-center">@Model.MaterialName</h3>
+
+        <strong><i class="fas fa-id-card mr-1"></i> @Html.DisplayNameFor(m => m.MaterialId)</strong>
+        <p class="text-muted">@Html.DisplayFor(m => m.MaterialId)</p>
+
+    </div>
+    <!-- /.card-body -->
+</div>
+<!-- /.card -->
+<!-- Xác nhận xóa -->
+
+<form asp-action="Delete" method="post">
+    <div class="form-group">
+        <input type="hidden" asp-for="MaterialId" />
+        <input type="submit" value="Xóa" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Quay Lại</a>
+    </div>
+</form>
