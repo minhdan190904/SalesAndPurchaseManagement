@@ -8,26 +8,34 @@
 <section class="content">
     <div class="ms-2 mx-2">
 
-        <form asp-controller="Feature" asp-action="Edit" method="post" class="mt-3">
-
-            <input type="hidden" asp-for="FeatureId" />
-
-            <div class="form-group row mb-3">
-                <label asp-for="FeatureName" class="col-sm-4 col-form-label"></label>
-                <div class="col-sm-8">
-                    <input asp-for="FeatureName" class="form-control" />
-                    <span asp-validation-for="FeatureName" class="text-danger"></span>
-                </div>
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Chỉnh Sửa Tính Năng</h3>
             </div>
+            <div class="card-body">
+                <form asp-controller="Feature" asp-action="Edit" method="post" class="mt-3">
 
-            <div class="row">
-                <div class="col-12">
-                    <a asp-action="Index" class="btn btn-secondary">Quay Lại</a>
-                    <button type="submit" class="btn btn-warning float-right">Cập nhật</button>
-                </div>
+                    <input type="hidden" asp-for="FeatureId" />
+
+                    <div class="form-group row mb-3">
+                        <label asp-for="FeatureName" class="col-sm-4 col-form-label"></label>
+                        <div class="col-sm-8">
+                            <input asp-for="FeatureName" class="form-control" />
+                            <span asp-validation-for="FeatureName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <a asp-action="Index" class="btn btn-secondary">Quay Lại</a>
+                            <button type="submit" class="btn btn-warning float-right">Cập nhật</button>
+                        </div>
+                    </div>
+
+                </form>
             </div>
+        </div>
 
-        </form>
     </div>
 </section>
 

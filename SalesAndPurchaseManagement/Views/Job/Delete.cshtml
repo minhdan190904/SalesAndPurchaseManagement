@@ -5,37 +5,42 @@
     Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
 }
 
-<div class="ms-2 mx-2">
-    <h1>Xóa Công Việc</h1>
-    <h3>Bạn có chắc chắn muốn xóa công việc này không?</h3>
-    <hr />
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
 
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.JobId)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.JobId)
-        </dd>
+<div class="card card-danger">
+    <div class="card-header">
+        <h3 class="card-title">Thông tin công việc cần xóa</h3>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <h3 class="profile-username text-center">@Model.JobTitle</h3>
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.JobTitle)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.JobTitle)
-        </dd>
+        <strong><i class="fas fa-id-card mr-1"></i> @Html.DisplayNameFor(m => m.JobId)</strong>
+        <p class="text-muted">@Html.DisplayFor(m => m.JobId)</p>
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Salary)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Salary)
-        </dd>
-    </dl>
+        <hr>
 
-    <form asp-controller="Job" asp-action="Delete" method="post">
-        <input type="hidden" asp-for="JobId" />
-        <input type="submit" value="Xóa" class="btn btn-danger" /> |
-        <a asp-action="Index">Trở Về Danh Sách</a>
-    </form>
+        <strong><i class="fas fa-info mr-1"></i> @Html.DisplayNameFor(m => m.JobTitle)</strong>
+        <p class="text-muted">@Html.DisplayFor(m => m.JobTitle)</p>
+
+        <strong><i class="fas fa-money-bill mr-1"></i> @Html.DisplayNameFor(m => m.Salary)</strong>
+        <p class="text-muted">@Html.DisplayFor(m => m.Salary)</p>
+
+    </div>
+    <!-- /.card-body -->
 </div>
+<!-- /.card -->
+<!-- Xác nhận xóa -->
+
+<form asp-action="Delete" method="post">
+    <div class="form-group">
+        <input type="hidden" asp-for="JobId" />
+        <input type="submit" value="Xóa" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Quay Lại</a>
+    </div>
+</form>

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SalesAndPurchaseManagement.DataAnnotationsModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SalesAndPurchaseManagement.Models
@@ -19,8 +20,9 @@ namespace SalesAndPurchaseManagement.Models
         [Display(Name = "Địa Chỉ")]
         public string Address { get; set; }
 
-        [StringLength(15)]
+        [Required(ErrorMessage = "Số điện thoại là bắt buộc.")]
         [Display(Name = "Số Điện Thoại")]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "Số điện thoại phải bao gồm 10 chữ số.")]
         public string PhoneNumber { get; set; }
     }
 }

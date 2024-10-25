@@ -1,0 +1,48 @@
+﻿@model SalesAndPurchaseManagement.Models.Characteristic
+
+@{
+    ViewData["Title"] = "Chỉnh Sửa Đặc Điểm";
+    Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
+}
+
+<section class="content">
+    <div class="ms-2 mx-2">
+
+        <form asp-controller="Characteristics" asp-action="Edit" method="post" class="mt-3">
+            <input type="hidden" asp-for="CharacteristicId" />
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-warning">
+                        <div class="card-header">
+                            <h3 class="card-title">Thông Tin Đặc Điểm</h3>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="form-group row mb-3">
+                                <label asp-for="CharacteristicName" class="col-sm-4 col-form-label">Tên Đặc Điểm</label>
+                                <div class="col-sm-8">
+                                    <input asp-for="CharacteristicName" class="form-control" />
+                                    <span asp-validation-for="CharacteristicName" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <a asp-action="Index" class="btn btn-secondary">Quay Lại</a>
+                    <button type="submit" class="btn btn-warning float-right">Cập nhật</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    @Html.Partial("_ValidationScriptsPartial")
+}

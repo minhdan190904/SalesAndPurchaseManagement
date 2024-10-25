@@ -10,11 +10,20 @@
 
         <form asp-controller="Feature" asp-action="Create" method="post" class="mt-3">
 
-            <div class="form-group row mb-3">
-                <label asp-for="FeatureName" class="col-sm-4 col-form-label"></label>
-                <div class="col-sm-8">
-                    <input asp-for="FeatureName" class="form-control" />
-                    <span asp-validation-for="FeatureName" class="text-danger"></span>
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Thông Tin Tính Năng</h3>
+                </div>
+                <div class="card-body">
+
+                    <div class="form-group row mb-3">
+                        <label asp-for="FeatureName" class="col-sm-4 col-form-label"></label>
+                        <div class="col-sm-8">
+                            <input asp-for="FeatureName" class="form-control" placeholder="Nhập tên tính năng" />
+                            <span asp-validation-for="FeatureName" class="text-danger"></span>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 

@@ -93,6 +93,12 @@ namespace SalesAndPurchaseManagement.Data
                 .WithMany(f => f.Products)
                 .HasForeignKey(p => p.FeatureId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Product>()
+                .HasOne(p => p.Characteristic)
+                .WithMany(f => f.Products)
+                .HasForeignKey(p => p.CharacteristicId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

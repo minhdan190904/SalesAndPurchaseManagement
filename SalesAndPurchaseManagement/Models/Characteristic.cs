@@ -1,8 +1,9 @@
-﻿namespace SalesAndPurchaseManagement.Models
-{
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
+namespace SalesAndPurchaseManagement.Models
+{
     public class Characteristic
     {
         [Key]
@@ -14,5 +15,6 @@
         [StringLength(100)]
         [Display(Name = "Tên Đặc Điểm")]
         public string CharacteristicName { get; set; }
+        public virtual ICollection<Product> Products { get; set; } = new List<Product>(); 
     }
 }

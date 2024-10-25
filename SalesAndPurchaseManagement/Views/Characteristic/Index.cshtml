@@ -1,56 +1,53 @@
-﻿@model IEnumerable<SalesAndPurchaseManagement.Models.Feature>
+﻿@model IEnumerable<SalesAndPurchaseManagement.Models.Characteristic>
 
 @{
-    ViewData["Title"] = "Danh Sách Tính Năng";
+    ViewData["Title"] = "Danh Sách Đặc Điểm";
     Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
 }
 
 <div class="ms-2 mx-2">
-    <a asp-controller="Feature" asp-action="Create" class="btn btn-primary">
-        <i class="fa fa-plus"></i> Tạo Tính Năng Mới
+    <a asp-controller="Characteristic" asp-action="Create" class="btn btn-primary">
+        <i class="fa fa-plus"></i> Tạo Đặc Điểm Mới
     </a>
 
     @if (!Model.Any())
     {
         <div class="alert alert-warning mt-3">
-            Không có tính năng nào trong danh sách.
+            Không có đặc điểm nào trong danh sách.
         </div>
     }
     else
     {
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Danh Sách Tính Năng</h3>
+                <h3 class="card-title">Danh Sách Đặc Điểm</h3>
             </div>
             <div class="card-body">
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th>@Html.DisplayNameFor(model => model.First().FeatureId)</th>
-                            <th>@Html.DisplayNameFor(model => model.First().FeatureName)</th>
+                            <th>@Html.DisplayNameFor(model => model.First().CharacteristicId)</th>
+                            <th>@Html.DisplayNameFor(model => model.First().CharacteristicName)</th>
                             <th>Sửa</th>
                             <th>Xóa</th>
-                            
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var feature in Model)
+                        @foreach (var characteristic in Model)
                         {
                             <tr>
-                                <td>@Html.DisplayFor(modelItem => feature.FeatureId)</td>
-                                <td>@Html.DisplayFor(modelItem => feature.FeatureName)</td>
+                                <td>@Html.DisplayFor(modelItem => characteristic.CharacteristicId)</td>
+                                <td>@Html.DisplayFor(modelItem => characteristic.CharacteristicName)</td>
                                 <td>
-                                    <a asp-action="Edit" asp-route-id="@feature.FeatureId" class="btn btn-warning btn-sm me-1">
+                                    <a asp-action="Edit" asp-route-id="@characteristic.CharacteristicId" class="btn btn-warning btn-sm me-1">
                                         <i class="fa fa-pencil-alt"></i> Sửa
                                     </a>
                                 </td>
-
                                 <td>
-                                    <a asp-action="Delete" asp-route-id="@feature.FeatureId" class="btn btn-danger btn-sm me-1">
+                                    <a asp-action="Delete" asp-route-id="@characteristic.CharacteristicId" class="btn btn-danger btn-sm me-1">
                                         <i class="fa fa-trash"></i> Xóa
                                     </a>
                                 </td>
-
                             </tr>
                         }
                     </tbody>
