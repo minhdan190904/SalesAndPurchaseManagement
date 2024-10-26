@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<SalesAndPurchaseManagement.Models.Employee>
+@using SalesAndPurchaseManagement.Helpers
+@{
     ViewData["Title"] = "Tổng quan";
     Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
 }
@@ -6,11 +8,9 @@
 <!-- Small boxes (Stat box) -->
 <div class="row">
     <div class="col-lg-3 col-6">
-        <!-- small box -->
         <div class="small-box bg-info">
             <div class="inner">
                 <h3>150</h3>
-
                 <p>Đơn hàng hôm nay</p>
             </div>
             <div class="icon">
@@ -19,13 +19,10 @@
             <a href="#" class="small-box-footer">Chi tiết <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
-    <!-- ./col -->
     <div class="col-lg-3 col-6">
-        <!-- small box -->
         <div class="small-box bg-success">
             <div class="inner">
                 <h3>53<sup style="font-size: 20px">%</sup></h3>
-
                 <p>Bounce Rate</p>
             </div>
             <div class="icon">
@@ -34,13 +31,10 @@
             <a href="#" class="small-box-footer">Chi tiết <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
-    <!-- ./col -->
     <div class="col-lg-3 col-6">
-        <!-- small box -->
         <div class="small-box bg-warning">
             <div class="inner">
                 <h3>44</h3>
-
                 <p>User Registrations</p>
             </div>
             <div class="icon">
@@ -49,13 +43,10 @@
             <a href="#" class="small-box-footer">Chi tiết <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
-    <!-- ./col -->
     <div class="col-lg-3 col-6">
-        <!-- small box -->
         <div class="small-box bg-danger">
             <div class="inner">
                 <h3>65</h3>
-
                 <p>Unique Visitors</p>
             </div>
             <div class="icon">
@@ -64,5 +55,56 @@
             <a href="#" class="small-box-footer">Chi tiết <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
-    <!-- ./col -->
 </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Thành viên mới nhất</h3>
+
+            <div class="card-tools">
+                <span class="badge badge-danger">@Model.Count() Thành viên mới</span>
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <ul class="users-list clearfix">
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var employee in Model)
+                    {
+                        <li>
+                            <a asp-controller="Employee" asp-action="ViewDetail" asp-route-id="@employee.EmployeeId" style="text-decoration: none; color: inherit;">
+                                <div class="text-center">
+                                    @if (!string.IsNullOrEmpty(employee.Image))
+                                    {
+                                        <img class="profile-user-img img-fluid img-circle" src="~/images/@employee.Image" alt="Ảnh Nhân Viên" style="width: 150px; height: 150px; object-fit: cover;" />
+                                    }
+                                    else
+                                    {
+                                        <img class="profile-user-img img-fluid img-circle" src="~/images/@AppDefaults.DefaultImageFile" alt="Ảnh mặc định">
+                                    }
+                                </div>
+                                <span class="users-list-name">@employee.EmployeeName</span>
+                                <span class="users-list-date">@employee.DateOfBirth.ToString("dd/MM/yyyy")</span>
+                            </a>
+                        </li>
+
+                    }
+                }
+                else
+                {
+                    <li>
+                        <p>Không có nhân viên mới.</p>
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="card-footer text-center">
+            <a href="@Url.Action("Index", "Employee")">Xem tất cả nhân viên</a>
+        </div>
+    </div>
