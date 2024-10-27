@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -94,6 +96,9 @@ namespace SalesAndPurchaseManagement.Controllers
             {
                 try
                 {
+                    var currentUserId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "EmployeeId")?.Value ?? "0");
+                    bool isSelfUpdate = (id == currentUserId);
+
                     if (imageFile != null && imageFile.Length > 0)
                     {
                         var filePath = Path.Combine(Directory.GetCurrentDirectory(), AppDefaults.DefaultImageFolder, imageFile.FileName);
@@ -101,7 +106,7 @@ namespace SalesAndPurchaseManagement.Controllers
                         {
                             await imageFile.CopyToAsync(stream);
                         }
-                        employee.Image = imageFile.FileName; 
+                        employee.Image = imageFile.FileName;
                     }
                     else
                     {
@@ -110,6 +115,12 @@ namespace SalesAndPurchaseManagement.Controllers
 
                     _context.Update(employee);
                     await _context.SaveChangesAsync();
+
+                    if (isSelfUpdate && !employee.IsAdmin)
+                    {
+                        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                        return RedirectToAction("Login", "Access");
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -126,8 +137,6 @@ namespace SalesAndPurchaseManagement.Controllers
             SetViewBagData(employee);
             return View(employee);
         }
-
-
 
         public async Task<IActionResult> Delete(int id)
         {

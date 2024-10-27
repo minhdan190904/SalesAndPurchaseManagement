@@ -1,31 +1,38 @@
 ﻿@model SalesAndPurchaseManagement.Models.CountryOfOrigin
+@using SalesAndPurchaseManagement.Helpers
 
 @{
     ViewData["Title"] = "Xóa Nước Xuất Xứ";
     Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
 }
 
-<section class="content">
-    <div class="ms-2 mx-2">
-
-        <h3 class="text-danger">Bạn có chắc chắn muốn xóa nước xuất xứ này?</h3>
-        <div>
-            <h4>Thông Tin Nước Xuất Xứ</h4>
-            <hr />
-            <dl class="row">
-                <dt class="col-sm-4">
-                    @Html.DisplayNameFor(model => model.CountryName)
-                </dt>
-                <dd class="col-sm-8">
-                    @Html.DisplayFor(model => model.CountryName)
-                </dd>
-            </dl>
-
-            <form asp-action="Delete">
-                <input type="hidden" asp-for="CountryOfOriginId" />
-                <input type="submit" value="Xóa" class="btn btn-danger" />
-                <a asp-action="Index" class="btn btn-secondary">Quay Lại</a>
-            </form>
-        </div>
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
     </div>
-</section>
+}
+
+<div class="card card-danger">
+    <div class="card-header">
+        <h3 class="card-title">Thông tin nước xuất xứ cần xóa</h3>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <h3 class="profile-username text-center">@Model.CountryName</h3>
+
+        <strong><i class="fas fa-id-card mr-1"></i> @Html.DisplayNameFor(m => m.CountryOfOriginId)</strong>
+        <p class="text-muted">@Html.DisplayFor(m => m.CountryOfOriginId)</p>
+    </div>
+    <!-- /.card-body -->
+</div>
+<!-- /.card -->
+<!-- Xác nhận xóa -->
+
+<form asp-action="Delete" method="post">
+    <div class="form-group">
+        <input type="hidden" asp-for="CountryOfOriginId" />
+        <input type="submit" value="Xóa" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Quay Lại</a>
+    </div>
+</form>

@@ -8,7 +8,6 @@ using System.Linq;
 
 namespace SalesAndPurchaseManagement.Controllers
 {
-    [Authorize(Policy = "AdminOnly")]
     public class ColorController : Controller
     {
         private readonly SAPManagementContext _context;

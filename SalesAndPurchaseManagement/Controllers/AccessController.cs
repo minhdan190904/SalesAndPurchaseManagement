@@ -46,7 +46,8 @@ namespace SalesAndPurchaseManagement.Controllers
                     List<Claim> claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.Name, employee.Email),
-                        new Claim("IsAdmin", employee.IsAdmin.ToString())
+                        new Claim("IsAdmin", employee.IsAdmin.ToString()),
+                        new Claim("EmployeeId", employee.EmployeeId.ToString())
                     };
 
                     ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

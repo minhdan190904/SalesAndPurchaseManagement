@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 
 namespace SalesAndPurchaseManagement.Controllers
 {
-    [Authorize(Policy = "AdminOnly")]
     public class ShapeController : Controller
     {
         private readonly SAPManagementContext _context;
