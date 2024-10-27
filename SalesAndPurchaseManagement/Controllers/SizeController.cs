@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace SalesAndPurchaseManagement.Controllers
 {
+    [Authorize]
     public class SizeController : Controller
     {
         private readonly SAPManagementContext _context;

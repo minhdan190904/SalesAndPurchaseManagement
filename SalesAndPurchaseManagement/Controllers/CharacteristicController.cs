@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace SalesAndPurchaseManagement.Controllers
 {
+    [Authorize]
     public class CharacteristicController : Controller
     {
         private readonly SAPManagementContext _context;

@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace SalesAndPurchaseManagement.Controllers
 {
+    [Authorize]
     public class ShapeController : Controller
     {
         private readonly SAPManagementContext _context;
