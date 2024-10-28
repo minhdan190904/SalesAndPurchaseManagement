@@ -24,10 +24,8 @@ public class SidebarMenuViewComponent : ViewComponent
                     new MenuItem() { Id = 5, Name = "Danh mục", Link = "/Category/Index" },
                     new MenuItem() { Id = 6, Name = "Xuất xứ", Link = "/CountryOfOrigin/Index" },
                     new MenuItem() { Id = 7, Name = "Đặc điểm", Link = "/Characteristic/Index" },
-                    new MenuItem() { Id = 8, Name = "Màu sắc", Link = "/Color/Index" },
                     new MenuItem() { Id = 9, Name = "Vật liệu", Link = "/Material/Index" },
                     new MenuItem() { Id = 10, Name = "Tính năng", Link = "/Feature/Index" },
-                    new MenuItem() { Id = 11, Name = "Kích thước", Link = "/Size/Index" },
                     new MenuItem() { Id = 12, Name = "Hình dạng", Link = "/Shape/Index" },
                     new MenuItem() { Id = 13, Name = "Nhà sản xuất", Link = "/Manufacturer/Index" }
                 }

@@ -4,13 +4,6 @@
       "type": "secrets.user",
       "dynamicId": null
     },
-    "mssql1": {
-      "serviceConnectorResourceId": "",
-      "secretStore": "LocalSecretsFile",
-      "resourceId": null,
-      "type": "mssql.onprem",
-      "connectionId": "ConnectionStrings:DANContext"
-    },
     "mssql2": {
       "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.ServiceLinker/locations/canadacentral/connectors/ConnectionStringsQLBGContext_F1F558A3A4",
       "secretStore": "LocalSecretsFile",
@@ -18,6 +11,13 @@
       "type": "mssql.azure",
       "connectionId": "ConnectionStrings:QLBGContext",
       "dynamicId": null
+    },
+    "mssql1": {
+      "serviceConnectorResourceId": "",
+      "secretStore": "LocalSecretsFile",
+      "resourceId": null,
+      "type": "mssql.onprem",
+      "connectionId": "ConnectionStrings:DANContext"
     }
   }
 }

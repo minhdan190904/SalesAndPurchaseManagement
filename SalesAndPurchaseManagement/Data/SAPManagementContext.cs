@@ -10,14 +10,10 @@ namespace SalesAndPurchaseManagement.Data
         {
             Database.EnsureCreated();
         }
-
-        public DbSet<Size> Sizes { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Shape> Shapes { get; set; }
         public DbSet<Material> Materials { get; set; }
         public DbSet<CountryOfOrigin> Countries { get; set; }
-        
-        public DbSet<Color> Colors { get; set; }
         public DbSet<Manufacturer> Manufacturers { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Customer> Customers { get; set; }
@@ -47,12 +43,6 @@ namespace SalesAndPurchaseManagement.Data
                 .IsUnique(); 
 
             modelBuilder.Entity<Product>()
-                .HasOne(p => p.Size)
-                .WithMany(s => s.Products)
-                .HasForeignKey(p => p.SizeId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Product>()
                 .HasOne(p => p.Category)
                 .WithMany(c => c.Products)
                 .HasForeignKey(p => p.CategoryId)
@@ -74,12 +64,6 @@ namespace SalesAndPurchaseManagement.Data
                 .HasOne(p => p.Country)
                 .WithMany(c => c.Products)
                 .HasForeignKey(p => p.CountryOfOriginId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Product>() 
-                .HasOne(p => p.Color)
-                .WithMany(c => c.Products)
-                .HasForeignKey(p => p.ColorId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Product>()

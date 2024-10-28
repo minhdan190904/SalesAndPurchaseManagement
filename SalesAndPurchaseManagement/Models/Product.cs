@@ -1,5 +1,4 @@
-﻿using SalesAndPurchaseManagement.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SalesAndPurchaseManagement.Models
@@ -17,8 +16,20 @@ namespace SalesAndPurchaseManagement.Models
         public string ProductName { get; set; }
 
         [Required]
-        [Display(Name = "Kích Thước")]
-        public int SizeId { get; set; }
+        [Display(Name = "Chiều Dài")]
+        public int Length { get; set; }
+
+        [Required]
+        [Display(Name = "Chiều Rộng")]
+        public int Width { get; set; }
+
+        [Required]
+        [Display(Name = "Chiều Cao")]
+        public int Height { get; set; }
+
+        [Required]
+        [Display(Name = "Màu Sắc")]
+        public string Color { get; set; }
 
         [Required]
         [Display(Name = "Danh Mục")]
@@ -35,10 +46,6 @@ namespace SalesAndPurchaseManagement.Models
         [Required]
         [Display(Name = "Xuất Xứ")]
         public int CountryOfOriginId { get; set; }
-
-        [Required]
-        [Display(Name = "Màu Sắc")]
-        public int ColorId { get; set; }
 
         [Required]
         [Display(Name = "Nhà Sản Xuất")]
@@ -77,10 +84,6 @@ namespace SalesAndPurchaseManagement.Models
         [Display(Name = "Ghi Chú")]
         public string Notes { get; set; }
 
-        [ForeignKey("SizeId")]
-        [Display(Name = "Kích Thước")]
-        public virtual Size Size { get; set; }
-
         [ForeignKey("CategoryId")]
         [Display(Name = "Danh Mục")]
         public virtual Category Category { get; set; }
@@ -96,10 +99,6 @@ namespace SalesAndPurchaseManagement.Models
         [ForeignKey("CountryOfOriginId")]
         [Display(Name = "Xuất Xứ")]
         public virtual CountryOfOrigin Country { get; set; }
-
-        [ForeignKey("ColorId")]
-        [Display(Name = "Màu Sắc")]
-        public virtual Color Color { get; set; }
 
         [ForeignKey("ManufacturerId")]
         [Display(Name = "Nhà Sản Xuất")]
