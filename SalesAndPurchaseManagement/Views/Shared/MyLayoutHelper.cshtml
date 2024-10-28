@@ -112,7 +112,7 @@
                                 <img src="@Url.Content("~/images/" + employee.Image)" class="img-circle elevation-2" alt="User Image">
                             </div>
                             <div class="info">
-                                <a asp-controller="Employee" asp-action="ViewDetail" asp-route-id="@employee.EmployeeId" class="d-block">@employee.EmployeeName</a>
+                                <a asp-controller="Home" asp-action="ViewDetail" asp-route-id="@employee.EmployeeId" class="d-block">@employee.EmployeeName</a>
                             </div>
                         </div>
                     }
