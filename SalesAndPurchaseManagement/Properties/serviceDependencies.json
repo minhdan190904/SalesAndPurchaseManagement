@@ -10,8 +10,7 @@
     },
     "mssql2": {
       "type": "mssql",
-      "connectionId": "ConnectionStrings:QLBGContext",
-      "dynamicId": null
+      "connectionId": "ConnectionStrings:QLBGContext"
     }
   }
 }

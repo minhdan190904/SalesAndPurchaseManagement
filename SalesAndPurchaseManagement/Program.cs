@@ -14,7 +14,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IEmailService, EmailService>();
 
 builder.Services.AddDbContext<SAPManagementContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("QLBGLocalContext")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("QLBGContext")));
 
 // Cấu hình Globalization
 var supportedCultures = new[]

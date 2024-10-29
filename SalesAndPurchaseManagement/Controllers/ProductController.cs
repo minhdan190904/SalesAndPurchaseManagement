@@ -269,11 +269,9 @@ namespace SalesAndPurchaseManagement.Controllers
                 .Include(f => f.Characteristic)
                 .AsEnumerable(); // Fetch data into memory
 
-            IEnumerable<Product> tmp;
-
             foreach (var keyword in keywords)
             {
-                tmp = products.Where(f =>
+                products = products.Where(f =>
                     f.ProductName.ToLower().Contains(keyword) ||
                     f.ProductId.ToString().Contains(keyword) ||
                     f.GetSize().ToLower().Contains(keyword) ||
@@ -288,10 +286,6 @@ namespace SalesAndPurchaseManagement.Controllers
                     f.PurchasePrice.ToString().Contains(keyword) ||
                     f.SellingPrice.ToString().Contains(keyword)
                 );
-                if (tmp.Count() > 0)
-                {
-                    products = tmp;
-                }
             }
 
             var paginatedProducts = products

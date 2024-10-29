@@ -16,8 +16,7 @@
       "secretStore": "LocalSecretsFile",
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/mavihu/databases/QLBG",
       "type": "mssql.azure",
-      "connectionId": "ConnectionStrings:QLBGContext",
-      "dynamicId": null
+      "connectionId": "ConnectionStrings:QLBGContext"
     }
   }
 }
