@@ -32,31 +32,31 @@ namespace SalesAndPurchaseManagement.Models
         public string Color { get; set; }
 
         [Required]
-        [Display(Name = "Danh Mục")]
+        [Display(Name = "Mã Danh Mục")]
         public int CategoryId { get; set; }
 
         [Required]
-        [Display(Name = "Hình Dạng")]
+        [Display(Name = "Mã Hình Dạng")]
         public int ShapeId { get; set; }
 
         [Required]
-        [Display(Name = "Chất Liệu")]
+        [Display(Name = "Mã Chất Liệu")]
         public int MaterialId { get; set; }
 
         [Required]
-        [Display(Name = "Xuất Xứ")]
+        [Display(Name = "Mã Xuất Xứ")]
         public int CountryOfOriginId { get; set; }
 
         [Required]
-        [Display(Name = "Nhà Sản Xuất")]
+        [Display(Name = "Mã Nhà Sản Xuất")]
         public int ManufacturerId { get; set; }
 
         [Required]
-        [Display(Name = "Đặc Tính")]
+        [Display(Name = "Mã Tính Năng")]
         public int FeatureId { get; set; }
 
         [Required]
-        [Display(Name = "Đặc Điểm")]
+        [Display(Name = "Mã Đặc Điểm")]
         public int CharacteristicId { get; set; }
 
         [Required]
@@ -105,11 +105,16 @@ namespace SalesAndPurchaseManagement.Models
         public virtual Manufacturer Manufacturer { get; set; }
 
         [ForeignKey("FeatureId")]
-        [Display(Name = "Đặc Tính")]
+        [Display(Name = "Tính Năng")]
         public virtual Feature Feature { get; set; }
 
         [ForeignKey("CharacteristicId")]
         [Display(Name = "Đặc Điểm")]
         public virtual Characteristic Characteristic { get; set; }
+
+        public string GetSize()
+        {
+            return $"{Length} x {Width} x {Height}";
+        }
     }
 }
