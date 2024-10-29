@@ -16,15 +16,15 @@ namespace SalesAndPurchaseManagement.Models
         public string ProductName { get; set; }
 
         [Required]
-        [Display(Name = "Chiều Dài")]
+        [Display(Name = "Chiều Dài(cm)")]
         public int Length { get; set; }
 
         [Required]
-        [Display(Name = "Chiều Rộng")]
+        [Display(Name = "Chiều Rộng(cm)")]
         public int Width { get; set; }
 
         [Required]
-        [Display(Name = "Chiều Cao")]
+        [Display(Name = "Chiều Cao(cm)")]
         public int Height { get; set; }
 
         [Required]
@@ -32,31 +32,31 @@ namespace SalesAndPurchaseManagement.Models
         public string Color { get; set; }
 
         [Required]
-        [Display(Name = "Mã Danh Mục")]
+        [Display(Name = "Danh Mục")]
         public int CategoryId { get; set; }
 
         [Required]
-        [Display(Name = "Mã Hình Dạng")]
+        [Display(Name = "Hình Dạng")]
         public int ShapeId { get; set; }
 
         [Required]
-        [Display(Name = "Mã Chất Liệu")]
+        [Display(Name = "Chất Liệu")]
         public int MaterialId { get; set; }
 
         [Required]
-        [Display(Name = "Mã Xuất Xứ")]
+        [Display(Name = "Xuất Xứ")]
         public int CountryOfOriginId { get; set; }
 
         [Required]
-        [Display(Name = "Mã Nhà Sản Xuất")]
+        [Display(Name = "Nhà Sản Xuất")]
         public int ManufacturerId { get; set; }
 
         [Required]
-        [Display(Name = "Mã Tính Năng")]
+        [Display(Name = "Tính Năng")]
         public int FeatureId { get; set; }
 
         [Required]
-        [Display(Name = "Mã Đặc Điểm")]
+        [Display(Name = "Đặc Điểm")]
         public int CharacteristicId { get; set; }
 
         [Required]
@@ -86,35 +86,35 @@ namespace SalesAndPurchaseManagement.Models
 
         [ForeignKey("CategoryId")]
         [Display(Name = "Danh Mục")]
-        public virtual Category Category { get; set; }
+        public virtual Category? Category { get; set; }
 
         [ForeignKey("ShapeId")]
         [Display(Name = "Hình Dạng")]
-        public virtual Shape Shape { get; set; }
+        public virtual Shape? Shape { get; set; }
 
         [ForeignKey("MaterialId")]
         [Display(Name = "Chất Liệu")]
-        public virtual Material Material { get; set; }
+        public virtual Material? Material { get; set; }
 
         [ForeignKey("CountryOfOriginId")]
         [Display(Name = "Xuất Xứ")]
-        public virtual CountryOfOrigin Country { get; set; }
+        public virtual CountryOfOrigin? Country { get; set; }
 
         [ForeignKey("ManufacturerId")]
         [Display(Name = "Nhà Sản Xuất")]
-        public virtual Manufacturer Manufacturer { get; set; }
+        public virtual Manufacturer? Manufacturer { get; set; }
 
         [ForeignKey("FeatureId")]
         [Display(Name = "Tính Năng")]
-        public virtual Feature Feature { get; set; }
+        public virtual Feature? Feature { get; set; }
 
         [ForeignKey("CharacteristicId")]
         [Display(Name = "Đặc Điểm")]
-        public virtual Characteristic Characteristic { get; set; }
+        public virtual Characteristic? Characteristic { get; set; }
 
         public string GetSize()
         {
-            return $"{Length} x {Width} x {Height}";
+            return $"{Length}cm x {Width}cm x {Height}cm";
         }
     }
 }

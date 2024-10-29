@@ -3,7 +3,9 @@
     public static class AppDefaults
     {
         public const string DefaultImageFile = "user_default.png";
+        public const string DefaultProductImageFile = "1.png";
         public const string DefaultImageFolder = "wwwroot/images";
+        public const string DefaultProductImageFolder = "wwwroot/images/ProductImages";
         public const string CannotDeleteSelfMessage = "Bạn không thể xóa tài khoản của chính mình.";
         public const string EmailNotFoundMessage = "Email không tồn tại trong hệ thống.";
         public const string InvalidLoginMessage = "Thông tin đăng nhập không chính xác.";

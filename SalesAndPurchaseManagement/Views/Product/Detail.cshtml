@@ -1,0 +1,102 @@
+﻿@model SalesAndPurchaseManagement.Models.Product
+
+@{
+    ViewData["Title"] = "Thông Tin Sản Phẩm";
+    Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/product.css">
+}
+
+<div class="container">
+    <div class="title">THÔNG TIN SẢN PHẨM</div>
+    <div class="detail">
+        <div class="image d-flex flex-column justify-content-between">
+            <img src="~/images/ProductImages/@Model.Image">
+
+            <div class="buttons d-flex justify-content-center">
+                <a class="product-btn" asp-controller="Product" asp-action="Index">Quay lại</a>
+                <a class="product-btn" asp-controller="Product" asp-action="Edit" asp-route-id="@Model.ProductId">Chỉnh sửa</a>
+                <form asp-controller="Product" asp-action="Delete" method="post" asp-route-id="@Model.ProductId">
+                    <button type="submit" class="product-btn" id="delete" onclick="return confirmDelete()">Xóa</button>
+                </form>
+            </div>
+        </div>
+        <div class="content">
+            <h1 class="name">@Model.ProductName</h1>
+            <div class="ID">
+                <label asp-for="@Model.ProductId" class="label"></label>:
+                <span class="value">@Model.ProductId</span>
+            </div>
+            <div class="size">
+                <label class="label">Kích thước</label>:
+                <span class="value">@Model.GetSize()</span>
+            </div>
+            <div class="color">
+                <label asp-for="@Model.Color" class="label"></label>:
+                <span class="value">@Model.Color</span>
+            </div>
+            <div class="category">
+                <label asp-for="@Model.Category" class="label"></label>:
+                <span class="value">@Model.Category.CategoryName</span>
+            </div>
+            <div class="shape">
+                <label asp-for="@Model.Shape" class="label"></label>:
+                <span class="value">@Model.Shape.ShapeName</span>
+            </div>
+            <div class="material">
+                <label asp-for="@Model.Material" class="label"></label>:
+                <span class="value">@Model.Material.MaterialName</span>
+            </div>
+            <div class="country">
+                <label asp-for="@Model.Country" class="label"></label>:
+                <span class="value">@Model.Country.CountryName</span>
+            </div>
+            <div class="manufacturer">
+                <label asp-for="@Model.Manufacturer" class="label"></label>:
+                <span class="value">@Model.Manufacturer.ManufacturerName</span>
+            </div>
+            <div class="feature">
+                <label asp-for="@Model.Feature" class="label"></label>:
+                <span class="value">@Model.Feature.FeatureName</span>
+            </div>
+            <div class="characteristic">
+                <label asp-for="@Model.Characteristic" class="label"></label>:
+                <span class="value">@Model.Characteristic.CharacteristicName</span>
+            </div>
+            <div class="quantity">
+                <label asp-for="@Model.Quantity" class="label"></label>:
+                <span class="value">@Model.Quantity</span>
+                <span>Chiếc</span>
+            </div>
+            <div class="purchase-price">
+                <label asp-for="@Model.PurchasePrice" class="label"></label>:
+                <span class="value">@Model.PurchasePrice.ToString("N0")</span>
+                <span>vnđ</span>
+            </div>
+            <div class="selling-price">
+                <label asp-for="@Model.SellingPrice" class="label"></label>:
+                <span class="value">@Model.SellingPrice.ToString("N0")</span>
+                <span>vnđ</span>
+            </div>
+            <div class="warranty-period">
+                <label asp-for="@Model.WarrantyPeriod" class="label"></label>:
+                <span class="value">@Model.WarrantyPeriod</span>
+                <span>Tháng</span>
+            </div>
+            <div class="description">
+                <label asp-for="@Model.Notes" class="label"></label>:
+                <span class="value">@Model.Notes</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function confirmDelete() {
+            return confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?");
+        }
+    </script>
+}

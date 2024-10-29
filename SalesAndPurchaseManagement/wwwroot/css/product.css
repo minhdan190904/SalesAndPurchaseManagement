@@ -7,7 +7,7 @@ a{
     text-decoration: none;
 }
 .container{
-    width: 900px;
+    width: 90%;
     margin: auto;
     max-width: 90vw;
     text-align: center;
@@ -17,13 +17,16 @@ a{
     font-size: xx-large;
     padding: 20px 0;
 }
+.container .function {
+    margin: 50px;
+}
 .listProduct .item img{
     width: 90%;
     filter: drop-shadow(0 50px 20px #0009);
 }
 .listProduct{
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 20px;
 }
 .listProduct .item{
@@ -35,8 +38,8 @@ a{
     font-weight: 500;
     font-size: large;
 }
-.listProduct .item .price{
-    letter-spacing: 7px;
+.listProduct .item .manufacturer{
+    letter-spacing: 3px;
     font-size: small;
 }
 /* detail page */
@@ -70,18 +73,23 @@ a{
     padding: 40px 0 0 0;
     margin: 0 0 10px 0;
 }
-.detail .price{
+.detail .content div {
+    font-size: medium;
+    margin-bottom: 5px;
+}
+.detail .content div .label {
     font-weight: bold;
-    font-size: x-large;
-    letter-spacing: 7px;
-    margin-bottom: 20px;
+}
+.detail .content div .value {
+    font-weight: normal;
 }
 .detail .buttons{
     display: flex;
     gap: 20px;
     margin-bottom: 20px;
 }
-.detail .buttons button{
+.product-btn{
+    cursor: pointer;
     background-color: #eee;
     border: none;
     padding: 15px 20px;
@@ -89,8 +97,12 @@ a{
     font-family: Poppins;
     font-size: large;
 }
-.detail .buttons svg{
-    width: 15px;
+.product-btn:hover {
+    background-color: #343a40;
+    color: white;
+}
+.detail .buttons a#delete:hover {
+    background-color: red;
 }
 .detail .buttons span{
     background-color: #555454;
@@ -102,6 +114,7 @@ a{
     border-radius: 50%;
     margin-left: 20px;
 }
+/*
 .detail .buttons button:nth-child(2){
     background-color: #2F2F2F;
     display: flex;
@@ -113,6 +126,8 @@ a{
 .detail .description{
     font-weight: 300;
 }
+*/
+
 /* // ipad */
 @media only screen and (max-width: 992px) {
     .listProduct{
@@ -147,5 +162,11 @@ a{
     }
     .detail .buttons{
         justify-content: center;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    .listProduct {
+        grid-template-columns: repeat(1, 1fr);
     }
 }
