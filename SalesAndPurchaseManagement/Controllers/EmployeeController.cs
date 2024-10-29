@@ -171,9 +171,6 @@ namespace SalesAndPurchaseManagement.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
-
-        [AllowAnonymous]
         public IActionResult ViewDetail(int id)
         {
             var employee = _context.Employees

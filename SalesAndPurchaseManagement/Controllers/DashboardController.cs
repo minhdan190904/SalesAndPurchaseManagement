@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SalesAndPurchaseManagement.Data;
 using System.Linq;
 
 namespace SalesAndPurchaseManagement.Controllers
 {
+    [Authorize]
     public class DashboardController : Controller
     {
         private readonly SAPManagementContext _context;

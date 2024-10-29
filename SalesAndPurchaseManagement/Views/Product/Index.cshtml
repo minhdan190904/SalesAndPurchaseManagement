@@ -4,82 +4,23 @@
     ViewData["Title"] = "Danh Sách Sản Phẩm";
     Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
 }
-@*
-<div class="ms-2 mx-2">
-    <a asp-controller="Employee" asp-action="Create" class="btn btn-primary">
-        <i class="fa fa-user-plus"></i> Thêm Sản Phẩm Mới
-    </a>
 
-    @if (!Model.Any())
-    {
-        <div class="alert alert-warning mt-3">
-            Không có nhân viên nào trong danh sách.
-        </div>
-    }
-    else
-    {
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Danh Sách Sản Phẩm</h3>
-            </div>
-            <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>@Html.DisplayNameFor(model => model.First().ProductName)</th>
-                            <th>@Html.DisplayNameFor(model => model.First().Manufacturer.ManufacturerName)</th>
-                            <th>@Html.DisplayNameFor(model => model.First().Shape.ShapeName)/th>
-                            <th>Sửa</th>
-                            <th>Xóa</th>
-                            <th>Xem chi tiết</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var employee in Model)
-                        {
-                            <tr>
-                                <td>@Html.DisplayFor(modelItem => employee.EmployeeId)</td>
-                                <td>@Html.DisplayFor(modelItem => employee.EmployeeName)</td>
-                                <td>@Html.DisplayFor(modelItem => employee.PhoneNumber)</td>
-                                <td>
-                                    @switch (employee.Gender)
-                                    {
-                                        case Gender.Male:
-                                            <span>Nam</span>
-                                            break;
-                                        case Gender.Female:
-                                            <span>Nữ</span>
-                                            break;
-                                        default:
-                                            <span>Không xác định</span>
-                                            break;
-                                    }
-                                </td>
-                                <td>@employee.Job?.JobTitle</td>
-                                <td>
-                                    <a asp-action="Edit" asp-route-id="@employee.EmployeeId" class="btn btn-warning btn-sm me-1">
-                                        <i class="fa fa-pencil-alt"></i> Sửa
-                                    </a>
-                                </td>
+@section Styles {
+    <link rel="stylesheet" href="~/css/product.css">
+}
 
-                                <td>
-                                    <a asp-action="Delete" asp-route-id="@employee.EmployeeId" class="btn btn-danger btn-sm me-1">
-                                        <i class="fa fa-trash"></i> Xóa
-                                    </a>
-                                </td>
-
-                                <td>
-                                    <a asp-action="ViewDetail" asp-route-id="@employee.EmployeeId" class="btn btn-info btn-sm">
-                                        <i class="fa fa-eye"></i> Chi Tiết
-                                    </a>
-                                </td>
-
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    }
+<div class="container">
+    <div class="title">DANH SÁCH SẢN PHẨM</div>
+    <div class="listProduct">
+        @foreach (var product in Model)
+        {
+            <a asp-controller="Product" asp-action="Detail" class="item">
+                <img src="~/images/ProductImages/@product.Image" alt=""/>
+                <h2>@product.ProductName</h2>
+                <div class="price">
+                    <span>@product.SellingPrice.ToString("N0")</span>
+                    <span>đ</span>
+            </a>
+        }
+    </div>
 </div>
-*@

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SalesAndPurchaseManagement.Models;
-using SalesAndPurchaseManagement.Models;
 
 namespace SalesAndPurchaseManagement.Data
 {
@@ -9,15 +8,13 @@ namespace SalesAndPurchaseManagement.Data
         public SAPManagementContext(DbContextOptions<SAPManagementContext> options) : base(options)
         {
             Database.EnsureCreated();
+            SeedDatabase();
         }
 
-        public DbSet<Size> Sizes { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Shape> Shapes { get; set; }
         public DbSet<Material> Materials { get; set; }
         public DbSet<CountryOfOrigin> Countries { get; set; }
-        
-        public DbSet<Color> Colors { get; set; }
         public DbSet<Manufacturer> Manufacturers { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Customer> Customers { get; set; }
@@ -31,26 +28,19 @@ namespace SalesAndPurchaseManagement.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<Characteristic> Characteristics { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Employee>()
-                .HasOne(e => e.Job)     
-                .WithMany(j => j.Employees) 
-                .HasForeignKey(e => e.JobId) 
+                .HasOne(e => e.Job)
+                .WithMany(j => j.Employees)
+                .HasForeignKey(e => e.JobId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Employee>()
                 .HasIndex(e => e.Email)
-                .IsUnique(); 
-
-            modelBuilder.Entity<Product>()
-                .HasOne(p => p.Size)
-                .WithMany(s => s.Products)
-                .HasForeignKey(p => p.SizeId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .IsUnique();
 
             modelBuilder.Entity<Product>()
                 .HasOne(p => p.Category)
@@ -76,12 +66,6 @@ namespace SalesAndPurchaseManagement.Data
                 .HasForeignKey(p => p.CountryOfOriginId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Product>() 
-                .HasOne(p => p.Color)
-                .WithMany(c => c.Products)
-                .HasForeignKey(p => p.ColorId)
-                .OnDelete(DeleteBehavior.Cascade);
-
             modelBuilder.Entity<Product>()
                 .HasOne(p => p.Manufacturer)
                 .WithMany(m => m.Products)
@@ -99,6 +83,36 @@ namespace SalesAndPurchaseManagement.Data
                 .WithMany(f => f.Products)
                 .HasForeignKey(p => p.CharacteristicId)
                 .OnDelete(DeleteBehavior.Cascade);
+        }
+
+        private void SeedDatabase()
+        {
+            if (!Jobs.Any())
+            {
+                var managerJob = new Job
+                {
+                    JobTitle = "Quản lý",
+                    Salary = 15000000
+                };
+                Jobs.Add(managerJob);
+                SaveChanges();
+
+                var adminEmployee = new Employee
+                {
+                    EmployeeName = "Admin",
+                    Gender = Gender.Male,
+                    Email = "hungbgclone01@gmail.com",
+                    Password = "tyquay2004",
+                    PhoneNumber = "0363686126",
+                    Address = "Hà Nội",
+                    DateOfBirth = new DateTime(2004, 5, 15),
+                    IsAdmin = true,
+                    JobId = managerJob.JobId,
+                    Image = "user_default.png"
+                };
+                Employees.Add(adminEmployee);
+                SaveChanges();
+            }
         }
     }
 }

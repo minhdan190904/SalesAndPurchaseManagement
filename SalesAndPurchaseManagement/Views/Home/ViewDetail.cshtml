@@ -1,0 +1,62 @@
+﻿@model SalesAndPurchaseManagement.Models.Employee
+@using SalesAndPurchaseManagement.Helpers
+
+@{
+    ViewData["Title"] = "Chi Tiết Nhân Viên";
+    Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
+}
+<!-- About Me Box -->
+<div class="card card-info">
+    <div class="card-header">
+        <h3 class="card-title">Thông tin nhân viên</h3>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <div class="text-center">
+            @if (!string.IsNullOrEmpty(Model.Image))
+            {
+                <img class="profile-user-img img-fluid img-circle" src="~/images/@Model.Image" alt="Ảnh Nhân Viên" style="width: 150px; height: 150px; object-fit: cover;" />
+            }
+            else
+            {
+                <img class="profile-user-img img-fluid img-circle" src="~/images/@AppDefaults.DefaultImageFile" alt="User profile picture">
+            }
+        </div>
+
+        <h3 class="profile-username text-center">@Model.EmployeeName</h3>
+        <p class="text-muted text-center">@Model.Job?.JobTitle</p>
+
+        <strong><i class="fas fa-id-card mr-1"></i> @Html.DisplayNameFor(m => m.EmployeeId)</strong>
+        <p class="text-muted">@Html.DisplayFor(m => m.EmployeeId)</p>
+
+        <hr>
+
+        <strong><i class="fas fa-phone-alt mr-1"></i> @Html.DisplayNameFor(m => m.PhoneNumber)</strong>
+        <p class="text-muted">@Html.DisplayFor(m => m.PhoneNumber)</p>
+
+        <hr>
+
+        <strong><i class="fas fa-map-marker-alt mr-1"></i> @Html.DisplayNameFor(m => m.Address)</strong>
+        <p class="text-muted">@Html.DisplayFor(m => m.Address)</p>
+
+        <hr>
+
+        <strong><i class="fas fa-calendar-alt mr-1"></i> @Html.DisplayNameFor(m => m.DateOfBirth)</strong>
+        <p class="text-muted">@Model.DateOfBirth.ToString("dd/MM/yyyy")</p>
+
+        <hr>
+
+        <strong><i class="fas fa-envelope mr-1"></i> @Html.DisplayNameFor(m => m.Email)</strong>
+        <p class="text-muted">@Html.DisplayFor(m => m.Email)</p>
+
+        <hr>
+
+        <strong><i class="fas fa-key mr-1"></i> @Html.DisplayNameFor(m => m.Password)</strong>
+        <p class="text-muted">@Html.DisplayFor(m => m.Password)</p>
+
+    </div>
+    <!-- /.card-body -->
+</div>
+<!-- /.card -->
+
+<a asp-controller="Dashboard" asp-action="Index" class="btn btn-secondary mt-3">Quay Lại</a>

@@ -6,7 +6,12 @@
     },
     "mssql1": {
       "type": "mssql",
-      "connectionId": "ConnectionStrings:QLBGLocalContext"
+      "connectionId": "ConnectionStrings:DANContext"
+    },
+    "mssql2": {
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:QLBGContext",
+      "dynamicId": null
     }
   }
 }

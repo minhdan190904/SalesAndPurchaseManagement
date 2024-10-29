@@ -10,7 +10,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IEmailService, EmailService>();
 
 builder.Services.AddDbContext<SAPManagementContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("QLBGContext")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("QLBGLocalContext")));
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

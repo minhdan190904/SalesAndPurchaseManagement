@@ -46,7 +46,8 @@
     <link rel="stylesheet" href="~/AdminLTE/plugins/bs-stepper/css/bs-stepper.min.css">
     <!-- dropzonejs -->
     <link rel="stylesheet" href="~/AdminLTE/plugins/dropzone/min/dropzone.min.css">
-
+    <!--Customize css-->
+    @RenderSection("Styles", required: false)
 
 
 
@@ -112,7 +113,7 @@
                                 <img src="@Url.Content("~/images/" + employee.Image)" class="img-circle elevation-2" alt="User Image">
                             </div>
                             <div class="info">
-                                <a asp-controller="Employee" asp-action="ViewDetail" asp-route-id="@employee.EmployeeId" class="d-block">@employee.EmployeeName</a>
+                                <a asp-controller="Home" asp-action="ViewDetail" asp-route-id="@employee.EmployeeId" class="d-block">@employee.EmployeeName</a>
                             </div>
                         </div>
                     }
