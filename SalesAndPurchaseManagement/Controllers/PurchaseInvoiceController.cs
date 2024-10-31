@@ -23,11 +23,12 @@ namespace SalesAndPurchaseManagement.Controllers
         public async Task<IActionResult> Index()
         {
             var invoices = await _context.PurchaseInvoices
+                .Include(i => i.Employee) // Bao gồm thông tin nhân viên
                 .Include(i => i.Supplier) // Bao gồm thông tin nhà cung cấp
                 .Include(i => i.PurchaseInvoiceDetails) // Bao gồm chi tiết hóa đơn
                 .ToListAsync();
 
-            return View(invoices);
+            return View("Index", invoices);
         }
 
 
@@ -48,40 +49,82 @@ namespace SalesAndPurchaseManagement.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Lấy EmployeeId từ Claims
-                var employeeIdClaim = User.Claims.FirstOrDefault(c => c.Type == "EmployeeId");
-                if (employeeIdClaim != null)
+                try
                 {
-                    invoice.EmployeeId = int.Parse(employeeIdClaim.Value); // Gán EmployeeId cho hóa đơn
+                    // Lấy EmployeeId từ Claims
+                    var employeeIdClaim = User.Claims.FirstOrDefault(c => c.Type == "EmployeeId");
+                    if (employeeIdClaim != null)
+                    {
+                        invoice.EmployeeId = int.Parse(employeeIdClaim.Value); // Gán EmployeeId cho hóa đơn
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Không tìm thấy thông tin nhân viên.");
+                        return View(invoice);
+                    }
+
+                    // Kiểm tra xem SupplierId có hợp lệ không
+                    if (invoice.SupplierId <= 0)
+                    {
+                        ModelState.AddModelError(nameof(invoice.SupplierId), "Nhà cung cấp không được để trống.");
+                        ViewBag.Suppliers = new SelectList(_context.Suppliers, "SupplierId", "SupplierName");
+                        ViewBag.Products = new SelectList(_context.Products, "ProductId", "ProductName");
+                        return View(invoice);
+                    }
+
+                    invoice.InvoiceDate = DateTime.Now;
+
+                    int totalAmount = 0;
+
+                    foreach (var detail in invoiceDetails)
+                    {
+                        if (detail.ProductId <= 0)
+                        {
+                            ModelState.AddModelError(nameof(detail.ProductId), "Mã hàng không hợp lệ.");
+                            ViewBag.Suppliers = new SelectList(_context.Suppliers, "SupplierId", "SupplierName");
+                            ViewBag.Products = new SelectList(_context.Products, "ProductId", "ProductName");
+                            return View(invoice);
+                        }
+                        var product = await _context.Products.FindAsync(detail.ProductId);
+                        if (product == null)
+                        {
+                            ModelState.AddModelError(nameof(detail.ProductId), "Mã hàng không tồn tại.");
+                            ViewBag.Suppliers = new SelectList(_context.Suppliers, "SupplierId", "SupplierName");
+                            ViewBag.Products = new SelectList(_context.Products, "ProductId", "ProductName");
+                            return View(invoice);
+                        }
+                        product.Quantity += detail.Quantity; // Cập nhật số lượng hàng tồn kho
+                        product.PurchasePrice = detail.UnitPrice; // Cập nhật giá nhập mới
+                        _context.Update(product);
+                        await _context.SaveChangesAsync();
+
+                        totalAmount += detail.TotalAmount;
+
+                        detail.PurchaseInvoiceId = invoice.PurchaseInvoiceId; // Gán ID hóa đơn cho chi tiết
+                        _context.Add(detail);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    invoice.TotalAmount = totalAmount;
+
+                    _context.Add(invoice);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
                 }
-                else
+                catch (Exception ex)
                 {
-                    ModelState.AddModelError(string.Empty, "Không tìm thấy thông tin nhân viên.");
+                    ModelState.AddModelError(string.Empty, ex.Message);
                     return View(invoice);
                 }
+            }
 
-                // Kiểm tra xem SupplierId có hợp lệ không
-                if (invoice.SupplierId <= 0)
+            foreach (var key in ModelState.Keys)
+            {
+                if (ModelState[key].Errors.Count > 0)
                 {
-                    ModelState.AddModelError(nameof(invoice.SupplierId), "Nhà cung cấp không được để trống.");
-                    ViewBag.Suppliers = new SelectList(_context.Suppliers, "SupplierId", "SupplierName");
-                    ViewBag.Products = new SelectList(_context.Products, "ProductId", "ProductName");
-                    return View(invoice);
+                    Console.WriteLine($"{key}: {ModelState[key].Errors[0].ErrorMessage}");
                 }
-
-                invoice.InvoiceDate = DateTime.Now;
-
-                _context.Add(invoice);
-                await _context.SaveChangesAsync();
-
-                foreach (var detail in invoiceDetails)
-                {
-                    detail.PurchaseInvoiceId = invoice.PurchaseInvoiceId; // Gán ID hóa đơn cho chi tiết
-                    _context.Add(detail);
-                }
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index));
             }
 
             ViewBag.Suppliers = new SelectList(_context.Suppliers, "SupplierId", "SupplierName", invoice.SupplierId);

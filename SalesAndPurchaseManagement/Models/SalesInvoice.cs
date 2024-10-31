@@ -29,9 +29,9 @@ namespace SalesAndPurchaseManagement.Models
         public int TotalAmount { get; set; }
 
         [ForeignKey("EmployeeId")]
-        public virtual Employee Employee { get; set; }
+        public virtual Employee? Employee { get; set; }
 
         [ForeignKey("CustomerId")]
-        public virtual Customer Customer { get; set; }
+        public virtual Customer? Customer { get; set; }
     }
 }

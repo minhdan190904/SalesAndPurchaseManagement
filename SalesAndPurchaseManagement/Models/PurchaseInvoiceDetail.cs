@@ -37,9 +37,9 @@ namespace SalesAndPurchaseManagement.Models
         public int TotalAmount => Quantity * UnitPrice * (100 - Discount) / 100;
 
         [ForeignKey("PurchaseInvoiceId")]
-        public virtual PurchaseInvoice PurchaseInvoice { get; set; }
+        public virtual PurchaseInvoice? PurchaseInvoice { get; set; }
 
         [ForeignKey("ProductId")]
-        public virtual Product Product { get; set; }
+        public virtual Product? Product { get; set; }
     }
 }

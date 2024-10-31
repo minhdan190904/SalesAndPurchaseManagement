@@ -38,9 +38,9 @@ namespace SalesAndPurchaseManagement.Models
         public int TotalPrice { get; set; }
 
         [ForeignKey("SalesInvoiceId")]
-        public virtual SalesInvoice SalesInvoice { get; set; }
+        public virtual SalesInvoice? SalesInvoice { get; set; }
 
         [ForeignKey("ProductId")]
-        public virtual Product Product { get; set; }
+        public virtual Product? Product { get; set; }
     }
 }

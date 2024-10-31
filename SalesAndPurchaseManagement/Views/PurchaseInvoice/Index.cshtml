@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Danh sách hóa đơn nhập";
+    Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -18,17 +19,16 @@
             <th>Nhân Viên</th>
             <th>Ngày Nhập</th>
             <th>Tổng Tiền</th>
-            <th></th>
+            <th>Chức Năng</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
-
         {
             <tr>
                 <td>@item.PurchaseInvoiceId</td>
-                <td>@item.Supplier.SupplierName</td>
-                <td>@item.Employee.EmployeeName</td>
+                <td>@(item.Supplier?.SupplierName ?? "N/A")</td>
+                <td>@(item.Employee?.EmployeeName ?? "N/A")</td>
                 <td>@item.InvoiceDate.ToShortDateString()</td>
                 <td>@item.TotalAmount.ToString("C")</td>
                 <td>

@@ -80,6 +80,7 @@
                         <th>ID Sản Phẩm</th>
                         <th>Tên Sản Phẩm</th>
                         <th>Số Lượng</th>
+                        <th>Đơn Giá</th>
                         <th>Giảm Giá</th>
                         <th></th> <!-- Cột cho nút Thêm sản phẩm -->
                     </tr>
@@ -91,6 +92,9 @@
                         <td>
                             <input type="number" class="form-control" id="ProductQuantity" min="1" placeholder="Nhập số lượng" />
                             <span class="text-danger" id="QuantityError" style="display: none;">Vui lòng nhập số lượng.</span>
+                        </td>
+                        <td>
+                            <input type="number" class="form-control" id="ProductUnitPrice" min="0" placeholder="Nhập đơn giá" />
                         </td>
                         <td>
                             <input type="number" class="form-control" id="ProductDiscount" min="0" placeholder="Nhập giảm giá nếu có" />
@@ -116,7 +120,9 @@
                         <th>ID Sản Phẩm</th>
                         <th>Tên Sản Phẩm</th>
                         <th>Số Lượng</th>
+                        <th>Đơn Giá</th>
                         <th>Giảm Giá</th>
+                        <th>Thành Tiền</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -172,6 +178,7 @@
                             $('#SelectedProductId').text(data?.productId || '--');
                             $('#SelectedProductName').text(data?.productName || '--');
                             $('#ProductQuantity, #ProductDiscount').val('');
+                            $('#ProductUnitPrice').val(data?.purchasePrice || 0);
                         },
                         error: function () {
                             $('#SelectedProductId, #SelectedProductName').text('--');
@@ -188,6 +195,7 @@
                 const productId = $('#SelectedProductId').text();
                 const productName = $('#SelectedProductName').text();
                 const quantity = $('#ProductQuantity').val();
+                const unitPrice = $('#ProductUnitPrice').val();
                 const discount = $('#ProductDiscount').val();
 
                 if (productId === '--') {
@@ -207,7 +215,9 @@
                                 <td>${productId}</td>
                                 <td>${productName}</td>
                                 <td>${quantity}</td>
+                                <td>${unitPrice}</td>
                                 <td>${discount || 0}</td>
+                                <td>${quantity * unitPrice * (1 - (discount || 0) / 100)}</td>
                                 <td><button type="button" class="btn btn-danger RemoveProductButton">Xóa</button></td>
                             </tr>
                         `;

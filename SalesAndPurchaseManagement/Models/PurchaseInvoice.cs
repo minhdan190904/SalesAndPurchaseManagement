@@ -30,10 +30,10 @@ namespace SalesAndPurchaseManagement.Models
         public int TotalAmount { get; set; }
 
         [ForeignKey("SupplierId")]
-        public virtual Supplier Supplier { get; set; }
+        public virtual Supplier? Supplier { get; set; }
 
         [ForeignKey("EmployeeId")]
-        public virtual Employee Employee { get; set; }
+        public virtual Employee? Employee { get; set; }
         public virtual ICollection<PurchaseInvoiceDetail> PurchaseInvoiceDetails { get; set; } = new List<PurchaseInvoiceDetail>();
     }
 }
