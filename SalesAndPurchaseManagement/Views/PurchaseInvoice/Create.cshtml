@@ -2,47 +2,224 @@
 
 @{
     ViewData["Title"] = "Tạo mới hóa đơn nhập";
+
+    Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
 }
 
 <h2>@ViewData["Title"]</h2>
 
 <form asp-action="Create" method="post">
+    @if (!ViewData.ModelState.IsValid)
+
+    {
+        <div class="alert alert-danger">
+            <ul>
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+
+                {
+                    <li>@error.ErrorMessage</li>
+                }
+            </ul>
+        </div>
+    }
+
+    <!-- Chọn nhà cung cấp -->
     <div class="form-group">
-        <label asp-for="PurchaseInvoiceId"></label>
-        <input asp-for="PurchaseInvoiceId" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="SupplierId"></label>
-        <select asp-for="SupplierId" class="form-control" asp-items="ViewBag.SupplierId"></select>
-    </div>
-    <div class="form-group">
-        <label asp-for="EmployeeId"></label>
-        <select asp-for="EmployeeId" class="form-control" asp-items="ViewBag.EmployeeId"></select>
-    </div>
-    <div class="form-group">
-        <label>Ngày Nhập</label>
-        <input asp-for="InvoiceDate" class="form-control" value="@DateTime.Now" readonly />
+        <label for="SupplierId">Chọn nhà cung cấp:</label>
+        <select asp-for="SupplierId" class="form-control select2bs4" asp-items="ViewBag.Suppliers" id="SupplierId">
+            <option value="" disabled selected>-- Chọn nhà cung cấp --</option>
+        </select>
+        <span class="text-danger" id="SupplierError" style="display: none;">Vui lòng chọn nhà cung cấp.</span>
     </div>
 
-    <h4>Chi Tiết Hóa Đơn</h4>
-    <div id="details">
-        <div class="form-group">
-            <label>Sản Phẩm</label>
-            <select name="details[0].ProductId" class="form-control" asp-items="ViewBag.ProductId"></select>
+    <!-- Thông tin nhà cung cấp -->
+    <div class="card mt-3">
+        <div class="card-header">
+            <h3 class="card-title">Thông tin nhà cung cấp</h3>
         </div>
-        <div class="form-group">
-            <label>Số Lượng</label>
-            <input type="number" name="details[0].Quantity" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label>Đơn Giá</label>
-            <input type="number" name="details[0].UnitPrice" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label>Giảm Giá (%)</label>
-            <input type="number" name="details[0].Discount" class="form-control" />
+        <div class="card-body p-0">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Mã</th>
+                        <th>Tên</th>
+                        <th>Địa chỉ</th>
+                        <th>Số điện thoại</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="SupplierIdDisplay">--</td>
+                        <td id="SupplierName">--</td>
+                        <td id="Address">--</td>
+                        <td id="PhoneNumber">--</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <button type="submit" class="btn btn-primary">Lưu</button>
+    <!-- Chọn sản phẩm -->
+    <div class="form-group">
+        <label for="ProductId">Chọn sản phẩm:</label>
+        <select id="ProductId" class="form-control select2bs4" asp-items="ViewBag.Products">
+            <option value="" disabled selected>-- Chọn sản phẩm --</option>
+        </select>
+        <span class="text-danger" id="ProductError" style="display: none;">Vui lòng chọn sản phẩm.</span>
+    </div>
+
+    <!-- Thông tin sản phẩm cần thêm -->
+    <div class="card mt-3">
+        <div class="card-header">
+            <h3 class="card-title">Thông tin sản phẩm cần thêm</h3>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID Sản Phẩm</th>
+                        <th>Tên Sản Phẩm</th>
+                        <th>Số Lượng</th>
+                        <th>Giảm Giá</th>
+                        <th></th> <!-- Cột cho nút Thêm sản phẩm -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="SelectedProductId">--</td>
+                        <td id="SelectedProductName">--</td>
+                        <td>
+                            <input type="number" class="form-control" id="ProductQuantity" min="1" placeholder="Nhập số lượng" />
+                            <span class="text-danger" id="QuantityError" style="display: none;">Vui lòng nhập số lượng.</span>
+                        </td>
+                        <td>
+                            <input type="number" class="form-control" id="ProductDiscount" min="0" placeholder="Nhập giảm giá nếu có" />
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-primary" id="AddProductButton">Thêm sản phẩm</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Danh sách sản phẩm đã chọn -->
+    <div class="card mt-3">
+        <div class="card-header">
+            <h3 class="card-title">Danh sách sản phẩm đã chọn</h3>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID Sản Phẩm</th>
+                        <th>Tên Sản Phẩm</th>
+                        <th>Số Lượng</th>
+                        <th>Giảm Giá</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="SelectedProductTableBody">
+                    <!-- Các sản phẩm đã thêm sẽ hiển thị tại đây -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Nút lưu hóa đơn -->
+    <button type="submit" class="btn btn-success mt-3">Lưu hóa đơn</button>
 </form>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Reset error messages
+            function resetErrorMessages() {
+                $('#SupplierError, #ProductError, #QuantityError').hide();
+            }
+
+            // Lấy thông tin nhà cung cấp khi chọn
+            $('#SupplierId').change(function () {
+                resetErrorMessages();
+                const supplierId = $(this).val();
+                if (supplierId) {
+                    $.ajax({
+                        url: '@Url.Action("GetSupplierInfo", "PurchaseInvoice")',
+                        data: { supplierId: supplierId },
+                        success: function (data) {
+                            $('#SupplierIdDisplay').text(data?.supplierId || '--');
+                            $('#SupplierName').text(data?.supplierName || '--');
+                            $('#Address').text(data?.address || '--');
+                            $('#PhoneNumber').text(data?.phoneNumber || '--');
+                        },
+                        error: function () {
+                            $('#SupplierIdDisplay, #SupplierName, #Address, #PhoneNumber').text('--');
+                        }
+                    });
+                }
+            });
+
+            // Lấy thông tin sản phẩm khi chọn
+            $('#ProductId').change(function () {
+                resetErrorMessages();
+                const productId = $(this).val();
+                if (productId) {
+                    $.ajax({
+                        url: '@Url.Action("GetProductInfo", "PurchaseInvoice")',
+                        data: { productId: productId },
+                        success: function (data) {
+                            $('#SelectedProductId').text(data?.productId || '--');
+                            $('#SelectedProductName').text(data?.productName || '--');
+                            $('#ProductQuantity, #ProductDiscount').val('');
+                        },
+                        error: function () {
+                            $('#SelectedProductId, #SelectedProductName').text('--');
+                        }
+                    });
+                } else {
+                    $('#SelectedProductId, #SelectedProductName').text('--');
+                }
+            });
+
+            // Thêm sản phẩm vào danh sách
+            $('#AddProductButton').click(function () {
+                resetErrorMessages();
+                const productId = $('#SelectedProductId').text();
+                const productName = $('#SelectedProductName').text();
+                const quantity = $('#ProductQuantity').val();
+                const discount = $('#ProductDiscount').val();
+
+                if (productId === '--') {
+                    $('#ProductError').show();
+                    alert("Vui lòng chọn sản phẩm!");
+                    return;
+                }
+
+                if (!quantity) {
+                    $('#QuantityError').show();
+                    alert("Vui lòng nhập số lượng!");
+                    return;
+                }
+
+                const selectedProductRow = `
+                            <tr>
+                                <td>${productId}</td>
+                                <td>${productName}</td>
+                                <td>${quantity}</td>
+                                <td>${discount || 0}</td>
+                                <td><button type="button" class="btn btn-danger RemoveProductButton">Xóa</button></td>
+                            </tr>
+                        `;
+                $('#SelectedProductTableBody').append(selectedProductRow);
+                $('#ProductId').val('').change();
+                $('#ProductQuantity, #ProductDiscount').val('');
+            });
+
+            // Xóa sản phẩm khỏi danh sách
+            $(document).on('click', '.RemoveProductButton', function () {
+                $(this).closest('tr').remove();
+            });
+        });
+    </script>
+}

@@ -58,7 +58,7 @@ namespace SalesAndPurchaseManagement.Controllers
                 }
                 else
                 {
-                    employee.Image = AppDefaults.DefaultImageFile; 
+                    employee.Image = AppDefaults.DefaultImageFile;
                 }
 
                 _context.Add(employee);
@@ -69,7 +69,6 @@ namespace SalesAndPurchaseManagement.Controllers
             SetViewBagData(employee);
             return View(employee);
         }
-
 
         public async Task<IActionResult> Edit(int id)
         {
@@ -171,11 +170,11 @@ namespace SalesAndPurchaseManagement.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult ViewDetail(int id)
+        public async Task<IActionResult> ViewDetail(int id)
         {
-            var employee = _context.Employees
+            var employee = await _context.Employees
                 .Include(e => e.Job)
-                .FirstOrDefault(e => e.EmployeeId == id);
+                .FirstOrDefaultAsync(e => e.EmployeeId == id);
 
             if (employee == null)
             {

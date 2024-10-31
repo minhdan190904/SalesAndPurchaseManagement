@@ -7,5 +7,6 @@
         public string? Link { get; set; }
         public string? Icon { get; set; }
         public List<MenuItem> SubItems { get; set; } = new List<MenuItem>();
+        public bool IsAdmin { get; set; }
     }
 }
