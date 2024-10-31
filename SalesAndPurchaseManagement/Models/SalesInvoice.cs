@@ -24,9 +24,9 @@ namespace SalesAndPurchaseManagement.Models
         public int CustomerId { get; set; }
 
         [Required]
-        [Column(TypeName = "decimal(18, 2)")]
+        [Column(TypeName = "BIGINT")]
         [Display(Name = "Tổng Tiền")]
-        public decimal TotalAmount { get; set; }
+        public int TotalAmount { get; set; }
 
         [ForeignKey("EmployeeId")]
         public virtual Employee Employee { get; set; }

@@ -9,14 +9,16 @@ using SalesAndPurchaseManagement.Models;
 using System.Text.RegularExpressions;
 using MailKit.Search;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SalesAndPurchaseManagement.Controllers
 {
+    [Authorize]
     public class ProductController : Controller
     {
         private SAPManagementContext db;
 
-        private const int itemPerPage = 20;
+        private const int itemPerPage = 4;
 
         public ProductController(SAPManagementContext context)
         {
@@ -37,7 +39,7 @@ namespace SalesAndPurchaseManagement.Controllers
 
         public IActionResult Detail(int id)
         {
-            var furniture= db.Products
+            var furniture = db.Products
                 .Include(f => f.Category)
                 .Include(f => f.Shape)
                 .Include(f => f.Material)
@@ -81,9 +83,7 @@ namespace SalesAndPurchaseManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id,
-             Product furniture,
-            IFormFile? imageFile)
+        public async Task<IActionResult> Edit(int id, Product furniture, IFormFile? imageFile)
         {
             if (id != furniture.ProductId)
             {
@@ -98,17 +98,15 @@ namespace SalesAndPurchaseManagement.Controllers
                 {
                     if (imageFile != null && imageFile.Length > 0)
                     {
-                        // Kiểm tra định dạng tệp (nếu cần)
                         var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
                         var fileExtension = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
 
                         if (!allowedExtensions.Contains(fileExtension))
                         {
                             ModelState.AddModelError("Image", "Only image files are allowed.");
-                            return View("Edit", furniture); // Trả về view với lỗi
+                            return View("Edit", furniture);
                         }
 
-                        // Tạo tên tệp duy nhất
                         var filePath = Path.Combine(Directory.GetCurrentDirectory(), AppDefaults.DefaultProductImageFolder, imageFile.FileName);
 
                         using (var stream = new FileStream(filePath, FileMode.Create))
@@ -119,12 +117,12 @@ namespace SalesAndPurchaseManagement.Controllers
                     }
                     else
                     {
-                        furniture.Image = oldImage; // Giữ hình ảnh cũ nếu không có tệp mới
+                        furniture.Image = oldImage;
                     }
 
                     db.Update(furniture);
                     await db.SaveChangesAsync();
-                    TempData["SuccessMessage"] = "Product updated successfully."; // Thông báo thành công
+                    TempData["SuccessMessage"] = "Product updated successfully.";
                     return RedirectToAction(nameof(Detail), new { id });
                 }
                 catch (DbUpdateConcurrencyException)
@@ -133,17 +131,15 @@ namespace SalesAndPurchaseManagement.Controllers
                     {
                         return NotFound();
                     }
-                    throw; // Xem xét ghi lại ngoại lệ này
+                    throw;
                 }
                 catch (Exception ex)
                 {
                     ModelState.AddModelError(string.Empty, "An error occurred while updating the product. Please try again.");
-                    // Ghi lại ngoại lệ
                 }
             }
 
-            // Repopulate ViewBag with data in case of invalid model
-            furniture.Image = oldImage; // Giữ hình ảnh cũ nếu model không hợp lệ
+            furniture.Image = oldImage;
             ViewBag.Categories = new SelectList(await db.Categories.ToListAsync(), "CategoryId", "CategoryName");
             ViewBag.Shapes = new SelectList(await db.Shapes.ToListAsync(), "ShapeId", "ShapeName");
             ViewBag.Materials = new SelectList(await db.Materials.ToListAsync(), "MaterialId", "MaterialName");
@@ -167,30 +163,29 @@ namespace SalesAndPurchaseManagement.Controllers
             return View("Create");
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Create(
             [Bind("Image, ProductName, Length, Width, Height, Color, CategoryId, ShapeId, MaterialId, CountryOfOriginId, " +
-            "ManufacturerId, FeatureId, CharacteristicId, Quantity, PurchasePrice, SellingPrice, WarrantyPeriod, Notes")] Product furniture, 
+            "ManufacturerId, FeatureId, CharacteristicId, PurchasePrice, SellingPrice, WarrantyPeriod, Notes")] Product furniture,
             IFormFile? imageFile)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
+                    furniture.Quantity = 0;
+
                     if (imageFile != null && imageFile.Length > 0)
                     {
-                        // Kiểm tra định dạng tệp (nếu cần)
                         var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
                         var fileExtension = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
 
                         if (!allowedExtensions.Contains(fileExtension))
                         {
                             ModelState.AddModelError("Image", "Only image files are allowed.");
-                            return View("Create", furniture); // Trả về view với lỗi
+                            return View("Create", furniture);
                         }
 
-                        // Tạo tên tệp duy nhất
                         var filePath = Path.Combine(Directory.GetCurrentDirectory(), AppDefaults.DefaultProductImageFolder, imageFile.FileName);
 
                         using (var stream = new FileStream(filePath, FileMode.Create))
@@ -202,28 +197,15 @@ namespace SalesAndPurchaseManagement.Controllers
 
                     db.Add(furniture);
                     await db.SaveChangesAsync();
-                    TempData["SuccessMessage"] = "Product created successfully."; // Thông báo thành công
+                    TempData["SuccessMessage"] = "Product created successfully.";
                     return RedirectToAction(nameof(Detail), new { id = furniture.ProductId });
                 }
                 catch (Exception ex)
                 {
                     ModelState.AddModelError(string.Empty, "An error occurred while creating the product. Please try again.");
-                    // Ghi lại ngoại lệ
                 }
             }
 
-            foreach (var state in ModelState)
-            {
-                var key = state.Key; // Tên của trường
-                var errors = state.Value.Errors; // Các lỗi liên quan đến trường đó
-
-                foreach (var error in errors)
-                {
-                    Console.WriteLine($"Field: {key}, Error: {error.ErrorMessage}");
-                }
-            }
-
-            // Repopulate ViewBag with data in case of invalid model
             ViewBag.Categories = new SelectList(await db.Categories.ToListAsync(), "CategoryId", "CategoryName");
             ViewBag.Shapes = new SelectList(await db.Shapes.ToListAsync(), "ShapeId", "ShapeName");
             ViewBag.Materials = new SelectList(await db.Materials.ToListAsync(), "MaterialId", "MaterialName");
@@ -246,7 +228,7 @@ namespace SalesAndPurchaseManagement.Controllers
 
             db.Products.Remove(furniture);
             await db.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Product deleted successfully."; // Thông báo thành công
+            TempData["SuccessMessage"] = "Product deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -267,7 +249,7 @@ namespace SalesAndPurchaseManagement.Controllers
                 .Include(f => f.Manufacturer)
                 .Include(f => f.Feature)
                 .Include(f => f.Characteristic)
-                .AsEnumerable(); // Fetch data into memory
+                .AsEnumerable();
 
             foreach (var keyword in keywords)
             {
