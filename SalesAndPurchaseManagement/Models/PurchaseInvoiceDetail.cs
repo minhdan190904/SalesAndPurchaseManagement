@@ -25,7 +25,7 @@ namespace SalesAndPurchaseManagement.Models
         [Required]
         [Column(TypeName = "BIGINT")]
         [Display(Name = "Đơn Giá")]
-        public int UnitPrice { get; set; }
+        public long UnitPrice { get; set; }
 
         [Required]
         [Column(TypeName = "INT")]
@@ -34,7 +34,7 @@ namespace SalesAndPurchaseManagement.Models
 
         [NotMapped]
         [Display(Name = "Thành Tiền")]
-        public int TotalAmount => Quantity * UnitPrice * (100 - Discount) / 100;
+        public long TotalAmount => Quantity * UnitPrice * (100 - Discount) / 100;
 
         [ForeignKey("PurchaseInvoiceId")]
         public virtual PurchaseInvoice? PurchaseInvoice { get; set; }

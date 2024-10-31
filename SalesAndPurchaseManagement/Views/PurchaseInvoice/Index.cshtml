@@ -5,36 +5,66 @@
     Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="ms-2 mx-2">
+    <a asp-controller="PurchaseInvoice" asp-action="Create" class="btn btn-primary">
+        <i class="fa fa-plus"></i> Tạo Hóa Đơn Nhập Mới
+    </a>
 
-<a asp-action="Create" class="btn btn-primary">
-    <i class="fa fa-plus"></i> Tạo
-</a>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Số Hóa Đơn</th>
-            <th>Nhà Cung Cấp</th>
-            <th>Nhân Viên</th>
-            <th>Ngày Nhập</th>
-            <th>Tổng Tiền</th>
-            <th>Chức Năng</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.PurchaseInvoiceId</td>
-                <td>@(item.Supplier?.SupplierName ?? "N/A")</td>
-                <td>@(item.Employee?.EmployeeName ?? "N/A")</td>
-                <td>@item.InvoiceDate.ToShortDateString()</td>
-                <td>@item.TotalAmount.ToString("C")</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.PurchaseInvoiceId">Chi Tiết</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning mt-3">
+            Không có hóa đơn nhập nào trong danh sách.
+        </div>
+    }
+    else
+    {
+        <div class="card mt-3">
+            <div class="card-header">
+                <h3 class="card-title">Danh sách hóa đơn nhập</h3>
+            </div>
+            <div class="card-body">
+                <table id="purchaseInvoiceTable" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Số Hóa Đơn</th>
+                            <th>Nhà Cung Cấp</th>
+                            <th>Nhân Viên</th>
+                            <th>Ngày Nhập</th>
+                            <th>Tổng Tiền</th>
+                            <th>Chi Tiết</th>
+                            <th>Sửa</th>
+                            <th>Xóa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.PurchaseInvoiceId)</td>
+                                <td>@(item.Supplier?.SupplierName ?? "N/A")</td>
+                                <td>@(item.Employee?.EmployeeName ?? "N/A")</td>
+                                <td>@item.InvoiceDate.ToShortDateString()</td>
+                                <td>@item.TotalAmount.ToString("C")</td>
+                                <td>
+                                    <a asp-action="Details" asp-route-id="@item.PurchaseInvoiceId" class="btn btn-info btn-sm">
+                                        <i class="fa fa-info-circle"></i> Xem
+                                    </a>
+                                </td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@item.PurchaseInvoiceId" class="btn btn-warning btn-sm">
+                                        <i class="fa fa-pencil-alt"></i> Sửa
+                                    </a>
+                                </td>
+                                <td>
+                                    <a asp-action="Delete" asp-route-id="@item.PurchaseInvoiceId" class="btn btn-danger btn-sm">
+                                        <i class="fa fa-trash"></i> Xóa
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>

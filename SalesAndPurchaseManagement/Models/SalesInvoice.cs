@@ -26,7 +26,7 @@ namespace SalesAndPurchaseManagement.Models
         [Required]
         [Column(TypeName = "BIGINT")]
         [Display(Name = "Tổng Tiền")]
-        public int TotalAmount { get; set; }
+        public long TotalAmount { get; set; }
 
         [ForeignKey("EmployeeId")]
         public virtual Employee? Employee { get; set; }

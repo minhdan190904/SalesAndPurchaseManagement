@@ -27,7 +27,7 @@ namespace SalesAndPurchaseManagement.Models
         [Required]
         [Column(TypeName = "BIGINT")]
         [Display(Name = "Tổng Tiền")]
-        public int TotalAmount { get; set; }
+        public long TotalAmount { get; set; }
 
         [ForeignKey("SupplierId")]
         public virtual Supplier? Supplier { get; set; }

@@ -18,7 +18,6 @@ namespace SalesAndPurchaseManagement.Controllers
             _context = context;
         }
 
-
         // GET: PurchaseInvoice
         public async Task<IActionResult> Index()
         {
@@ -31,17 +30,13 @@ namespace SalesAndPurchaseManagement.Controllers
             return View("Index", invoices);
         }
 
-
         public IActionResult Create()
         {
             ViewBag.Suppliers = new SelectList(_context.Suppliers, "SupplierId", "SupplierName");
-
             ViewBag.Products = new SelectList(_context.Products, "ProductId", "ProductName");
 
             return View();
         }
-
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -73,8 +68,11 @@ namespace SalesAndPurchaseManagement.Controllers
                     }
 
                     invoice.InvoiceDate = DateTime.Now;
+                    long totalAmount = 0; // Thay đổi kiểu dữ liệu thành long
 
-                    int totalAmount = 0;
+                    // Lưu hóa đơn đầu tiên
+                    _context.Add(invoice);
+                    await _context.SaveChangesAsync(); // Lưu hóa đơn để nhận PurchaseInvoiceId
 
                     foreach (var detail in invoiceDetails)
                     {
@@ -85,6 +83,7 @@ namespace SalesAndPurchaseManagement.Controllers
                             ViewBag.Products = new SelectList(_context.Products, "ProductId", "ProductName");
                             return View(invoice);
                         }
+
                         var product = await _context.Products.FindAsync(detail.ProductId);
                         if (product == null)
                         {
@@ -93,45 +92,40 @@ namespace SalesAndPurchaseManagement.Controllers
                             ViewBag.Products = new SelectList(_context.Products, "ProductId", "ProductName");
                             return View(invoice);
                         }
+
                         product.Quantity += detail.Quantity; // Cập nhật số lượng hàng tồn kho
                         product.PurchasePrice = detail.UnitPrice; // Cập nhật giá nhập mới
                         _context.Update(product);
-                        await _context.SaveChangesAsync();
-
-                        totalAmount += detail.TotalAmount;
 
                         detail.PurchaseInvoiceId = invoice.PurchaseInvoiceId; // Gán ID hóa đơn cho chi tiết
                         _context.Add(detail);
-                        await _context.SaveChangesAsync();
+                        totalAmount += detail.TotalAmount; // Sử dụng thuộc tính TotalAmount đã được tính toán
                     }
 
-                    invoice.TotalAmount = totalAmount;
+                    invoice.TotalAmount = totalAmount; // Cập nhật tổng tiền cho hóa đơn
 
-                    _context.Add(invoice);
-                    await _context.SaveChangesAsync();
+                    // Cập nhật hóa đơn với tổng tiền
+                    _context.Update(invoice);
+                    await _context.SaveChangesAsync(); // Lưu các thay đổi cuối cùng
 
                     return RedirectToAction(nameof(Index));
                 }
-                catch (Exception ex)
+                catch (DbUpdateException ex)
                 {
-                    ModelState.AddModelError(string.Empty, ex.Message);
+                    var innerException = ex.InnerException;
+                    Console.WriteLine(innerException?.Message);
+                    ModelState.AddModelError(string.Empty, "Lỗi khi lưu dữ liệu. Vui lòng kiểm tra thông tin và thử lại.");
+                    ViewBag.Suppliers = new SelectList(_context.Suppliers, "SupplierId", "SupplierName", invoice.SupplierId);
+                    ViewBag.Products = new SelectList(_context.Products, "ProductId", "ProductName");
                     return View(invoice);
                 }
             }
 
-            foreach (var key in ModelState.Keys)
-            {
-                if (ModelState[key].Errors.Count > 0)
-                {
-                    Console.WriteLine($"{key}: {ModelState[key].Errors[0].ErrorMessage}");
-                }
-            }
-
+            // Nếu có lỗi trong ModelState, hãy trả về View với lỗi
             ViewBag.Suppliers = new SelectList(_context.Suppliers, "SupplierId", "SupplierName", invoice.SupplierId);
             ViewBag.Products = new SelectList(_context.Products, "ProductId", "ProductName");
             return View(invoice);
         }
-
 
         // API để lấy thông tin nhà cung cấp
         [HttpGet]

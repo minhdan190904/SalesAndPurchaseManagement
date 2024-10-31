@@ -18,7 +18,7 @@ namespace SalesAndPurchaseManagement.Controllers
     {
         private SAPManagementContext db;
 
-        private const int itemPerPage = 4;
+        private const int itemPerPage = 5;
 
         public ProductController(SAPManagementContext context)
         {
