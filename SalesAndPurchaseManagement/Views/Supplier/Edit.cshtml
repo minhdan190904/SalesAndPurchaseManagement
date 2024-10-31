@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Chỉnh Sửa Nhà Cung Cấp";
+
     Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
 }
 
@@ -12,27 +13,36 @@
 
             <input type="hidden" asp-for="SupplierId" />
 
-            <div class="form-group row mb-3">
-                <label asp-for="SupplierName" class="col-sm-4 col-form-label"></label>
-                <div class="col-sm-8">
-                    <input asp-for="SupplierName" class="form-control" />
-                    <span asp-validation-for="SupplierName" class="text-danger"></span>
+            <div class="card card-warning">
+                <div class="card-header">
+                    <h3 class="card-title">Thông Tin Nhà Cung Cấp</h3>
                 </div>
-            </div>
+                <div class="card-body">
 
-            <div class="form-group row mb-3">
-                <label asp-for="Address" class="col-sm-4 col-form-label"></label>
-                <div class="col-sm-8">
-                    <input asp-for="Address" class="form-control" />
-                    <span asp-validation-for="Address" class="text-danger"></span>
-                </div>
-            </div>
+                    <div class="form-group row mb-3">
+                        <label asp-for="SupplierName" class="col-sm-4 col-form-label"></label>
+                        <div class="col-sm-8">
+                            <input asp-for="SupplierName" class="form-control" />
+                            <span asp-validation-for="SupplierName" class="text-danger"></span>
+                        </div>
+                    </div>
 
-            <div class="form-group row mb-3">
-                <label asp-for="PhoneNumber" class="col-sm-4 col-form-label"></label>
-                <div class="col-sm-8">
-                    <input asp-for="PhoneNumber" class="form-control" />
-                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    <div class="form-group row mb-3">
+                        <label asp-for="Address" class="col-sm-4 col-form-label"></label>
+                        <div class="col-sm-8">
+                            <input asp-for="Address" class="form-control" />
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row mb-3">
+                        <label asp-for="PhoneNumber" class="col-sm-4 col-form-label"></label>
+                        <div class="col-sm-8">
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
