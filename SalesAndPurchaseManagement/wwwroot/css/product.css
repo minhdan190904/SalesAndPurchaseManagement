@@ -107,6 +107,7 @@ div.search-div .search-btn, div.search-div .search {
     border-radius: 20px;
     /*    font-family: Poppins;*/
     font-size: large;
+    margin: 10px;
 }
 .product-btn:hover {
     background-color: #343a40;

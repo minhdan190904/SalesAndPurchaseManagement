@@ -10,7 +10,7 @@
 }
 
 <div class="container d-flex flex-column justify-content-between">
-    <div class="function d-flex justify-content-between ">
+    <div class="function d-flex justify-content-between flex-wrap">
         <a id="product-btn" asp-controller="Product" asp-action="Create" class="product-btn">Thêm Sản Phẩm Mới</a>
         <div class="search-div" style= @(Model.Count() > 0 ? "" : "visibility: hidden") ;>
             <input type="text" id="search" class="search" placeholder="Tìm kiếm sản phẩm..."/>
