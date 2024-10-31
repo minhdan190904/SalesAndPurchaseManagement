@@ -23,19 +23,19 @@ namespace SalesAndPurchaseManagement.Models
         public int Quantity { get; set; }
 
         [Required]
-        [Column(TypeName = "decimal(18, 2)")]
+        [Column(TypeName = "BIGINT")]
         [Display(Name = "Đơn Giá")]
-        public decimal UnitPrice { get; set; }
+        public int UnitPrice { get; set; }
 
         [Required]
-        [Column(TypeName = "decimal(18, 2)")]
+        [Column(TypeName = "INT")]
         [Display(Name = "Giảm Giá")]
-        public decimal Discount { get; set; }
+        public int Discount { get; set; }
 
         [Required]
-        [Column(TypeName = "decimal(18, 2)")]
+        [Column(TypeName = "BIGINT")]
         [Display(Name = "Thành Tiền")]
-        public decimal TotalPrice { get; set; }
+        public int TotalPrice { get; set; }
 
         [ForeignKey("SalesInvoiceId")]
         public virtual SalesInvoice SalesInvoice { get; set; }

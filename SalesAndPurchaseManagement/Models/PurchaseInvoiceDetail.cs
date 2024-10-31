@@ -23,18 +23,18 @@ namespace SalesAndPurchaseManagement.Models
         public int Quantity { get; set; }
 
         [Required]
-        [Column(TypeName = "decimal(18, 2)")]
+        [Column(TypeName = "BIGINT")]
         [Display(Name = "Đơn Giá")]
-        public decimal UnitPrice { get; set; }
+        public int UnitPrice { get; set; }
 
         [Required]
-        [Column(TypeName = "decimal(5, 2)")]
+        [Column(TypeName = "INT")]
         [Display(Name = "Giảm Giá")]
-        public decimal Discount { get; set; }
+        public int Discount { get; set; }
 
         [NotMapped]
         [Display(Name = "Thành Tiền")]
-        public decimal TotalAmount => Quantity * UnitPrice * (1 - Discount / 100);
+        public int TotalAmount => Quantity * UnitPrice * (100 - Discount) / 100;
 
         [ForeignKey("PurchaseInvoiceId")]
         public virtual PurchaseInvoice PurchaseInvoice { get; set; }

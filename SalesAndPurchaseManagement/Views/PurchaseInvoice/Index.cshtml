@@ -1,0 +1,36 @@
+﻿@model IEnumerable<SalesAndPurchaseManagement.Models.PurchaseInvoice>
+
+@{
+    ViewData["Title"] = "Danh sách hóa đơn nhập";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Số Hóa Đơn</th>
+            <th>Nhà Cung Cấp</th>
+            <th>Nhân Viên</th>
+            <th>Ngày Nhập</th>
+            <th>Tổng Tiền</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+
+        {
+            <tr>
+                <td>@item.PurchaseInvoiceId</td>
+                <td>@item.Supplier.SupplierName</td>
+                <td>@item.Employee.EmployeeName</td>
+                <td>@item.InvoiceDate.ToShortDateString()</td>
+                <td>@item.TotalAmount.ToString("C")</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.PurchaseInvoiceId">Chi Tiết</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

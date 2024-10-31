@@ -64,14 +64,14 @@ namespace SalesAndPurchaseManagement.Models
         public int Quantity { get; set; }
 
         [Required]
-        [Column(TypeName = "decimal(18, 2)")]
+        [Column(TypeName = "BIGINT")]
         [Display(Name = "Giá Nhập")]
-        public decimal PurchasePrice { get; set; }
+        public long PurchasePrice { get; set; }
 
         [Required]
-        [Column(TypeName = "decimal(18, 2)")]
+        [Column(TypeName = "BIGINT")]
         [Display(Name = "Giá Bán")]
-        public decimal SellingPrice { get; set; }
+        public long SellingPrice { get; set; }
 
         [Required]
         [Display(Name = "Thời Gian Bảo Hành")]

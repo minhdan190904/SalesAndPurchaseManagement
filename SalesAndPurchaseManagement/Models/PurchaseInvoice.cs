@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -24,14 +25,16 @@ namespace SalesAndPurchaseManagement.Models
         public DateTime InvoiceDate { get; set; }
 
         [Required]
-        [Column(TypeName = "decimal(18, 2)")]
+        [Column(TypeName = "BIGINT")]
         [Display(Name = "Tổng Tiền")]
-        public decimal TotalAmount { get; set; }
+        public int TotalAmount { get; set; }
 
         [ForeignKey("SupplierId")]
         public virtual Supplier Supplier { get; set; }
 
         [ForeignKey("EmployeeId")]
         public virtual Employee Employee { get; set; }
+
+        public virtual ICollection<PurchaseInvoiceDetail> PurchaseInvoiceDetails { get; set; } = new List<PurchaseInvoiceDetail>();
     }
 }

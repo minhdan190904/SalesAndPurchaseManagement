@@ -17,10 +17,13 @@ namespace SalesAndPurchaseManagement.Models
         public string JobTitle { get; set; }
 
         [Required(ErrorMessage = "Mức lương là bắt buộc.")]
-        [Range(0, double.MaxValue, ErrorMessage = "Mức lương phải là một số dương.")]
+        [Range(0, int.MaxValue, ErrorMessage = "Mức lương phải là một số dương.")]
         [Display(Name = "Mức Lương")]
-        public decimal Salary { get; set; }
+        [Column(TypeName = "BIGINT")]
+        public int Salary { get; set; }
 
         public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
     }
 }
+
+
