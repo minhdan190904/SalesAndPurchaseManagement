@@ -34,7 +34,7 @@ namespace SalesAndPurchaseManagement.Models
 
         [ForeignKey("EmployeeId")]
         public virtual Employee Employee { get; set; }
-
+        //
         public virtual ICollection<PurchaseInvoiceDetail> PurchaseInvoiceDetails { get; set; } = new List<PurchaseInvoiceDetail>();
     }
 }
