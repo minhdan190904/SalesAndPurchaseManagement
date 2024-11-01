@@ -2,6 +2,7 @@
 @using SalesAndPurchaseManagement.Helpers
 @{
     ViewData["Title"] = "Tổng quan";
+
     Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
 }
 
@@ -57,263 +58,53 @@
     </div>
 </div>
 
-<!--content chart grahp-->
-<div class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header border-0">
-                        <div class="d-flex justify-content-between">
-                            <h3 class="card-title">Online Store Visitors</h3>
-                            <a href="javascript:void(0);">View Report</a>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <p class="d-flex flex-column">
-                                <span class="text-bold text-lg">820</span>
-                                <span>Visitors Over Time</span>
-                            </p>
-                            <p class="ml-auto d-flex flex-column text-right">
-                                <span class="text-success">
-                                    <i class="fas fa-arrow-up"></i> 12.5%
-                                </span>
-                                <span class="text-muted">Since last week</span>
-                            </p>
-                        </div>
-                        <!-- /.d-flex -->
-
-                        <div class="position-relative mb-4">
-                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                            <canvas id="visitors-chart" height="250" width="432" style="display: block; height: 200px; width: 346px;" class="chartjs-render-monitor"></canvas>
-                        </div>
-
-                        <div class="d-flex flex-row justify-content-end">
-                            <span class="mr-2">
-                                <i class="fas fa-square text-primary"></i> This Week
-                            </span>
-
-                            <span>
-                                <i class="fas fa-square text-gray"></i> Last Week
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.card -->
-
-                <div class="card">
-                    <div class="card-header border-0">
-                        <h3 class="card-title">Products</h3>
-                        <div class="card-tools">
-                            <a href="#" class="btn btn-tool btn-sm">
-                                <i class="fas fa-download"></i>
-                            </a>
-                            <a href="#" class="btn btn-tool btn-sm">
-                                <i class="fas fa-bars"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="card-body table-responsive p-0">
-                        <table class="table table-striped table-valign-middle">
-                            <thead>
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Price</th>
-                                    <th>Sales</th>
-                                    <th>More</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <img src="dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
-                                        Some Product
-                                    </td>
-                                    <td>$13 USD</td>
-                                    <td>
-                                        <small class="text-success mr-1">
-                                            <i class="fas fa-arrow-up"></i>
-                                            12%
-                                        </small>
-                                        12,000 Sold
-                                    </td>
-                                    <td>
-                                        <a href="#" class="text-muted">
-                                            <i class="fas fa-search"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <img src="dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
-                                        Another Product
-                                    </td>
-                                    <td>$29 USD</td>
-                                    <td>
-                                        <small class="text-warning mr-1">
-                                            <i class="fas fa-arrow-down"></i>
-                                            0.5%
-                                        </small>
-                                        123,234 Sold
-                                    </td>
-                                    <td>
-                                        <a href="#" class="text-muted">
-                                            <i class="fas fa-search"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <img src="dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
-                                        Amazing Product
-                                    </td>
-                                    <td>$1,230 USD</td>
-                                    <td>
-                                        <small class="text-danger mr-1">
-                                            <i class="fas fa-arrow-down"></i>
-                                            3%
-                                        </small>
-                                        198 Sold
-                                    </td>
-                                    <td>
-                                        <a href="#" class="text-muted">
-                                            <i class="fas fa-search"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <img src="dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
-                                        Perfect Item
-                                        <span class="badge bg-danger">NEW</span>
-                                    </td>
-                                    <td>$199 USD</td>
-                                    <td>
-                                        <small class="text-success mr-1">
-                                            <i class="fas fa-arrow-up"></i>
-                                            63%
-                                        </small>
-                                        87 Sold
-                                    </td>
-                                    <td>
-                                        <a href="#" class="text-muted">
-                                            <i class="fas fa-search"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <!-- /.card -->
-            </div>
-            <!-- /.col-md-6 -->
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header border-0">
-                        <div class="d-flex justify-content-between">
-                            <h3 class="card-title">Sales</h3>
-                            <a href="javascript:void(0);">View Report</a>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <p class="d-flex flex-column">
-                                <span class="text-bold text-lg">$18,230.00</span>
-                                <span>Sales Over Time</span>
-                            </p>
-                            <p class="ml-auto d-flex flex-column text-right">
-                                <span class="text-success">
-                                    <i class="fas fa-arrow-up"></i> 33.1%
-                                </span>
-                                <span class="text-muted">Since last month</span>
-                            </p>
-                        </div>
-                        <!-- /.d-flex -->
-
-                        <div class="position-relative mb-4">
-                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                            <canvas id="sales-chart" height="250" width="432" style="display: block; height: 200px; width: 346px;" class="chartjs-render-monitor"></canvas>
-                        </div>
-
-                        <div class="d-flex flex-row justify-content-end">
-                            <span class="mr-2">
-                                <i class="fas fa-square text-primary"></i> This year
-                            </span>
-
-                            <span>
-                                <i class="fas fa-square text-gray"></i> Last year
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.card -->
-
-                <div class="card">
-                    <div class="card-header border-0">
-                        <h3 class="card-title">Online Store Overview</h3>
-                        <div class="card-tools">
-                            <a href="#" class="btn btn-sm btn-tool">
-                                <i class="fas fa-download"></i>
-                            </a>
-                            <a href="#" class="btn btn-sm btn-tool">
-                                <i class="fas fa-bars"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
-                            <p class="text-success text-xl">
-                                <i class="ion ion-ios-refresh-empty"></i>
-                            </p>
-                            <p class="d-flex flex-column text-right">
-                                <span class="font-weight-bold">
-                                    <i class="ion ion-android-arrow-up text-success"></i> 12%
-                                </span>
-                                <span class="text-muted">CONVERSION RATE</span>
-                            </p>
-                        </div>
-                        <!-- /.d-flex -->
-                        <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
-                            <p class="text-warning text-xl">
-                                <i class="ion ion-ios-cart-outline"></i>
-                            </p>
-                            <p class="d-flex flex-column text-right">
-                                <span class="font-weight-bold">
-                                    <i class="ion ion-android-arrow-up text-warning"></i> 0.8%
-                                </span>
-                                <span class="text-muted">SALES RATE</span>
-                            </p>
-                        </div>
-                        <!-- /.d-flex -->
-                        <div class="d-flex justify-content-between align-items-center mb-0">
-                            <p class="text-danger text-xl">
-                                <i class="ion ion-ios-people-outline"></i>
-                            </p>
-                            <p class="d-flex flex-column text-right">
-                                <span class="font-weight-bold">
-                                    <i class="ion ion-android-arrow-down text-danger"></i> 1%
-                                </span>
-                                <span class="text-muted">REGISTRATION RATE</span>
-                            </p>
-                        </div>
-                        <!-- /.d-flex -->
-                    </div>
+<div class="row">
+    <!-- DONUT CHART -->
+    <div class="col-md-6">
+        <div class="card card-danger">
+            <div class="card-header">
+                <h3 class="card-title">Biểu diễn tổng số sản phẩm bán được theo từng danh mục</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
             </div>
-            <!-- /.col-md-6 -->
+            <div class="card-body">
+                <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            </div>
         </div>
-        <!-- /.row -->
     </div>
-    <!-- /.container-fluid -->
+    <!-- /.col-md-6 -->
+    <!-- PIE CHART -->
+    <div class="col-md-6">
+        <div class="card card-warning">
+            <div class="card-header">
+                <h3 class="card-title">Biểu diễn tổng số tiền bán hàng theo từng danh mục (VNĐ)</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            </div>
+        </div>
+    </div>
+    <!-- /.col-md-6 -->
 </div>
-
-<!--Nhan vien-->
+<!-- /.row -->
+<!--Nhân viên-->
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Thành viên mới nhất</h3>
-
         <div class="card-tools">
             <span class="badge badge-danger">@Model.Count() Thành viên mới</span>
             <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -328,16 +119,21 @@
         <ul class="users-list clearfix">
             @if (Model != null && Model.Any())
             {
+
                 foreach (var employee in Model)
+
                 {
                     <li>
                         <a asp-controller="Employee" asp-action="ViewDetail" asp-route-id="@employee.EmployeeId" style="text-decoration: none; color: inherit;">
                             <div class="text-center">
                                 @if (!string.IsNullOrEmpty(employee.Image))
+
                                 {
                                     <img class="profile-user-img img-fluid img-circle" src="~/images/@employee.Image" alt="Ảnh Nhân Viên" style="width: 150px; height: 150px; object-fit: cover;" />
                                 }
+
                                 else
+
                                 {
                                     <img class="profile-user-img img-fluid img-circle" src="~/images/@AppDefaults.DefaultImageFile" alt="Ảnh mặc định">
                                 }
@@ -346,7 +142,6 @@
                             <span class="users-list-date">@employee.DateOfBirth.ToString("dd/MM/yyyy")</span>
                         </a>
                     </li>
-
                 }
             }
             else
@@ -361,3 +156,92 @@
         <a href="@Url.Action("Index", "Employee")">Xem tất cả nhân viên</a>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            // Prepare data for Donut and Pie charts
+            var donutLabels = [];
+            var donutData = [];
+            var pieLabels = [];
+            var pieData = [];
+
+            // Loop through donut data
+            @foreach (var item in ViewBag.DonutData)
+            {
+                <text>
+                    donutLabels.push('@Html.Raw(item.CategoryName)'); // Use CategoryName for labels
+                    donutData.push(@item.TotalSold);
+                </text>
+            }
+
+            // Loop through pie data
+            @foreach (var item in ViewBag.PieData)
+            {
+                <text>
+                    pieLabels.push('@Html.Raw(item.CategoryName)'); // Use CategoryName for labels
+                    pieData.push(@item.TotalRevenue);
+                </text>
+            }
+
+            // Function to initialize charts
+            function initializeDonutChart() {
+                var donutChartCanvas = $('#donutChart').get(0).getContext('2d');
+                var donutChartOptions = {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    cutoutPercentage: 50 // Donut-specific option
+                };
+                new Chart(donutChartCanvas, {
+                    type: 'doughnut',
+                    data: {
+                        labels: donutLabels,
+                        datasets: [{
+                            data: donutData,
+                            backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef'] // Add more colors if needed
+                        }]
+                    },
+                    options: donutChartOptions
+                });
+            }
+
+            function initializePieChart() {
+                var pieChartCanvas = $('#pieChart').get(0).getContext('2d');
+                var pieChartOptions = {
+                    maintainAspectRatio: false,
+                    responsive: true
+                };
+                new Chart(pieChartCanvas, {
+                    type: 'pie',
+                    data: {
+                        labels: pieLabels,
+                        datasets: [{
+                            data: pieData,
+                            backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef'] // Add more colors if needed
+                        }]
+                    },
+                    options: pieChartOptions
+                });
+            }
+
+            // Initialize charts only if data is available
+            if (donutLabels.length > 0 && donutData.length > 0) {
+                initializeDonutChart();
+            } else {
+                console.log('No data available for the donut chart.');
+            }
+
+            if (pieLabels.length > 0 && pieData.length > 0) {
+                initializePieChart();
+            } else {
+                console.log('No data available for the pie chart.');
+            }
+
+            // Logging data for debugging
+            console.log('Donut Labels:', donutLabels);
+            console.log('Donut Data:', donutData);
+            console.log('Pie Labels:', pieLabels);
+            console.log('Pie Data:', pieData);
+        });
+    </script>
+}
