@@ -34,7 +34,7 @@ namespace SalesAndPurchaseManagement.Models
 
         [NotMapped]
         [Display(Name = "Thành Tiền")]
-        public long TotalPrice => Quantity * UnitPrice * (100 - Discount) / 100;
+        public long TotalAmount => Quantity * UnitPrice * (100 - Discount) / 100;
 
         [ForeignKey("SalesInvoiceId")]
         public virtual SalesInvoice? SalesInvoice { get; set; }

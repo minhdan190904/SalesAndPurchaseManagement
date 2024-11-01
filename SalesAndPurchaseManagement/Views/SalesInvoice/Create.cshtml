@@ -1,0 +1,254 @@
+﻿@model SalesAndPurchaseManagement.Models.SalesInvoice
+
+@{
+    ViewData["Title"] = "Tạo mới hóa đơn bán";
+    Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Create" method="post">
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            <ul>
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <li>@error.ErrorMessage</li>
+                }
+            </ul>
+        </div>
+    }
+
+    <!-- Chọn khách hàng -->
+    <div class="form-group">
+        <label for="CustomerId">Chọn khách hàng:</label>
+        <select asp-for="CustomerId" class="form-control select2bs4" asp-items="ViewBag.Customers" id="CustomerId">
+            <option value="" disabled selected>-- Chọn khách hàng --</option>
+        </select>
+        <span class="text-danger" id="CustomerError" style="display: none;">Vui lòng chọn khách hàng.</span>
+    </div>
+
+    <!-- Thông tin khách hàng -->
+    <div class="card mt-3">
+        <div class="card-header">
+            <h3 class="card-title">Thông tin khách hàng</h3>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên</th>
+                        <th>Địa chỉ</th>
+                        <th>Số điện thoại</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="CustomerIdDisplay">--</td>
+                        <td id="CustomerName">--</td>
+                        <td id="CustomerAddress">--</td>
+                        <td id="CustomerPhone">--</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Chọn sản phẩm -->
+    <div class="form-group">
+        <label for="ProductId">Chọn sản phẩm:</label>
+        <select id="ProductId" class="form-control select2bs4" asp-items="ViewBag.Products">
+            <option value="" disabled selected>-- Chọn sản phẩm --</option>
+        </select>
+        <span class="text-danger" id="ProductError" style="display: none;">Vui lòng chọn sản phẩm.</span>
+    </div>
+
+    <!-- Thông tin sản phẩm cần thêm -->
+    <div class="card mt-3">
+        <div class="card-header">
+            <h3 class="card-title">Thông tin sản phẩm cần thêm</h3>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID Sản Phẩm</th>
+                        <th>Tên Sản Phẩm</th>
+                        <th>Số lượng có sẵn</th>
+                        <th>Số Lượng</th>
+                        <th>Đơn Giá</th>
+                        <th>Giảm Giá</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="SelectedProductId">--</td>
+                        <td id="SelectedProductName">--</td>
+                        <td id="AvailableQuantityDisplay">--</td>
+                        <td>
+                            <input type="number" class="form-control" id="ProductQuantity" min="1" placeholder="Nhập số lượng" />
+                            <span class="text-danger" id="QuantityError" style="display: none;">Vui lòng nhập số lượng.</span>
+                        </td>
+                        <td>
+                            <input type="number" class="form-control" id="ProductUnitPrice" min="0" placeholder="Nhập đơn giá" />
+                        </td>
+                        <td>
+                            <input type="number" class="form-control" id="ProductDiscount" min="0" placeholder="Nhập giảm giá nếu có" />
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-primary" id="AddProductButton">Thêm sản phẩm</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Danh sách sản phẩm đã thêm -->
+    <div class="card mt-3">
+        <div class="card-header">
+            <h3 class="card-title">Danh sách sản phẩm đã thêm</h3>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID Sản Phẩm</th>
+                        <th>Tên Sản Phẩm</th>
+                        <th>Số Lượng</th>
+                        <th>Đơn Giá</th>
+                        <th>Giảm Giá</th>
+                        <th>Tổng Tiền</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="SelectedProductTableBody">
+                    <!-- Sản phẩm sẽ được thêm ở đây -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Tổng tiền -->
+    <div class="card-footer">
+        <h4>Tổng Tiền: <span id="TotalAmount">0</span> VNĐ</h4>
+    </div>
+
+    <!-- Nút lưu hóa đơn -->
+    <button type="submit" class="btn btn-success mt-3">Lưu hóa đơn</button>
+</form>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            let availableQuantity = 0;
+
+            function resetErrorMessages() {
+                $('#CustomerError, #ProductError, #QuantityError').hide();
+            }
+
+            function updateTotalAmount() {
+                let total = 0;
+                $('#SelectedProductTableBody tr').each(function () {
+                    const amount = parseFloat($(this).find('td:nth-child(6)').text());
+                    total += isNaN(amount) ? 0 : amount;
+                });
+                $('#TotalAmount').text(total.toFixed(2));
+            }
+
+            $('#CustomerId').change(function () {
+                resetErrorMessages();
+                const customerId = $(this).val();
+                if (customerId) {
+                    $.ajax({
+                        url: '@Url.Action("GetCustomerInfo", "SalesInvoice")',
+                        data: { customerId: customerId },
+                        success: function (data) {
+                            $('#CustomerIdDisplay').text(data?.customerId || '--');
+                            $('#CustomerName').text(data?.customerName || '--');
+                            $('#CustomerAddress').text(data?.address || '--');
+                            $('#CustomerPhone').text(data?.phoneNumber || '--');
+                        },
+                        error: function () {
+                            $('#CustomerIdDisplay, #CustomerName, #CustomerAddress, #CustomerPhone').text('--');
+                        }
+                    });
+                }
+            });
+
+            $('#ProductId').change(function () {
+                resetErrorMessages();
+                const productId = $(this).val();
+                if (productId) {
+                    $.ajax({
+                        url: '@Url.Action("GetProductInfo", "SalesInvoice")',
+                        data: { productId: productId },
+                        success: function (data) {
+                            $('#SelectedProductId').text(data?.productId || '--');
+                            $('#SelectedProductName').text(data?.productName || '--');
+                            $('#ProductQuantity, #ProductDiscount').val('');
+                            $('#ProductUnitPrice').val(data?.sellingPrice || 0);
+                            availableQuantity = data?.availableQuantity || 0;
+                            $('#AvailableQuantityDisplay').text(availableQuantity); // Hiển thị số lượng có sẵn
+                        },
+                        error: function () {
+                            $('#SelectedProductId, #SelectedProductName').text('--');
+                        }
+                    });
+                } else {
+                    $('#SelectedProductId, #SelectedProductName').text('--');
+                }
+            });
+
+            $('#AddProductButton').click(function () {
+                resetErrorMessages();
+                const productId = $('#SelectedProductId').text();
+                const productName = $('#SelectedProductName').text();
+                const quantity = $('#ProductQuantity').val();
+                const unitPrice = $('#ProductUnitPrice').val();
+                const discount = $('#ProductDiscount').val();
+
+                if (productId === '--') {
+                    $('#ProductError').show();
+                    alert("Vui lòng chọn sản phẩm!");
+                    return;
+                }
+
+                if (!quantity) {
+                    $('#QuantityError').show();
+                    alert("Vui lòng nhập số lượng!");
+                    return;
+                }
+
+                if (parseInt(quantity) > availableQuantity) {
+                    $('#QuantityError').show();
+                    alert(`Số lượng không thể lớn hơn ${availableQuantity}!`);
+                    return;
+                }
+
+                const index = $('#SelectedProductTableBody tr').length;
+                const amount = quantity * unitPrice * (1 - (discount || 0) / 100);
+                const selectedProductRow = `
+                            <tr>
+                                <td>${productId}<input type="hidden" name="InvoiceDetails[${index}].ProductId" value="${productId}" /></td>
+                                <td>${productName}<input type="hidden" name="InvoiceDetails[${index}].ProductName" value="${productName}" /></td>
+                                <td>${quantity}<input type="hidden" name="InvoiceDetails[${index}].Quantity" value="${quantity}" /></td>
+                                <td>${unitPrice}<input type="hidden" name="InvoiceDetails[${index}].UnitPrice" value="${unitPrice}" /></td>
+                                <td>${discount}<input type="hidden" name="InvoiceDetails[${index}].Discount" value="${discount}" /></td>
+                                <td>${amount.toFixed(2)}<input type="hidden" name="InvoiceDetails[${index}].TotalAmount" value="${amount.toFixed(2)}" /></td>
+                                <td><button type="button" class="btn btn-danger remove-product">Xóa</button></td>
+                            </tr>`;
+                $('#SelectedProductTableBody').append(selectedProductRow);
+                updateTotalAmount();
+            });
+
+            $(document).on('click', '.remove-product', function () {
+                $(this).closest('tr').remove();
+                updateTotalAmount();
+            });
+        });
+    </script>
+}
