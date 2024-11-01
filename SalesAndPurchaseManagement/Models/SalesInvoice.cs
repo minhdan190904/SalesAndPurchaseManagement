@@ -33,5 +33,7 @@ namespace SalesAndPurchaseManagement.Models
 
         [ForeignKey("CustomerId")]
         public virtual Customer? Customer { get; set; }
+
+        public virtual ICollection<SalesInvoiceDetail> SalesInvoiceDetails { get; set; } = new List<SalesInvoiceDetail>();
     }
 }

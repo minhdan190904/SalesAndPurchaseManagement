@@ -1,35 +1,35 @@
-﻿@model IEnumerable<SalesAndPurchaseManagement.Models.PurchaseInvoice>
+﻿@model IEnumerable<SalesAndPurchaseManagement.Models.SalesInvoice>
 
 @{
-    ViewData["Title"] = "Danh sách hóa đơn nhập";
+    ViewData["Title"] = "Danh sách hóa đơn bán";
     Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
 }
 
 <div class="ms-2 mx-2">
-    <a asp-controller="PurchaseInvoice" asp-action="Create" class="btn btn-primary">
-        <i class="fa fa-plus"></i> Tạo Hóa Đơn Nhập Mới
+    <a asp-controller="SalesInvoice" asp-action="Create" class="btn btn-primary">
+        <i class="fa fa-plus"></i> Tạo Hóa Đơn Bán Mới
     </a>
 
     @if (!Model.Any())
     {
         <div class="alert alert-warning mt-3">
-            Không có hóa đơn nhập nào trong danh sách.
+            Không có hóa đơn bán nào trong danh sách.
         </div>
     }
     else
     {
         <div class="card mt-3">
             <div class="card-header">
-                <h3 class="card-title">Danh sách hóa đơn nhập</h3>
+                <h3 class="card-title">Danh sách hóa đơn bán</h3>
             </div>
             <div class="card-body">
-                <table id="purchaseInvoiceTable" class="table table-bordered table-striped">
+                <table id="salesInvoiceTable" class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>Số Hóa Đơn</th>
-                            <th>Nhà Cung Cấp</th>
+                            <th>Khách Hàng</th>
                             <th>Nhân Viên</th>
-                            <th>Ngày Nhập</th>
+                            <th>Ngày Bán</th>
                             <th>Tổng Tiền</th>
                             <th>Chi Tiết</th>
                             <th>Sửa</th>
@@ -40,24 +40,23 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td>@Html.DisplayFor(modelItem => item.PurchaseInvoiceId)</td>
-                                <td>@(item.Supplier?.SupplierName ?? "N/A")</td>
+                                <td>@Html.DisplayFor(modelItem => item.SalesInvoiceId)</td>
+                                <td>@(item.Customer?.CustomerName ?? "N/A")</td>
                                 <td>@(item.Employee?.EmployeeName ?? "N/A")</td>
                                 <td>@item.InvoiceDate.ToShortDateString()</td>
                                 <td>@item.TotalAmount.ToString("N0") VND</td>
-
                                 <td>
-                                    <a asp-action="Details" asp-route-id="@item.PurchaseInvoiceId" class="btn btn-info btn-sm">
+                                    <a asp-action="Details" asp-route-id="@item.SalesInvoiceId" class="btn btn-info btn-sm">
                                         <i class="fa fa-info-circle"></i> Xem
                                     </a>
                                 </td>
                                 <td>
-                                    <a asp-action="Edit" asp-route-id="@item.PurchaseInvoiceId" class="btn btn-warning btn-sm">
+                                    <a asp-action="Edit" asp-route-id="@item.SalesInvoiceId" class="btn btn-warning btn-sm">
                                         <i class="fa fa-pencil-alt"></i> Sửa
                                     </a>
                                 </td>
                                 <td>
-                                    <a asp-action="Delete" asp-route-id="@item.PurchaseInvoiceId" class="btn btn-danger btn-sm">
+                                    <a asp-action="Delete" asp-route-id="@item.SalesInvoiceId" class="btn btn-danger btn-sm">
                                         <i class="fa fa-trash"></i> Xóa
                                     </a>
                                 </td>
