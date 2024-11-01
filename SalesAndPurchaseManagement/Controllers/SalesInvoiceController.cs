@@ -36,7 +36,6 @@ namespace SalesAndPurchaseManagement.Controllers
             PopulateViewBag();
             return View();
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(SalesInvoice invoice, List<SalesInvoiceDetail> invoiceDetails)
@@ -62,6 +61,7 @@ namespace SalesAndPurchaseManagement.Controllers
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Không tìm thấy thông tin nhân viên.");
+                    PopulateViewBag(); // Gọi PopulateViewBag để nạp dữ liệu cho view
                     return View(invoice);
                 }
 
@@ -69,6 +69,7 @@ namespace SalesAndPurchaseManagement.Controllers
                 if (invoice.CustomerId <= 0)
                 {
                     ModelState.AddModelError(nameof(invoice.CustomerId), "Khách hàng không được để trống.");
+                    PopulateViewBag(); // Gọi PopulateViewBag để nạp dữ liệu cho view
                     return View(invoice);
                 }
 
@@ -76,6 +77,7 @@ namespace SalesAndPurchaseManagement.Controllers
                 if (invoiceDetails == null || !invoiceDetails.Any())
                 {
                     ModelState.AddModelError(nameof(invoiceDetails), "Vui lòng thêm ít nhất một sản phẩm.");
+                    PopulateViewBag(); // Gọi PopulateViewBag để nạp dữ liệu cho view
                     return View(invoice);
                 }
 
@@ -90,6 +92,7 @@ namespace SalesAndPurchaseManagement.Controllers
                     if (detail.ProductId <= 0)
                     {
                         ModelState.AddModelError(nameof(detail.ProductId), "Mã hàng không hợp lệ.");
+                        PopulateViewBag(); // Gọi PopulateViewBag để nạp dữ liệu cho view
                         return View(invoice);
                     }
 
@@ -97,12 +100,14 @@ namespace SalesAndPurchaseManagement.Controllers
                     if (product == null)
                     {
                         ModelState.AddModelError(nameof(detail.ProductId), "Mã hàng không tồn tại.");
+                        PopulateViewBag(); // Gọi PopulateViewBag để nạp dữ liệu cho view
                         return View(invoice);
                     }
 
                     if (product.Quantity < detail.Quantity)
                     {
                         ModelState.AddModelError(nameof(detail.Quantity), "Số lượng không đủ.");
+                        PopulateViewBag(); // Gọi PopulateViewBag để nạp dữ liệu cho view
                         return View(invoice);
                     }
 
@@ -127,12 +132,15 @@ namespace SalesAndPurchaseManagement.Controllers
                 var innerException = ex.InnerException;
                 Console.WriteLine(innerException?.Message);
                 ModelState.AddModelError(string.Empty, "Lỗi khi lưu dữ liệu. Vui lòng kiểm tra thông tin và thử lại.");
+                PopulateViewBag(); // Gọi PopulateViewBag để nạp dữ liệu cho view
                 return View(invoice);
             }
 
             // Nếu có lỗi trong ModelState, hãy trả về View với lỗi
+            PopulateViewBag(); // Gọi PopulateViewBag để nạp dữ liệu cho view
             return View(invoice);
         }
+
 
 
         private void PopulateViewBag()
@@ -175,6 +183,93 @@ namespace SalesAndPurchaseManagement.Controllers
             }
             return Json(null);
         }
+
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var invoice = await _context.SalesInvoices
+                .Include(i => i.Employee)
+                .Include(i => i.Customer)
+                .Include(i => i.SalesInvoiceDetails)
+                    .ThenInclude(d => d.Product)
+                    .ThenInclude(p => p.Manufacturer)
+                .FirstOrDefaultAsync(i => i.SalesInvoiceId == id);
+
+            if (invoice == null)
+            {
+                return NotFound();
+            }
+
+            return View("Details", invoice);
+        }
+
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            // Tìm chi tiết hóa đơn bằng SalesInvoiceDetailId
+            var detail = await _context.SalesInvoiceDetails
+                .Include(d => d.Product) // Bao gồm sản phẩm
+                    .ThenInclude(p => p.Manufacturer) // Bao gồm hãng sản xuất
+                .Include(d => d.SalesInvoice) // Bao gồm hóa đơn để lấy thông tin
+                    .ThenInclude(i => i.Customer) // Nếu cần thông tin khách hàng
+                .Include(d => d.SalesInvoice.Employee) // Bao gồm nhân viên
+                .FirstOrDefaultAsync(d => d.SalesInvoiceDetailId == id);
+
+            if (detail == null)
+            {
+                return NotFound();
+            }
+
+            return View(detail); // Trả về view với chi tiết hóa đơn
+        }
+
+
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int salesInvoiceDetailId)
+        {
+            if (salesInvoiceDetailId <= 0)
+            {
+                return BadRequest();
+            }
+
+            var detail = await _context.SalesInvoiceDetails
+                .Include(d => d.Product)
+                .Include(d => d.SalesInvoice)
+                .FirstOrDefaultAsync(d => d.SalesInvoiceDetailId == salesInvoiceDetailId);
+
+            if (detail == null)
+            {
+                return NotFound();
+            }
+
+            // Cập nhật lại số lượng sản phẩm trong kho
+            var product = await _context.Products.FindAsync(detail.ProductId);
+            if (product != null)
+            {
+                product.Quantity += detail.Quantity; // Cộng lại số lượng
+                _context.Update(product);
+            }
+
+            // Xóa chi tiết hóa đơn
+            _context.SalesInvoiceDetails.Remove(detail);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = detail.SalesInvoiceId }); // Trở về trang chi tiết hóa đơn
+        }
+
+
 
     }
 }

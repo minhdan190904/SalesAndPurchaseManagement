@@ -1,7 +1,7 @@
-﻿@model SalesAndPurchaseManagement.Models.PurchaseInvoice
+﻿@model SalesAndPurchaseManagement.Models.SalesInvoice
 
 @{
-    ViewData["Title"] = "Tạo mới hóa đơn nhập";
+    ViewData["Title"] = "Chi tiết hóa đơn bán";
     Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
 }
 
@@ -19,20 +19,20 @@
                         <h1>DAVSH</h1>
                     </div>
                     <div class="title">
-                        <h1>Hóa đơn nhập số @Model.PurchaseInvoiceId</h1>
+                        <h1>Hóa đơn bán số @Model.SalesInvoiceId</h1>
                     </div>
                 </div>
                 <div class="i_row">
                     <div class="i_to">
                         <div class="main_title">
-                            <p>Nhà cung cấp</p>
+                            <p>Khách hàng</p>
                         </div>
                         <div class="p_title">
-                            <p>@Model.Supplier.SupplierName</p>
+                            <p>@Model.Customer.CustomerName</p>
                         </div>
                         <div class="p_title">
-                            <p>@Model.Supplier.PhoneNumber</p>
-                            <p>@Model.Supplier.Address</p>
+                            <p>@Model.Customer.PhoneNumber</p>
+                            <p>@Model.Customer.Address</p>
                         </div>
                     </div>
                     <div class="i_details text_right">
@@ -41,10 +41,10 @@
                         </div>
                         <div class="p_title">
                             <p>Số hóa đơn:</p>
-                            <span>@Model.PurchaseInvoiceId</span>
+                            <span>@Model.SalesInvoiceId</span>
                         </div>
                         <div class="p_title">
-                            <p>Ngày nhập:</p>
+                            <p>Ngày bán:</p>
                             <span>@Model.InvoiceDate</span>
                         </div>
                     </div>
@@ -52,7 +52,7 @@
                 <div class="i_row">
                     <div class="i_employee">
                         <div class="main_title">
-                            <p>Nhân viên nhập hàng</p>
+                            <p>Nhân viên bán hàng</p>
                         </div>
                         <div class="p_title">
                             <p>Mã nhân viên</p>
@@ -97,7 +97,7 @@
                     </div>
 
                     <div class="i_table_body">
-                        @foreach (var item in Model.PurchaseInvoiceDetails)
+                        @foreach (var item in Model.SalesInvoiceDetails)
                         {
                             <div class="i_row">
                                 <div class="i_col w_40">
@@ -150,7 +150,7 @@
             // Cấu hình html2pdf
             const options = {
                 margin: 0.5,                 // Lề của PDF
-                filename: `Hóa đơn nhập số ${@Model.PurchaseInvoiceId}.pdf`, // Tên file PDF
+                filename: `Hóa đơn bán số ${@Model.SalesInvoiceId}.pdf`, // Tên file PDF
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2 },   // Tăng độ phân giải của canvas
                 jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }

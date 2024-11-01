@@ -109,3 +109,24 @@
 .invoice .invoice_right .terms {
     margin: 0;
 }
+
+.export_button {
+    text-align: center; /* Căn giữa nút */
+    margin-top: 20px; /* Khoảng cách trên nút */
+}
+
+.btn-export {
+    font-size: 16px; /* Kích thước chữ lớn hơn */
+    padding: 10px 20px; /* Khoảng cách bên trong nút */
+    background-color: #007bff; /* Màu nền */
+    color: white; /* Màu chữ */
+    border: none; /* Không có đường viền */
+    border-radius: 5px; /* Bo tròn góc */
+    cursor: pointer; /* Con trỏ khi hover */
+    transition: background-color 0.3s; /* Hiệu ứng chuyển đổi màu */
+}
+
+.btn-export:hover {
+    background-color: #0056b3; /* Màu nền khi hover */
+}
+

@@ -1,51 +1,117 @@
-﻿@model SalesAndPurchaseManagement.Models.Customer
-@using SalesAndPurchaseManagement.Helpers
+﻿@model SalesAndPurchaseManagement.Models.SalesInvoiceDetail
 
 @{
-    ViewData["Title"] = "Xóa Khách Hàng";
+    ViewData["Title"] = "Xóa sản phẩm khỏi hóa đơn";
+
+
+
     Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
 }
 
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger">
-        @TempData["ErrorMessage"]
-    </div>
+@section Styles {
+    <link rel="stylesheet" href="~/css/Invoice.css" />
 }
 
-<section class="content">
-    <div class="ms-2 mx-2">
-        <div class="card card-danger">
-            <div class="card-header">
-                <h3 class="card-title">Thông tin khách hàng cần xóa</h3>
+<section>
+    <!-- Bọc nội dung hóa đơn trong một div để xuất PDF -->
+    <div id="printableInvoice">
+        <div class="invoice">
+            <div class="invoice_info">
+                <div class="i_row">
+                    <div class="i_logo">
+                        <h1>DAVSH</h1>
+                    </div>
+                    <div class="title">
+                        <h1>Hóa đơn bán số @Model.SalesInvoice?.SalesInvoiceId</h1>
+                    </div>
+                </div>
+                <div class="i_row">
+                    <div class="i_to">
+                        <div class="main_title">
+                            <p>Khách hàng</p>
+                        </div>
+                        <div class="p_title">
+                            <p>@Model.SalesInvoice?.Customer?.CustomerName</p>
+                        </div>
+                        <div class="p_title">
+                            <p>@Model.SalesInvoice?.Customer?.PhoneNumber</p>
+                            <p>@Model.SalesInvoice?.Customer?.Address</p>
+                        </div>
+                    </div>
+                    <div class="i_details text_right">
+                        <div class="main_title">
+                            <p>Thông tin hóa đơn</p>
+                        </div>
+                        <div class="p_title">
+                            <p>Số hóa đơn:</p>
+                            <span>@Model.SalesInvoiceId</span>
+                        </div>
+                        <div class="p_title">
+                            <p>Ngày bán:</p>
+                            <span>@Model.SalesInvoice?.InvoiceDate.ToString("dd/MM/yyyy")</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="i_row">
+                    <div class="i_employee">
+                        <div class="main_title">
+                            <p>Nhân viên bán hàng</p>
+                        </div>
+                        <div class="p_title">
+                            <p>Mã nhân viên:</p>
+                            <span>@Model.SalesInvoice?.EmployeeId</span>
+                        </div>
+                        <div class="p_title">
+                            <p>Tên nhân viên:</p>
+                            <span>@Model.SalesInvoice?.Employee?.EmployeeName</span>
+                        </div>
+                    </div>
+                    <div class="i_duetotal text_right">
+                        <div class="main_title">
+                            <p>Tổng chi phí</p>
+                        </div>
+                        <div class="p_title">
+                            <p>Tổng (vnd):</p>
+                            <span>@Model.SalesInvoice?.TotalAmount.ToString("N0")</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!-- /.card-header -->
-            <div class="card-body">
-                <h3 class="profile-username text-center">@Model.CustomerName</h3>
 
-                <strong><i class="fas fa-id-card mr-1"></i> @Html.DisplayNameFor(m => m.CustomerId)</strong>
-                <p class="text-muted">@Html.DisplayFor(m => m.CustomerId)</p>
-
-                <hr>
-
-                <strong><i class="fas fa-phone-alt mr-1"></i> @Html.DisplayNameFor(m => m.PhoneNumber)</strong>
-                <p class="text-muted">@Html.DisplayFor(m => m.PhoneNumber)</p>
-
-                <hr>
-
-                <strong><i class="fas fa-map-marker-alt mr-1"></i> @Html.DisplayNameFor(m => m.Address)</strong>
-                <p class="text-muted">@Html.DisplayFor(m => m.Address)</p>
+            <div class="invoice_table">
+                <div class="i_table">
+                    <div class="i_table_body">
+                        <div class="i_row">
+                            <div class="i_col w_40">
+                                <p>@Model.Product?.ProductId @Model.Product?.ProductName</p>
+                                <span>@Model.Product?.Manufacturer?.ManufacturerName, @Model.Product?.Color, @Model.Product?.GetSize()</span>
+                            </div>
+                            <div class="i_col w_15 text_center">
+                                <p>@Model.Quantity</p>
+                            </div>
+                            <div class="i_col w_15 text_center">
+                                <p>@Model.UnitPrice.ToString("N0")</p>
+                            </div>
+                            <div class="i_col w_15 text_center">
+                                <p>@Model.Discount.ToString("N0")</p>
+                            </div>
+                            <div class="i_col w_15 text_right">
+                                <p>@Model.TotalAmount.ToString("N0")</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!-- /.card-body -->
         </div>
-        <!-- /.card -->
-        <!-- Xác nhận xóa -->
-        <form asp-action="Delete" method="post">
-            <div class="form-group">
-                <input type="hidden" asp-for="CustomerId" />
-                <input type="submit" value="Xóa" class="btn btn-danger" />
-                <a asp-action="Index" class="btn btn-secondary">Quay Lại</a>
-            </div>
-        </form>
     </div>
 </section>
+
+<div class="alert alert-warning">
+    <strong>Cảnh báo!</strong> Bạn có chắc chắn muốn xóa sản phẩm <strong>@Model.Product?.ProductName</strong> khỏi hóa đơn này không?
+</div>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" name="salesInvoiceDetailId" value="@Model.SalesInvoiceDetailId" />
+    <button type="submit" class="btn btn-danger">Xóa sản phẩm</button>
+    <a href="@Url.Action("Index", "SalesInvoice")" class="btn btn-secondary">Hủy</a>
+</form>

@@ -207,9 +207,9 @@
                 resetErrorMessages();
                 const productId = $('#SelectedProductId').text();
                 const productName = $('#SelectedProductName').text();
-                const quantity = $('#ProductQuantity').val();
-                const unitPrice = $('#ProductUnitPrice').val();
-                const discount = $('#ProductDiscount').val();
+                const quantity = parseInt($('#ProductQuantity').val());
+                const unitPrice = parseFloat($('#ProductUnitPrice').val());
+                const discount = parseFloat($('#ProductDiscount').val()) || 0;
 
                 if (productId === '--') {
                     $('#ProductError').show();
@@ -217,20 +217,33 @@
                     return;
                 }
 
-                if (!quantity) {
+                if (!quantity || quantity <= 0) {
                     $('#QuantityError').show();
                     alert("Vui lòng nhập số lượng!");
                     return;
                 }
 
-                if (parseInt(quantity) > availableQuantity) {
+                // Kiểm tra tổng số lượng sản phẩm đã thêm
+                let totalExistingQuantity = 0;
+                $('#SelectedProductTableBody tr').each(function () {
+                    const existingProductId = $(this).find('td:nth-child(1)').text();
+                    const existingQuantity = parseInt($(this).find('td:nth-child(3)').text());
+
+                    if (existingProductId === productId) {
+                        totalExistingQuantity += existingQuantity;
+                    }
+                });
+
+                const newTotalQuantity = totalExistingQuantity + quantity;
+
+                if (newTotalQuantity > availableQuantity) {
                     $('#QuantityError').show();
-                    alert(`Số lượng không thể lớn hơn ${availableQuantity}!`);
+                    alert(`Tổng số lượng sản phẩm không thể lớn hơn ${availableQuantity}!`);
                     return;
                 }
 
                 const index = $('#SelectedProductTableBody tr').length;
-                const amount = quantity * unitPrice * (1 - (discount || 0) / 100);
+                const amount = quantity * unitPrice * (1 - (discount / 100));
                 const selectedProductRow = `
                             <tr>
                                 <td>${productId}<input type="hidden" name="InvoiceDetails[${index}].ProductId" value="${productId}" /></td>
@@ -245,6 +258,7 @@
                 updateTotalAmount();
             });
 
+            // Xóa sản phẩm khỏi danh sách
             $(document).on('click', '.remove-product', function () {
                 $(this).closest('tr').remove();
                 updateTotalAmount();
