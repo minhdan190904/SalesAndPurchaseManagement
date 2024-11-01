@@ -1,19 +1,18 @@
-﻿@model SalesAndPurchaseManagement.Models.SalesInvoiceDetail
+﻿@model SalesAndPurchaseManagement.Models.SalesInvoice
 
 @{
-    ViewData["Title"] = "Xóa sản phẩm khỏi hóa đơn";
-
-
+    ViewData["Title"] = "Xóa hóa đơn bán";
 
     Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
 }
+
 
 @section Styles {
     <link rel="stylesheet" href="~/css/Invoice.css" />
 }
 
+
 <section>
-    <!-- Bọc nội dung hóa đơn trong một div để xuất PDF -->
     <div id="printableInvoice">
         <div class="invoice">
             <div class="invoice_info">
@@ -22,7 +21,7 @@
                         <h1>DAVSH</h1>
                     </div>
                     <div class="title">
-                        <h1>Hóa đơn bán số @Model.SalesInvoice?.SalesInvoiceId</h1>
+                        <h1>Hóa đơn bán số @Model.SalesInvoiceId</h1>
                     </div>
                 </div>
                 <div class="i_row">
@@ -31,11 +30,11 @@
                             <p>Khách hàng</p>
                         </div>
                         <div class="p_title">
-                            <p>@Model.SalesInvoice?.Customer?.CustomerName</p>
+                            <p>@Model.Customer?.CustomerName</p>
                         </div>
                         <div class="p_title">
-                            <p>@Model.SalesInvoice?.Customer?.PhoneNumber</p>
-                            <p>@Model.SalesInvoice?.Customer?.Address</p>
+                            <p>@Model.Customer?.PhoneNumber</p>
+                            <p>@Model.Customer?.Address</p>
                         </div>
                     </div>
                     <div class="i_details text_right">
@@ -48,7 +47,7 @@
                         </div>
                         <div class="p_title">
                             <p>Ngày bán:</p>
-                            <span>@Model.SalesInvoice?.InvoiceDate.ToString("dd/MM/yyyy")</span>
+                            <span>@Model.InvoiceDate.ToString("dd/MM/yyyy")</span>
                         </div>
                     </div>
                 </div>
@@ -58,12 +57,12 @@
                             <p>Nhân viên bán hàng</p>
                         </div>
                         <div class="p_title">
-                            <p>Mã nhân viên:</p>
-                            <span>@Model.SalesInvoice?.EmployeeId</span>
+                            <p>Mã nhân viên</p>
+                            <span>@Model.EmployeeId</span>
                         </div>
                         <div class="p_title">
-                            <p>Tên nhân viên:</p>
-                            <span>@Model.SalesInvoice?.Employee?.EmployeeName</span>
+                            <p>Tên nhân viên</p>
+                            <span>@Model.Employee?.EmployeeName</span>
                         </div>
                     </div>
                     <div class="i_duetotal text_right">
@@ -72,46 +71,50 @@
                         </div>
                         <div class="p_title">
                             <p>Tổng (vnd):</p>
-                            <span>@Model.SalesInvoice?.TotalAmount.ToString("N0")</span>
+                            <span>@Model.TotalAmount.ToString("N0")</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="invoice_table">
-                <div class="i_table">
-                    <div class="i_table_body">
-                        <div class="i_row">
-                            <div class="i_col w_40">
-                                <p>@Model.Product?.ProductId @Model.Product?.ProductName</p>
-                                <span>@Model.Product?.Manufacturer?.ManufacturerName, @Model.Product?.Color, @Model.Product?.GetSize()</span>
-                            </div>
-                            <div class="i_col w_15 text_center">
-                                <p>@Model.Quantity</p>
-                            </div>
-                            <div class="i_col w_15 text_center">
-                                <p>@Model.UnitPrice.ToString("N0")</p>
-                            </div>
-                            <div class="i_col w_15 text_center">
-                                <p>@Model.Discount.ToString("N0")</p>
-                            </div>
-                            <div class="i_col w_15 text_right">
-                                <p>@Model.TotalAmount.ToString("N0")</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Mã hàng</th>
+                            <th>Tên hàng</th>
+                            <th>Số lượng</th>
+                            <th>Giá</th>
+                            <th>Giảm giá</th>
+                            <th>Tổng tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.SalesInvoiceDetails)
+
+                        {
+                            <tr>
+                                <td>@item.Product?.ProductId</td>
+                                <td>@item.Product?.ProductName</td>
+                                <td>@item.Quantity</td>
+                                <td>@item.UnitPrice.ToString("N0")</td>
+                                <td>@item.Discount.ToString("N0")</td>
+                                <td>@item.TotalAmount.ToString("N0")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+
+    <div class="alert alert-warning">
+        <strong>Cảnh báo!</strong> Bạn có chắc chắn muốn xóa hóa đơn này? Tất cả thông tin chi tiết và số lượng sản phẩm sẽ được cộng lại vào kho.
+    </div>
+
+    <form asp-action="DeleteConfirmed" method="post">
+        <input type="hidden" name="salesInvoiceId" value="@Model.SalesInvoiceId" />
+        <button type="submit" class="btn btn-danger">Xóa hóa đơn</button>
+        <a href="@Url.Action("Index", "SalesInvoice")" class="btn btn-secondary">Hủy</a>
+    </form>
 </section>
-
-<div class="alert alert-warning">
-    <strong>Cảnh báo!</strong> Bạn có chắc chắn muốn xóa sản phẩm <strong>@Model.Product?.ProductName</strong> khỏi hóa đơn này không?
-</div>
-
-<form asp-action="DeleteConfirmed" method="post">
-    <input type="hidden" name="salesInvoiceDetailId" value="@Model.SalesInvoiceDetailId" />
-    <button type="submit" class="btn btn-danger">Xóa sản phẩm</button>
-    <a href="@Url.Action("Index", "SalesInvoice")" class="btn btn-secondary">Hủy</a>
-</form>

@@ -184,5 +184,62 @@ namespace SalesAndPurchaseManagement.Controllers
 
             return View("Details", invoice);
         }
+
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            // Tải hóa đơn cùng thông tin nhà cung cấp, nhân viên và chi tiết hóa đơn
+            var invoice = await _context.PurchaseInvoices
+                .Include(i => i.Supplier) // Bao gồm thông tin nhà cung cấp
+                .Include(i => i.Employee) // Bao gồm thông tin nhân viên
+                .Include(i => i.PurchaseInvoiceDetails) // Bao gồm chi tiết hóa đơn
+                    .ThenInclude(d => d.Product) // Bao gồm thông tin sản phẩm
+                .FirstOrDefaultAsync(i => i.PurchaseInvoiceId == id);
+
+            if (invoice == null)
+            {
+                return NotFound();
+            }
+
+            return View("Delete", invoice);
+        }
+
+        [HttpPost, ActionName("DeleteConfirmed")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var invoice = await _context.PurchaseInvoices
+                .Include(i => i.PurchaseInvoiceDetails) // Bao gồm chi tiết hóa đơn
+                .FirstOrDefaultAsync(i => i.PurchaseInvoiceId == id);
+
+            if (invoice == null)
+            {
+                return NotFound();
+            }
+
+            // Xóa từng chi tiết hóa đơn
+            foreach (var detail in invoice.PurchaseInvoiceDetails)
+            {
+                var product = await _context.Products.FindAsync(detail.ProductId);
+                if (product != null)
+                {
+                    product.Quantity -= detail.Quantity;
+                    if (product.Quantity < 0) product.Quantity = 0;
+                    _context.Update(product);
+                }
+            }
+
+            // Xóa hóa đơn
+            _context.PurchaseInvoices.Remove(invoice);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
     }
 }

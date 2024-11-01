@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SalesAndPurchaseManagement.Data;
 using SalesAndPurchaseManagement.Models;
 using System;
-using System.Collections.Generic; // Thêm namespace này cho List
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -36,14 +36,13 @@ namespace SalesAndPurchaseManagement.Controllers
             PopulateViewBag();
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(SalesInvoice invoice, List<SalesInvoiceDetail> invoiceDetails)
         {
-            // Kiểm tra ModelState ban đầu
             if (!ModelState.IsValid)
             {
-                // Ghi log lỗi để kiểm tra
                 foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
                 {
                     Console.WriteLine(error.ErrorMessage);
@@ -52,47 +51,42 @@ namespace SalesAndPurchaseManagement.Controllers
 
             try
             {
-                // Lấy EmployeeId từ Claims
                 var employeeIdClaim = User.Claims.FirstOrDefault(c => c.Type == "EmployeeId");
                 if (employeeIdClaim != null)
                 {
-                    invoice.EmployeeId = int.Parse(employeeIdClaim.Value); // Gán EmployeeId cho hóa đơn
+                    invoice.EmployeeId = int.Parse(employeeIdClaim.Value);
                 }
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Không tìm thấy thông tin nhân viên.");
-                    PopulateViewBag(); // Gọi PopulateViewBag để nạp dữ liệu cho view
+                    PopulateViewBag();
                     return View(invoice);
                 }
 
-                // Kiểm tra xem CustomerId có hợp lệ không
                 if (invoice.CustomerId <= 0)
                 {
                     ModelState.AddModelError(nameof(invoice.CustomerId), "Khách hàng không được để trống.");
-                    PopulateViewBag(); // Gọi PopulateViewBag để nạp dữ liệu cho view
+                    PopulateViewBag();
                     return View(invoice);
                 }
 
-                // Kiểm tra dữ liệu chi tiết hóa đơn
                 if (invoiceDetails == null || !invoiceDetails.Any())
                 {
                     ModelState.AddModelError(nameof(invoiceDetails), "Vui lòng thêm ít nhất một sản phẩm.");
-                    PopulateViewBag(); // Gọi PopulateViewBag để nạp dữ liệu cho view
+                    PopulateViewBag();
                     return View(invoice);
                 }
 
-                long totalAmount = 0; // Thay đổi kiểu dữ liệu thành long
-
-                // Lưu hóa đơn đầu tiên
+                long totalAmount = 0;
                 _context.Add(invoice);
-                await _context.SaveChangesAsync(); // Lưu hóa đơn để nhận SalesInvoiceId
+                await _context.SaveChangesAsync();
 
                 foreach (var detail in invoiceDetails)
                 {
                     if (detail.ProductId <= 0)
                     {
                         ModelState.AddModelError(nameof(detail.ProductId), "Mã hàng không hợp lệ.");
-                        PopulateViewBag(); // Gọi PopulateViewBag để nạp dữ liệu cho view
+                        PopulateViewBag();
                         return View(invoice);
                     }
 
@@ -100,56 +94,49 @@ namespace SalesAndPurchaseManagement.Controllers
                     if (product == null)
                     {
                         ModelState.AddModelError(nameof(detail.ProductId), "Mã hàng không tồn tại.");
-                        PopulateViewBag(); // Gọi PopulateViewBag để nạp dữ liệu cho view
+                        PopulateViewBag();
                         return View(invoice);
                     }
 
                     if (product.Quantity < detail.Quantity)
                     {
                         ModelState.AddModelError(nameof(detail.Quantity), "Số lượng không đủ.");
-                        PopulateViewBag(); // Gọi PopulateViewBag để nạp dữ liệu cho view
+                        PopulateViewBag();
                         return View(invoice);
                     }
 
-                    product.Quantity -= detail.Quantity; // Cập nhật số lượng hàng tồn kho
+                    product.Quantity -= detail.Quantity;
                     _context.Update(product);
 
-                    detail.SalesInvoiceId = invoice.SalesInvoiceId; // Gán ID hóa đơn cho chi tiết
+                    detail.SalesInvoiceId = invoice.SalesInvoiceId;
                     _context.Add(detail);
-                    totalAmount += detail.TotalAmount; // Sử dụng thuộc tính TotalAmount đã được tính toán
+                    totalAmount += detail.TotalAmount;
                 }
 
-                invoice.TotalAmount = totalAmount; // Cập nhật tổng tiền cho hóa đơn
-
-                // Cập nhật hóa đơn với tổng tiền
+                invoice.TotalAmount = totalAmount;
                 _context.Update(invoice);
-                await _context.SaveChangesAsync(); // Lưu các thay đổi cuối cùng
+                await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateException ex)
             {
-                var innerException = ex.InnerException;
-                Console.WriteLine(innerException?.Message);
+                Console.WriteLine($"Lỗi lưu dữ liệu: {ex.InnerException?.Message}");
                 ModelState.AddModelError(string.Empty, "Lỗi khi lưu dữ liệu. Vui lòng kiểm tra thông tin và thử lại.");
-                PopulateViewBag(); // Gọi PopulateViewBag để nạp dữ liệu cho view
+                PopulateViewBag();
                 return View(invoice);
             }
 
-            // Nếu có lỗi trong ModelState, hãy trả về View với lỗi
-            PopulateViewBag(); // Gọi PopulateViewBag để nạp dữ liệu cho view
+            PopulateViewBag();
             return View(invoice);
         }
 
-
-
         private void PopulateViewBag()
         {
-            ViewBag.Customers = new SelectList(_context.Customers, "CustomerId", "CustomerName");
-            ViewBag.Products = new SelectList(_context.Products, "ProductId", "ProductName");
+            ViewBag.Customers = new SelectList(_context.Customers?.ToList() ?? new List<Customer>(), "CustomerId", "CustomerName");
+            ViewBag.Products = new SelectList(_context.Products?.ToList() ?? new List<Product>(), "ProductId", "ProductName");
         }
 
-        // API để lấy thông tin khách hàng
         [HttpGet]
         public async Task<JsonResult> GetCustomerInfo(int customerId)
         {
@@ -167,7 +154,6 @@ namespace SalesAndPurchaseManagement.Controllers
             return Json(customer);
         }
 
-        // API để lấy thông tin sản phẩm
         public JsonResult GetProductInfo(int productId)
         {
             var product = _context.Products.Find(productId);
@@ -214,62 +200,52 @@ namespace SalesAndPurchaseManagement.Controllers
                 return NotFound();
             }
 
-            // Tìm chi tiết hóa đơn bằng SalesInvoiceDetailId
-            var detail = await _context.SalesInvoiceDetails
-                .Include(d => d.Product) // Bao gồm sản phẩm
-                    .ThenInclude(p => p.Manufacturer) // Bao gồm hãng sản xuất
-                .Include(d => d.SalesInvoice) // Bao gồm hóa đơn để lấy thông tin
-                    .ThenInclude(i => i.Customer) // Nếu cần thông tin khách hàng
-                .Include(d => d.SalesInvoice.Employee) // Bao gồm nhân viên
-                .FirstOrDefaultAsync(d => d.SalesInvoiceDetailId == id);
+            // Tải hóa đơn cùng thông tin khách hàng, chi tiết hóa đơn và sản phẩm liên quan
+            var invoice = await _context.SalesInvoices
+                .Include(i => i.Customer)
+                .Include(i => i.SalesInvoiceDetails)
+                    .ThenInclude(d => d.Product)
+                .Include(i => i.Employee) // Bao gồm thông tin nhân viên bán hàng
+                .FirstOrDefaultAsync(i => i.SalesInvoiceId == id);
 
-            if (detail == null)
+            if (invoice == null)
             {
                 return NotFound();
             }
 
-            return View(detail); // Trả về view với chi tiết hóa đơn
+            return View("Delete", invoice);
         }
-
-
 
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int salesInvoiceDetailId)
+        public async Task<IActionResult> DeleteConfirmed(int salesInvoiceId)
         {
-            if (salesInvoiceDetailId <= 0)
-            {
-                return BadRequest();
-            }
+            var invoice = await _context.SalesInvoices
+                .Include(i => i.SalesInvoiceDetails)
+                .ThenInclude(d => d.Product)
+                .FirstOrDefaultAsync(i => i.SalesInvoiceId == salesInvoiceId);
 
-            var detail = await _context.SalesInvoiceDetails
-                .Include(d => d.Product)
-                .Include(d => d.SalesInvoice)
-                .FirstOrDefaultAsync(d => d.SalesInvoiceDetailId == salesInvoiceDetailId);
-
-            if (detail == null)
+            if (invoice == null)
             {
                 return NotFound();
             }
 
-            // Cập nhật lại số lượng sản phẩm trong kho
-            var product = await _context.Products.FindAsync(detail.ProductId);
-            if (product != null)
+            foreach (var detail in invoice.SalesInvoiceDetails)
             {
-                product.Quantity += detail.Quantity; // Cộng lại số lượng
-                _context.Update(product);
+                if (detail.Product != null)
+                {
+                    detail.Product.Quantity += detail.Quantity;
+                    _context.Update(detail.Product);
+                }
             }
 
-            // Xóa chi tiết hóa đơn
-            _context.SalesInvoiceDetails.Remove(detail);
+            _context.SalesInvoiceDetails.RemoveRange(invoice.SalesInvoiceDetails);
+            _context.SalesInvoices.Remove(invoice);
+
             await _context.SaveChangesAsync();
-
-            return RedirectToAction("Details", new { id = detail.SalesInvoiceId }); // Trở về trang chi tiết hóa đơn
+            return RedirectToAction(nameof(Index));
         }
-
-
-
     }
 }
