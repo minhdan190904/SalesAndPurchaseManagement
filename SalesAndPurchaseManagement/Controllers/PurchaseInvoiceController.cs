@@ -102,7 +102,7 @@ namespace SalesAndPurchaseManagement.Controllers
                         totalAmount += detail.TotalAmount; // Sử dụng thuộc tính TotalAmount đã được tính toán
                     }
 
-                    invoice.TotalAmount = totalAmount; // Cập nhật tổng tiền cho hóa đơn
+                    invoice.TotalAmount = (int)totalAmount; // Cập nhật tổng tiền cho hóa đơn
 
                     // Cập nhật hóa đơn với tổng tiền
                     _context.Update(invoice);
@@ -160,6 +160,29 @@ namespace SalesAndPurchaseManagement.Controllers
                 .FirstOrDefaultAsync();
 
             return Json(product);
+        }
+
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var invoice = await _context.PurchaseInvoices
+                .Include(i => i.Employee)
+                .Include(i => i.Supplier)
+                .Include(i => i.PurchaseInvoiceDetails)
+                    .ThenInclude(d => d.Product)
+                    .ThenInclude(p => p.Manufacturer)
+                .FirstOrDefaultAsync(i => i.PurchaseInvoiceId == id);
+
+            if (invoice == null)
+            {
+                return NotFound();
+            }
+
+            return View("Details", invoice);
         }
     }
 }

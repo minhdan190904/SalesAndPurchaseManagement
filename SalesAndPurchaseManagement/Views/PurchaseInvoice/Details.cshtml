@@ -1,0 +1,175 @@
+﻿@model SalesAndPurchaseManagement.Models.PurchaseInvoice
+
+@{
+    ViewData["Title"] = "Tạo mới hóa đơn nhập";
+    Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
+
+
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Invoice.css" />
+}
+
+<section>
+    <div class="invoice">
+        <div class="invoice_info">
+            <div class="i_row">
+                <div class="i_logo">
+                    <h1>DAVSH</h1>
+                </div>
+                <div class="title">
+                    <h1>HÓA ĐƠN</h1>
+                </div>
+            </div>
+            <div class="i_row">
+
+                <div class="i_to">
+                    <div class="main_title">
+                        <p>Nhà cung cấp</p>
+                    </div>
+                    <div class="p_title">
+                        <p>@Model.Supplier.SupplierName</p>
+                    </div>
+                    <div class="p_title">
+                        <p>@Model.Supplier.PhoneNumber</p>
+                        <p>@Model.Supplier.Address</p>
+                    </div>
+                </div>
+                <div class="i_details text_right">
+                    <div class="main_title">
+                        <p>Thông tin hóa đơn</p>
+                    </div>
+                    <div class="p_title">
+                        <p>Số hóa đơn:</p>
+                        <span>@Model.PurchaseInvoiceId</span>
+                    </div>
+                    <div class="p_title">
+                        <p>Ngày nhập:</p>
+                        <span>@Model.InvoiceDate</span>
+                    </div>
+                </div>
+            </div>
+            <div class="i_row">
+                <div class="i_employee">
+                    <div class="main_title">
+                        <p>Nhân viên nhập hàng</p>
+                    </div>
+                    <div class="p_title">
+                        <p>Mã nhân viên</p>
+                        <span>@Model.EmployeeId</span>
+                    </div>
+                    <div class="p_title">
+                        <p>Tên nhân viên</p>
+                        <span>@Model.Employee.EmployeeName</span>
+                    </div>
+                </div>
+                <div class="i_duetotal text_right">
+                    <div class="main_title">
+                        <p>Tổng chi phí</p>
+                    </div>
+                    <div class="p_title">
+                        <p>Tổng (vnd):</p>
+                        <span>@Model.TotalAmount.ToString("N0")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="invoice_table">
+            <div class="i_table">
+                <div class="i_table_head">
+                    <div class="i_row">
+                        <div class="i_col w_40">
+                            <p class="p_title">Mô tả hàng hóa</p>
+                        </div>
+                        <div class="i_col w_15 text_center">
+                            <p class="p_title">Số lượng</p>
+                        </div>
+                        <div class="i_col w_15 text_center">
+                            <p class="p_title">Giá</p>
+                        </div>
+                        <div class="i_col w_15 text_center">
+                            <p class="p_title">Giảm giá</p>
+                        </div>
+                        <div class="i_col w_15 text_right">
+                            <p class="p_title">Tổng tiền</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="i_table_body">
+                    @foreach (var item in Model.PurchaseInvoiceDetails)
+                    {
+                        <div class="i_row">
+                            <div class="i_col w_40">
+                                <p>@item.Product.ProductId @item.Product.ProductName</p>
+                                <span>@item.Product.Manufacturer.ManufacturerName, @item.Product.Color, @item.Product.GetSize()</span>
+                            </div>
+                            <div class="i_col w_15 text_center">
+                                <p>@item.Quantity</p>
+                            </div>
+                            <div class="i_col w_15 text_center">
+                                <p>@item.UnitPrice.ToString("N0")</p>
+                            </div>
+                            <div class="i_col w_15 text_center">
+                                <p>@item.Discount.ToString("N0")</p>
+                            </div>
+                            <div class="i_col w_15 text_right">
+                                <p>@item.TotalAmount.ToString("N0")</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="i_table_foot">
+                    <div class="i_row grand_total_wrap">
+                        <div class="i_col w_50">
+                            <p>TỔNG:</p>
+                        </div>
+                        <div class="i_col w_50 text_right">
+                            <p>@Model.TotalAmount.ToString("N0") vnd</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="invoice_terms">
+            <div class="main_title">
+                <p>Chức năng</p>
+            </div>
+            <button onclick="exportInvoiceAsPDF()">Xuất hóa đơn PDF</button>
+        </div>
+    </div>
+</section>
+@*
+    @section Scripts {
+        <!--
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+        -->
+        <script>
+            function exportInvoiceAsPDF() {
+                // Lấy nội dung hóa đơn
+                const invoice = document.querySelector('.invoice');
+
+                // Thiết lập thông số cho jsPDF
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF("p", "pt", "a4");
+
+                // Dùng html2canvas để chụp ảnh màn hình của phần hóa đơn
+                html2canvas(invoice, { scale: 2 }).then(canvas => {
+                    const imgData = canvas.toDataURL('image/png');
+                    const imgWidth = 210; // chiều rộng ảnh A4 theo mm
+                    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+                    // Thêm ảnh vào PDF
+                    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+
+                    // Xuất file PDF
+                    pdf.save("HoaDonNhap.pdf");
+                });
+            }
+        </script>
+    }
+
+*@
