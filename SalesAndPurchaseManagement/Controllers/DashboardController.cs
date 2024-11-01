@@ -17,13 +17,24 @@ namespace SalesAndPurchaseManagement.Controllers
 
         public IActionResult Index()
         {
-            // Lấy danh sách nhân viên mới nhất, sắp xếp giảm dần theo EmployeeId.
             var latestEmployees = _context.Employees
                 .OrderByDescending(e => e.EmployeeId)
-                .Take(8) // Lấy tối đa 8 nhân viên
+                .Take(8)
                 .ToList();
 
-            return View(latestEmployees); // Truyền danh sách nhân viên vào View
+            ViewBag.TotalSalesInvoices = _context.SalesInvoices
+                .Where(i => i.InvoiceDate.Date == DateTime.Today)
+                .Count();
+
+            ViewBag.TotalMonthIncome = _context.SalesInvoices
+                .Where(i => i.InvoiceDate.Month == DateTime.Today.Month)
+                .Sum(i => i.TotalAmount);
+
+            ViewBag.TotalUsers = _context.Customers.Count();
+
+            ViewBag.TotalProducts = _context.Products.Count();
+
+            return View(latestEmployees);
         }
 
     }

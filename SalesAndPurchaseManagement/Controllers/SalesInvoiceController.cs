@@ -77,6 +77,8 @@ namespace SalesAndPurchaseManagement.Controllers
                     return View(invoice);
                 }
 
+                invoice.InvoiceDate = DateTime.Now;
+
                 long totalAmount = 0;
                 _context.Add(invoice);
                 await _context.SaveChangesAsync();
@@ -169,6 +171,84 @@ namespace SalesAndPurchaseManagement.Controllers
             }
             return Json(null);
         }
+
+        // GET: SalesInvoice/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var invoice = await _context.SalesInvoices
+                .Include(i => i.SalesInvoiceDetails)
+                .FirstOrDefaultAsync(i => i.SalesInvoiceId == id);
+
+            if (invoice == null)
+            {
+                return NotFound();
+            }
+
+            PopulateViewBag();
+            return View(invoice);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, SalesInvoice invoice, List<SalesInvoiceDetail> invoiceDetails)
+        {
+            if (id != invoice.SalesInvoiceId)
+            {
+                return NotFound();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                // Handle model state errors
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
+                PopulateViewBag(); // Assuming you have a method to populate view data
+                return View(invoice);
+            }
+
+            try
+            {
+                var existingInvoice = await _context.SalesInvoices
+                    .Include(i => i.SalesInvoiceDetails)
+                    .FirstOrDefaultAsync(i => i.SalesInvoiceId == id);
+
+                if (existingInvoice == null)
+                {
+                    return NotFound();
+                }
+
+                // Update properties
+                existingInvoice.CustomerId = invoice.CustomerId;
+                existingInvoice.InvoiceDate = invoice.InvoiceDate; // Make sure to update the date
+                existingInvoice.TotalAmount = 0; // Reset total amount to recalculate
+
+                // Process invoice details and update existingInvoice.SalesInvoiceDetails if necessary...
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine($"Error saving data: {ex.InnerException?.Message}");
+                ModelState.AddModelError(string.Empty, "Error saving data. Please check your input and try again.");
+                PopulateViewBag(); // Ensure this method populates your ViewBag
+                return View(invoice);
+            }
+        }
+
+
+        private bool SalesInvoiceExists(int id)
+        {
+            return _context.SalesInvoices.Any(e => e.SalesInvoiceId == id);
+        }
+
 
         public async Task<IActionResult> Details(int? id)
         {

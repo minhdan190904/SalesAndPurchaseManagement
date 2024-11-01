@@ -10,20 +10,20 @@
     <div class="col-lg-3 col-6">
         <div class="small-box bg-info">
             <div class="inner">
-                <h3>150</h3>
-                <p>Đơn hàng hôm nay</p>
+                <h3>@ViewBag.TotalSalesInvoices</h3>
+                <p>Đơn hàng đã bán hôm nay</p>
             </div>
             <div class="icon">
                 <i class="ion ion-bag"></i>
             </div>
-            <a href="#" class="small-box-footer">Chi tiết <i class="fas fa-arrow-circle-right"></i></a>
+            <a asp-controller="SalesInvoice" asp-action="Index" class="small-box-footer">Chi tiết <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
     <div class="col-lg-3 col-6">
         <div class="small-box bg-success">
             <div class="inner">
-                <h3>53<sup style="font-size: 20px">%</sup></h3>
-                <p>Bounce Rate</p>
+                <h3>@ViewBag.TotalMonthIncome.ToString("N0")<sup style="font-size: 20px">vnd</sup></h3>
+                <p>Doanh thu tháng</p>
             </div>
             <div class="icon">
                 <i class="ion ion-stats-bars"></i>
@@ -34,25 +34,25 @@
     <div class="col-lg-3 col-6">
         <div class="small-box bg-warning">
             <div class="inner">
-                <h3>44</h3>
-                <p>User Registrations</p>
+                <h3>@ViewBag.TotalUsers</h3>
+                <p>Khách hàng</p>
             </div>
             <div class="icon">
                 <i class="ion ion-person-add"></i>
             </div>
-            <a href="#" class="small-box-footer">Chi tiết <i class="fas fa-arrow-circle-right"></i></a>
+            <a asp-controller="Customer" asp-action="Index" class="small-box-footer">Chi tiết <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
     <div class="col-lg-3 col-6">
         <div class="small-box bg-danger">
             <div class="inner">
-                <h3>65</h3>
-                <p>Unique Visitors</p>
+                <h3>@ViewBag.TotalProducts</h3>
+                <p>Sản phẩm khác nhau</p>
             </div>
             <div class="icon">
-                <i class="ion ion-pie-graph"></i>
+                <i class="ion ion-pricetags"></i>
             </div>
-            <a href="#" class="small-box-footer">Chi tiết <i class="fas fa-arrow-circle-right"></i></a>
+            <a asp-controller="Product" asp-action="Index" class="small-box-footer">Chi tiết <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
 </div>

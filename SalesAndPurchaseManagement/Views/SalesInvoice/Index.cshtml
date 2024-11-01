@@ -23,14 +23,14 @@
                 <h3 class="card-title">Danh sách hóa đơn bán</h3>
             </div>
             <div class="card-body">
-                <table id="salesInvoiceTable" class="table table-bordered table-striped">
+                <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th>Số Hóa Đơn</th>
-                            <th>Khách Hàng</th>
-                            <th>Nhân Viên</th>
-                            <th>Ngày Bán</th>
-                            <th>Tổng Tiền</th>
+                            <th>@Html.DisplayNameFor(model => model.First().SalesInvoiceId)</th>
+                            <th>@Html.DisplayNameFor(model => model.First().Customer.CustomerName)</th>
+                            <th>@Html.DisplayNameFor(model => model.First().Employee.EmployeeName)</th>
+                            <th>@Html.DisplayNameFor(model => model.First().InvoiceDate)</th>
+                            <th>@Html.DisplayNameFor(model => model.First().TotalAmount)</th>
                             <th>Chi Tiết</th>
                             <th>Sửa</th>
                             <th>Xóa</th>
