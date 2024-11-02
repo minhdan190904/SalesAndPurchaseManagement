@@ -49,6 +49,12 @@ INSERT INTO [dbo].[Jobs] ([JobTitle], [Salary]) VALUES
 (N'Nhân viên', 12000000);
 
 INSERT INTO [dbo].[Employees] ([EmployeeName], [Gender], [DateOfBirth], [PhoneNumber], [Address], [Image], [JobId], [Password], [IsAdmin], [Email]) VALUES
+(N'Trần Minh Đan', 0, '2004-09-04', N'0348580486', N'123 Đường XYZ, Quận 1, TP.HCM', 'user_default.png', 2, N'123456', 1, N'minhdan190904@gmail.com');
+
+INSERT INTO [dbo].[Employees] ([EmployeeName], [Gender], [DateOfBirth], [PhoneNumber], [Address], [Image], [JobId], [Password], [IsAdmin], [Email]) VALUES
+(N'Tổng Quản Trị', 1, '1980-01-01', N'0900000000', N'1 Đại lộ Chính, Quận 1, TP.HCM', 'user_default.png', 1, N'123456', 1, N'admin@gmail.com'); 
+
+INSERT INTO [dbo].[Employees] ([EmployeeName], [Gender], [DateOfBirth], [PhoneNumber], [Address], [Image], [JobId], [Password], [IsAdmin], [Email]) VALUES
 (N'Admin', 0, '1980-03-15', N'0901234567', N'123 Đường ABC, Quận 1, TP.HCM', 'user_default.png', 1, N'123456', 1, N'hungbgclone01@gmail.com'),
 
 (N'Trần Văn Bảo', 1, '1980-03-15', N'0901234567', N'123 Đường ABC, Quận 1, TP.HCM', 'user_default.png', 1, N'AdminPass123', 1, N'ql1@example.com'),
