@@ -1,0 +1,25 @@
+﻿@model IEnumerable<SalesAndPurchaseManagement.Models.SalesInvoice>
+
+<table id="example1" class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Số Hóa Đơn</th>
+            <th>Khách Hàng</th>
+            <th>Nhân Viên</th>
+            <th>Ngày Lập</th>
+            <th>Tổng Tiền</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.SalesInvoiceId</td>
+                <td>@(item.Customer?.CustomerName ?? "N/A")</td>
+                <td>@(item.Employee?.EmployeeName ?? "N/A")</td>
+                <td>@item.InvoiceDate.ToShortDateString()</td>
+                <td>@item.TotalAmount.ToString("N0")</td>
+            </tr>
+        }
+    </tbody>
+</table>

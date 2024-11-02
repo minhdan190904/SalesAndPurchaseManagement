@@ -1,0 +1,75 @@
+﻿@model IEnumerable<SalesAndPurchaseManagement.Models.SalesInvoice>
+
+@{
+    Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
+    ViewData["Title"] = "Thống kê doanh thu";
+}
+
+<div class="container">
+    <h2>Thống kê doanh thu</h2>
+
+    <div class="form-group">
+        <label>Chọn khoảng thời gian:</label>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="far fa-clock"></i></span>
+            </div>
+            <input type="text" class="form-control float-right" id="reservationtime">
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-header">
+            <h3 class="card-title">Danh sách hóa đơn bán từ <span id="start-date">@ViewBag.StartDate</span> đến <span id="end-date">@ViewBag.EndDate</span></h3>
+        </div>
+        <div class="card-body">
+            <!-- Khu vực cho bảng hóa đơn -->
+            <div id="sales-invoice-container">
+                @Html.Partial("_SalesInvoiceTable", Model)
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <h4>Tổng doanh thu: <span id="total-revenue">@ViewBag.TotalRevenue.ToString("N0")</span> VND</h4>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            // Date range picker with time picker
+            $('#reservationtime').daterangepicker({
+                timePicker: true,
+                timePickerIncrement: 30,
+                locale: {
+                    format: 'MM/DD/YYYY hh:mm A'
+                }
+            }, function (start, end) {
+                // AJAX call to update table and total revenue
+                $.ajax({
+                    url: '@Url.Action("GetSalesInvoiceData", "Dashboard")',
+                    type: 'GET',
+                    data: {
+                        startDate: start.format('YYYY-MM-DD HH:mm'),
+                        endDate: end.format('YYYY-MM-DD HH:mm')
+                    },
+                    success: function (response) {
+                        // Update the table with new data
+                        $('#sales-invoice-container').html(response.htmlTable);
+
+                        // Update the total revenue
+                        $('#total-revenue').text(response.totalRevenue.toLocaleString() + ' VND');
+
+                        // Update the date range displayed in the header
+                        $('#start-date').text(start.format('MM/DD/YYYY hh:mm A'));
+                        $('#end-date').text(end.format('MM/DD/YYYY hh:mm A'));
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+        });
+    </script>
+}
