@@ -8,25 +8,13 @@
 <h2>@ViewData["Title"]</h2>
 
 <form asp-action="Create" method="post">
-    @if (!ViewData.ModelState.IsValid)
-    {
-        <div class="alert alert-danger">
-            <ul>
-                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    <li>@error.ErrorMessage</li>
-                }
-            </ul>
-        </div>
-    }
-
     <!-- Chọn nhà cung cấp -->
     <div class="form-group">
         <label for="SupplierId">Chọn nhà cung cấp:</label>
         <select asp-for="SupplierId" class="form-control select2bs4" asp-items="ViewBag.Suppliers" id="SupplierId">
             <option value="" disabled selected>-- Chọn nhà cung cấp --</option>
         </select>
-        <span class="text-danger" id="SupplierError" style="display: none;">Vui lòng chọn nhà cung cấp.</span>
+        <span class="text-danger">@Html.ValidationMessageFor(m => m.SupplierId)</span>
     </div>
 
     <!-- Thông tin nhà cung cấp -->
@@ -59,8 +47,12 @@
     <!-- Chọn sản phẩm -->
     <div class="form-group">
         <label for="ProductId">Chọn sản phẩm:</label>
-        <select id="ProductId" class="form-control select2bs4" asp-items="ViewBag.Products">
+        <select id="ProductId" class="form-control select2bs4">
             <option value="" disabled selected>-- Chọn sản phẩm --</option>
+            @foreach (var product in ViewBag.Products)
+            {
+                <option value="@product.Value">@product.Text</option>
+            }
         </select>
         <span class="text-danger" id="ProductError" style="display: none;">Vui lòng chọn sản phẩm.</span>
     </div>
@@ -78,7 +70,7 @@
                         <th>Tên Sản Phẩm</th>
                         <th>Số Lượng</th>
                         <th>Đơn Giá</th>
-                        <th>Giảm Giá</th>
+                        <th>Giảm Giá (%)</th>
                         <th></th> <!-- Cột cho nút Thêm sản phẩm -->
                     </tr>
                 </thead>
@@ -94,10 +86,10 @@
                             <input type="number" class="form-control" id="ProductUnitPrice" min="0" placeholder="Nhập đơn giá" />
                         </td>
                         <td>
-                            <input type="number" class="form-control" id="ProductDiscount" min="0" placeholder="Nhập giảm giá nếu có" />
+                            <input type="number" class="form-control" id="ProductDiscount" min="0" max="100" placeholder="Nhập giảm giá (%) nếu có" />
                         </td>
                         <td>
-                            <button type="button" class="btn btn-primary" id="AddProductButton">Thêm</button>
+                            <button type="button" class="btn btn-primary" id="AddProductButton">Thêm sản phẩm</button>
                         </td>
                     </tr>
                 </tbody>
@@ -111,14 +103,14 @@
             <h3 class="card-title">Danh sách sản phẩm đã chọn</h3>
         </div>
         <div class="card-body p-0">
-            <table class="table table-striped">
+            <table class="table table-striped" id="ProductDetailsTable">
                 <thead>
                     <tr>
                         <th>ID Sản Phẩm</th>
                         <th>Tên Sản Phẩm</th>
                         <th>Số Lượng</th>
                         <th>Đơn Giá</th>
-                        <th>Giảm Giá</th>
+                        <th>Giảm Giá (%)</th>
                         <th>Thành Tiền</th>
                         <th></th>
                     </tr>
@@ -142,108 +134,147 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            function resetErrorMessages() {
-                $('#SupplierError, #ProductError, #QuantityError').hide();
-            }
+            // Initialize Select2
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            });
 
-            function updateTotalAmount() {
-                let total = 0;
-                $('#SelectedProductTableBody tr').each(function () {
-                    const amount = parseFloat($(this).find('td:nth-child(6)').text());
-                    total += isNaN(amount) ? 0 : amount;
-                });
-                $('#TotalAmount').text(total.toFixed(2)); // Cập nhật tổng tiền
-            }
+            var nextIndex = 0;
 
+            // Load supplier info when supplier selection changes
             $('#SupplierId').change(function () {
-                resetErrorMessages();
-                const supplierId = $(this).val();
+                var supplierId = $(this).val();
                 if (supplierId) {
                     $.ajax({
                         url: '@Url.Action("GetSupplierInfo", "PurchaseInvoice")',
                         data: { supplierId: supplierId },
                         success: function (data) {
-                            $('#SupplierIdDisplay').text(data?.supplierId || '--');
-                            $('#SupplierName').text(data?.supplierName || '--');
-                            $('#Address').text(data?.address || '--');
-                            $('#PhoneNumber').text(data?.phoneNumber || '--');
+                            $('#SupplierIdDisplay').text(data.supplierId);
+                            $('#SupplierName').text(data.supplierName);
+                            $('#Address').text(data.address);
+                            $('#PhoneNumber').text(data.phoneNumber);
                         },
                         error: function () {
                             $('#SupplierIdDisplay, #SupplierName, #Address, #PhoneNumber').text('--');
                         }
                     });
+                } else {
+                    $('#SupplierIdDisplay, #SupplierName, #Address, #PhoneNumber').text('--');
                 }
             });
 
+            // Load product information when a product is selected
             $('#ProductId').change(function () {
-                resetErrorMessages();
-                const productId = $(this).val();
+                var productId = $(this).val();
                 if (productId) {
                     $.ajax({
                         url: '@Url.Action("GetProductInfo", "PurchaseInvoice")',
                         data: { productId: productId },
                         success: function (data) {
-                            $('#SelectedProductId').text(data?.productId || '--');
-                            $('#SelectedProductName').text(data?.productName || '--');
-                            $('#ProductQuantity, #ProductDiscount').val('');
-                            $('#ProductUnitPrice').val(data?.purchasePrice || 0);
+                            if (data) {
+                                $('#SelectedProductId').text(data.productId);
+                                $('#SelectedProductName').text(data.productName);
+                                $('#ProductUnitPrice').val(data.purchasePrice);
+                                $('#ProductDiscount').val('0');
+                                $('#ProductQuantity').val('');
+                            }
                         },
                         error: function () {
                             $('#SelectedProductId, #SelectedProductName').text('--');
+                            $('#ProductUnitPrice, #ProductDiscount, #ProductQuantity').val('');
                         }
                     });
                 } else {
                     $('#SelectedProductId, #SelectedProductName').text('--');
+                    $('#ProductUnitPrice, #ProductDiscount, #ProductQuantity').val('');
                 }
             });
 
+            // Handle adding products to the invoice
             $('#AddProductButton').click(function () {
-                resetErrorMessages();
-                const productId = $('#SelectedProductId').text();
-                const productName = $('#SelectedProductName').text();
-                const quantity = $('#ProductQuantity').val();
-                const unitPrice = $('#ProductUnitPrice').val();
-                const discount = $('#ProductDiscount').val();
+                var productId = $('#SelectedProductId').text();
+                var productName = $('#SelectedProductName').text();
+                var quantity = parseInt($('#ProductQuantity').val());
+                var unitPrice = parseFloat($('#ProductUnitPrice').val());
+                var discount = parseInt($('#ProductDiscount').val()) || 0;
 
-                if (productId === '--') {
+                if (!productId || productId === '--') {
                     $('#ProductError').show();
-                    alert("Vui lòng chọn sản phẩm!");
                     return;
+                } else {
+                    $('#ProductError').hide();
                 }
 
-                if (!quantity) {
+                if (isNaN(quantity) || quantity <= 0) {
                     $('#QuantityError').show();
-                    alert("Vui lòng nhập số lượng!");
+                    return;
+                } else {
+                    $('#QuantityError').hide();
+                }
+
+                // Calculate total amount
+                var totalAmount = quantity * unitPrice * (100 - discount) / 100;
+
+                // Check if product is already added
+                var existingRow = $('#SelectedProductTableBody').find(`input[name$='ProductId'][value='${productId}']`);
+                if (existingRow.length > 0) {
+                    alert('Sản phẩm này đã được thêm.');
                     return;
                 }
 
-                const index = $('#SelectedProductTableBody tr').length;
-                const amount = quantity * unitPrice * (1 - (discount || 0) / 100);
-                const selectedProductRow = `
-                            <tr>
-                                <td>${productId}<input type="hidden" name="InvoiceDetails[${index}].ProductId" value="${productId}" /></td>
-                                <td>${productName}<input type="hidden" name="InvoiceDetails[${index}].ProductName" value="${productName}" /></td>
-                                <td>${quantity}<input type="hidden" name="InvoiceDetails[${index}].Quantity" value="${quantity}" /></td>
-                                <td>${unitPrice}<input type="hidden" name="InvoiceDetails[${index}].UnitPrice" value="${unitPrice}" /></td>
-                                <td>${discount || 0}<input type="hidden" name="InvoiceDetails[${index}].Discount" value="${discount || 0}" /></td>
-                                <td>${amount.toFixed(2)}<input type="hidden" name="InvoiceDetails[${index}].Amount" value="${amount.toFixed(2)}" /></td>
-                                <td><button type="button" class="btn btn-danger btn-sm remove-product">Xóa</button></td>
+                // Append the product to the table with the correct index
+                $('#SelectedProductTableBody').append(`
+                            <tr data-index="${nextIndex}">
+                                <td>${productId}<input type="hidden" name="invoiceDetails[${nextIndex}].ProductId" value="${productId}" /></td>
+                                <td>${productName}</td>
+                                <td><input type="number" class="form-control quantity-input" name="invoiceDetails[${nextIndex}].Quantity" value="${quantity}" min="1" /></td>
+                                <td><input type="number" class="form-control unitprice-input" name="invoiceDetails[${nextIndex}].UnitPrice" value="${unitPrice}" min="0" /></td>
+                                <td><input type="number" class="form-control discount-input" name="invoiceDetails[${nextIndex}].Discount" value="${discount}" min="0" max="100" /></td>
+                                <td class="total-amount-cell">${totalAmount.toFixed(2)}</td>
+                                <td><button type="button" class="btn btn-danger RemoveProductButton">Xóa</button></td>
                             </tr>
-                        `;
-                $('#SelectedProductTableBody').append(selectedProductRow);
+                        `);
+
+                nextIndex++; // Increment the index for the next product
+
                 updateTotalAmount();
 
-                // Reset các trường
+                // Clear product selection
                 $('#ProductId').val('').trigger('change');
+                $('#SelectedProductId').text('--');
+                $('#SelectedProductName').text('--');
+                $('#ProductUnitPrice').val('');
+                $('#ProductDiscount').val('');
                 $('#ProductQuantity').val('');
-                $('#ProductUnitPrice').val(0);
-                $('#ProductDiscount').val(0);
             });
 
-            $('#SelectedProductTableBody').on('click', '.remove-product', function () {
+            // Handle removing products from the invoice
+            $('#SelectedProductTableBody').on('click', '.RemoveProductButton', function () {
                 $(this).closest('tr').remove();
                 updateTotalAmount();
             });
+
+            // Update total amount when quantity, unit price, or discount changes
+            $('#SelectedProductTableBody').on('input', '.quantity-input, .unitprice-input, .discount-input', function () {
+                var row = $(this).closest('tr');
+                var quantity = parseInt(row.find('.quantity-input').val()) || 0;
+                var unitPrice = parseFloat(row.find('.unitprice-input').val()) || 0;
+                var discount = parseInt(row.find('.discount-input').val()) || 0;
+
+                var totalAmount = quantity * unitPrice * (100 - discount) / 100;
+                row.find('.total-amount-cell').text(totalAmount.toFixed(2));
+
+                updateTotalAmount();
+            });
+
+            function updateTotalAmount() {
+                var total = 0;
+                $('#SelectedProductTableBody tr').each(function () {
+                    var amount = parseFloat($(this).find('.total-amount-cell').text()) || 0;
+                    total += amount;
+                });
+                $('#TotalAmount').text(total.toFixed(2));
+            }
         });
     </script>
 }
