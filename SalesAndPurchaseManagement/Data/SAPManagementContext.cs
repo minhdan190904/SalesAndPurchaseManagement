@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SalesAndPurchaseManagement.Helpers;
 using SalesAndPurchaseManagement.Models;
 
 namespace SalesAndPurchaseManagement.Data
@@ -89,29 +90,16 @@ namespace SalesAndPurchaseManagement.Data
         {
             if (!Jobs.Any())
             {
-                var managerJob = new Job
+                var sqlFilePath = Path.Combine(Directory.GetCurrentDirectory(), AppDefaults.DefaultSQLFile);
+                Console.WriteLine(sqlFilePath);
+                if (File.Exists(sqlFilePath))
                 {
-                    JobTitle = "Quản lý",
-                    Salary = 15000000
-                };
-                Jobs.Add(managerJob);
-                SaveChanges();
-
-                var adminEmployee = new Employee
-                {
-                    EmployeeName = "Admin",
-                    Gender = Gender.Male,
-                    Email = "hungbgclone01@gmail.com",
-                    Password = "tyquay2004",
-                    PhoneNumber = "0363686126",
-                    Address = "Hà Nội",
-                    DateOfBirth = new DateTime(2004, 5, 15),
-                    IsAdmin = true,
-                    JobId = managerJob.JobId,
-                    Image = "user_default.png"
-                };
-                Employees.Add(adminEmployee);
-                SaveChanges();
+                    var sql = File.ReadAllText(sqlFilePath);
+                    if (!string.IsNullOrWhiteSpace(sql))
+                    {
+                        Database.ExecuteSqlRaw(sql);
+                    }
+                }
             }
         }
     }

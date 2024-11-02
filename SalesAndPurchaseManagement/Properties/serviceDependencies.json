@@ -4,13 +4,14 @@
       "type": "secrets",
       "dynamicId": null
     },
-    "mssql2": {
-      "type": "mssql",
-      "connectionId": "ConnectionStrings:QLBGContext"
-    },
     "mssql1": {
       "type": "mssql",
       "connectionId": "ConnectionStrings:DANContext"
+    },
+    "mssql2": {
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:QLBGContext",
+      "dynamicId": null
     }
   }
 }

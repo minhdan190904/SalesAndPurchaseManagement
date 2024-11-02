@@ -3,6 +3,7 @@
     public static class AppDefaults
     {
         public const string DefaultImageFile = "user_default.png";
+        public const string DefaultSQLFile = "Data\\QLBG_data_2.sql";
         public const string DefaultProductImageFile = "1.png";
         public const string DefaultImageFolder = "wwwroot/images";
         public const string DefaultProductImageFolder = "wwwroot/images/ProductImages";
