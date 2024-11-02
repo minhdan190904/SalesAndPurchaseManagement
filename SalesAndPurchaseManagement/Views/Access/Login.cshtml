@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="~/css/login-form.css">
-    <title>Đăng Nhập</title>
 </head>
 <body>
     <div class="container-fluid">
@@ -21,9 +21,15 @@
             </div>
             <form asp-action="Login" method="post" class="login-form">
                 <div class="main-form">
+                    <!-- Display fixed account and password -->
+                    <div class="alert alert-info text-center" role="alert">
+                        <p>Tài khoản: <strong>minhdan190904@gmail.com</strong></p>
+                        <p>Mật khẩu: <strong>123456</strong></p>
+                    </div>
+
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control input-field" name="Email" id="name" asp-for="Email" placeholder="Email" />
-                        <label for="user-name">Email</label>
+                        <input type="text" class="form-control input-field" name="Email" id="Email" asp-for="Email" placeholder="Email" />
+                        <label for="Email">Email</label>
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                     <div class="form-floating mb-3">
@@ -31,23 +37,31 @@
                         <label for="password">Mật khẩu</label>
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
-                    <input type="checkbox" name="KeepLoggedIn" id="save-button" asp-for="KeepLoggedIn" />
-                    <label for="save">Lưu thông tin đăng nhập</label>
-                    <button type="submit" class="login" disabled>ĐĂNG NHẬP</button>
+                    <div class="mb-3">
+                        <input type="checkbox" name="KeepLoggedIn" id="KeepLoggedIn" asp-for="KeepLoggedIn" />
+                        <label for="KeepLoggedIn">Lưu thông tin đăng nhập</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">ĐĂNG NHẬP</button>
 
                     @if (ViewData["ValidateMessage"] != null)
+
+
+
                     {
-                        <label style="color:red; margin-left:25px">@ViewData["ValidateMessage"]</label>
+                        <div class="text-danger text-center mt-2">
+                            @ViewData["ValidateMessage"]
+                        </div>
                     }
                 </div>
-                <div class="footer">
-                    <a href="@Url.Action("ResetPassword", "Access")">Quên mật khẩu? </a>
+                <div class="footer text-center mt-3">
+                    <a href="@Url.Action("ResetPassword", "Access")">Quên mật khẩu?</a>
                     <p>Nếu nhân viên quên mật khẩu thì bạn có thể nhấn vào "Quên mật khẩu?" để lấy lại mật khẩu</p>
                 </div>
             </form>
         </div>
     </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/login-form.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
