@@ -31,26 +31,34 @@ namespace SalesAndPurchaseManagement.Controllers
             return View(invoices);
         }
 
+        // GET: SalesInvoice/Create
         public IActionResult Create()
         {
             PopulateViewBag();
             return View();
         }
 
+        // POST: SalesInvoice/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(SalesInvoice invoice, List<SalesInvoiceDetail> invoiceDetails)
         {
             if (!ModelState.IsValid)
             {
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    Console.WriteLine(error.ErrorMessage);
-                }
+                PopulateViewBag();
+                return View(invoice);
+            }
+
+            if (invoiceDetails == null || !invoiceDetails.Any())
+            {
+                ModelState.AddModelError(string.Empty, "Vui lòng thêm ít nhất một sản phẩm.");
+                PopulateViewBag();
+                return View(invoice);
             }
 
             try
             {
+                // Assuming EmployeeId is obtained from the logged-in user's claims
                 var employeeIdClaim = User.Claims.FirstOrDefault(c => c.Type == "EmployeeId");
                 if (employeeIdClaim != null)
                 {
@@ -70,24 +78,17 @@ namespace SalesAndPurchaseManagement.Controllers
                     return View(invoice);
                 }
 
-                if (invoiceDetails == null || !invoiceDetails.Any())
-                {
-                    ModelState.AddModelError(nameof(invoiceDetails), "Vui lòng thêm ít nhất một sản phẩm.");
-                    PopulateViewBag();
-                    return View(invoice);
-                }
-
                 invoice.InvoiceDate = DateTime.Now;
+                _context.Add(invoice);
+                await _context.SaveChangesAsync(); // Save to generate SalesInvoiceId
 
                 long totalAmount = 0;
-                _context.Add(invoice);
-                await _context.SaveChangesAsync();
 
                 foreach (var detail in invoiceDetails)
                 {
                     if (detail.ProductId <= 0)
                     {
-                        ModelState.AddModelError(nameof(detail.ProductId), "Mã hàng không hợp lệ.");
+                        ModelState.AddModelError(string.Empty, "Mã sản phẩm không hợp lệ.");
                         PopulateViewBag();
                         return View(invoice);
                     }
@@ -95,14 +96,14 @@ namespace SalesAndPurchaseManagement.Controllers
                     var product = await _context.Products.FindAsync(detail.ProductId);
                     if (product == null)
                     {
-                        ModelState.AddModelError(nameof(detail.ProductId), "Mã hàng không tồn tại.");
+                        ModelState.AddModelError(string.Empty, "Sản phẩm không tồn tại.");
                         PopulateViewBag();
                         return View(invoice);
                     }
 
                     if (product.Quantity < detail.Quantity)
                     {
-                        ModelState.AddModelError(nameof(detail.Quantity), "Số lượng không đủ.");
+                        ModelState.AddModelError(string.Empty, $"Số lượng không đủ cho sản phẩm {product.ProductName}.");
                         PopulateViewBag();
                         return View(invoice);
                     }
@@ -112,6 +113,7 @@ namespace SalesAndPurchaseManagement.Controllers
 
                     detail.SalesInvoiceId = invoice.SalesInvoiceId;
                     _context.Add(detail);
+
                     totalAmount += detail.TotalAmount;
                 }
 
@@ -128,17 +130,223 @@ namespace SalesAndPurchaseManagement.Controllers
                 PopulateViewBag();
                 return View(invoice);
             }
+        }
+
+
+        // GET: SalesInvoice/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            // Retrieve the invoice along with its details and related entities
+            var invoice = await _context.SalesInvoices
+                .Include(i => i.SalesInvoiceDetails)
+                    .ThenInclude(d => d.Product)
+                .Include(i => i.Customer)
+                .FirstOrDefaultAsync(i => i.SalesInvoiceId == id);
+
+            if (invoice == null)
+            {
+                return NotFound();
+            }
 
             PopulateViewBag();
             return View(invoice);
         }
 
+        // POST: SalesInvoice/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, SalesInvoice invoice, List<SalesInvoiceDetail> invoiceDetails)
+        {
+            if (id != invoice.SalesInvoiceId)
+            {
+                return NotFound();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                PopulateViewBag();
+                return View(invoice);
+            }
+
+            if (invoiceDetails == null || !invoiceDetails.Any())
+            {
+                ModelState.AddModelError(string.Empty, "Vui lòng thêm ít nhất một sản phẩm.");
+                PopulateViewBag();
+                return View(invoice);
+            }
+
+            try
+            {
+                var existingInvoice = await _context.SalesInvoices
+                    .Include(i => i.SalesInvoiceDetails)
+                    .FirstOrDefaultAsync(i => i.SalesInvoiceId == id);
+
+                if (existingInvoice == null)
+                {
+                    return NotFound();
+                }
+
+                // Update invoice properties
+                existingInvoice.CustomerId = invoice.CustomerId;
+                existingInvoice.InvoiceDate = invoice.InvoiceDate;
+
+                // Restore product quantities from existing details
+                foreach (var detail in existingInvoice.SalesInvoiceDetails)
+                {
+                    var product = await _context.Products.FindAsync(detail.ProductId);
+                    if (product != null)
+                    {
+                        product.Quantity += detail.Quantity;
+                        _context.Update(product);
+                    }
+                }
+
+                // Remove existing invoice details
+                _context.SalesInvoiceDetails.RemoveRange(existingInvoice.SalesInvoiceDetails);
+                await _context.SaveChangesAsync();
+
+                // Add new invoice details
+                long totalAmount = 0;
+                foreach (var detail in invoiceDetails)
+                {
+                    var product = await _context.Products.FindAsync(detail.ProductId);
+                    if (product == null)
+                    {
+                        ModelState.AddModelError(string.Empty, $"Sản phẩm với ID {detail.ProductId} không tồn tại.");
+                        PopulateViewBag();
+                        return View(invoice);
+                    }
+
+                    if (product.Quantity < detail.Quantity)
+                    {
+                        ModelState.AddModelError(string.Empty, $"Số lượng không đủ cho sản phẩm {product.ProductName}.");
+                        PopulateViewBag();
+                        return View(invoice);
+                    }
+
+                    product.Quantity -= detail.Quantity;
+                    _context.Update(product);
+
+                    detail.SalesInvoiceId = id;
+                    _context.SalesInvoiceDetails.Add(detail);
+
+                    totalAmount += detail.TotalAmount;
+                }
+
+                existingInvoice.TotalAmount = totalAmount;
+                _context.Update(existingInvoice);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine($"Lỗi khi lưu dữ liệu: {ex.InnerException?.Message}");
+                ModelState.AddModelError(string.Empty, "Lỗi khi lưu dữ liệu. Vui lòng kiểm tra thông tin và thử lại.");
+                PopulateViewBag();
+                return View(invoice);
+            }
+        }
+
+        // GET: SalesInvoice/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var invoice = await _context.SalesInvoices
+                .Include(i => i.Employee)
+                .Include(i => i.Customer)
+                .Include(i => i.SalesInvoiceDetails)
+                    .ThenInclude(d => d.Product)
+                        .ThenInclude(p => p.Manufacturer) // Include Manufacturer
+                                                          // If Product has Color as a navigation property, include it as well
+                                                          // .ThenInclude(p => p.Color)
+                .FirstOrDefaultAsync(i => i.SalesInvoiceId == id);
+
+            if (invoice == null)
+            {
+                return NotFound();
+            }
+
+            return View(invoice);
+        }
+
+
+        // GET: SalesInvoice/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var invoice = await _context.SalesInvoices
+                .Include(i => i.Customer)
+                .Include(i => i.SalesInvoiceDetails)
+                    .ThenInclude(d => d.Product)
+                .Include(i => i.Employee)
+                .FirstOrDefaultAsync(i => i.SalesInvoiceId == id);
+
+            if (invoice == null)
+            {
+                return NotFound();
+            }
+
+            return View(invoice);
+        }
+
+        // POST: SalesInvoice/DeleteConfirmed/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int salesInvoiceId)
+        {
+            var invoice = await _context.SalesInvoices
+                .Include(i => i.SalesInvoiceDetails)
+                    .ThenInclude(d => d.Product)
+                .FirstOrDefaultAsync(i => i.SalesInvoiceId == salesInvoiceId);
+
+            if (invoice == null)
+            {
+                return NotFound();
+            }
+
+            // Restore product quantities
+            foreach (var detail in invoice.SalesInvoiceDetails)
+            {
+                if (detail.Product != null)
+                {
+                    detail.Product.Quantity += detail.Quantity;
+                    _context.Update(detail.Product);
+                }
+            }
+
+            _context.SalesInvoiceDetails.RemoveRange(invoice.SalesInvoiceDetails);
+            _context.SalesInvoices.Remove(invoice);
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        // Helper method to populate ViewBag data
         private void PopulateViewBag()
         {
             ViewBag.Customers = new SelectList(_context.Customers?.ToList() ?? new List<Customer>(), "CustomerId", "CustomerName");
-            ViewBag.Products = new SelectList(_context.Products?.ToList() ?? new List<Product>(), "ProductId", "ProductName");
+            ViewBag.Products = _context.Products?.Select(p => new SelectListItem
+            {
+                Value = p.ProductId.ToString(),
+                Text = p.ProductName,
+            }).ToList() ?? new List<SelectListItem>();
         }
 
+        // AJAX action to get customer information
         [HttpGet]
         public async Task<JsonResult> GetCustomerInfo(int customerId)
         {
@@ -156,176 +364,27 @@ namespace SalesAndPurchaseManagement.Controllers
             return Json(customer);
         }
 
-        public JsonResult GetProductInfo(int productId)
+        // AJAX action to get product information
+        [HttpGet]
+        public async Task<JsonResult> GetProductInfo(int productId)
         {
-            var product = _context.Products.Find(productId);
-            if (product != null)
-            {
-                return Json(new
+            var product = await _context.Products
+                .Where(p => p.ProductId == productId)
+                .Select(p => new
                 {
-                    productId = product.ProductId,
-                    productName = product.ProductName,
-                    availableQuantity = product.Quantity,
-                    sellingPrice = product.SellingPrice
-                });
-            }
-            return Json(null);
+                    productId = p.ProductId,
+                    productName = p.ProductName,
+                    availableQuantity = p.Quantity,
+                    sellingPrice = p.SellingPrice
+                })
+                .FirstOrDefaultAsync();
+
+            return Json(product);
         }
-
-        // GET: SalesInvoice/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var invoice = await _context.SalesInvoices
-                .Include(i => i.SalesInvoiceDetails)
-                .FirstOrDefaultAsync(i => i.SalesInvoiceId == id);
-
-            if (invoice == null)
-            {
-                return NotFound();
-            }
-
-            PopulateViewBag();
-            return View(invoice);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, SalesInvoice invoice, List<SalesInvoiceDetail> invoiceDetails)
-        {
-            if (id != invoice.SalesInvoiceId)
-            {
-                return NotFound();
-            }
-
-            if (!ModelState.IsValid)
-            {
-                // Handle model state errors
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    Console.WriteLine(error.ErrorMessage);
-                }
-                PopulateViewBag(); // Assuming you have a method to populate view data
-                return View(invoice);
-            }
-
-            try
-            {
-                var existingInvoice = await _context.SalesInvoices
-                    .Include(i => i.SalesInvoiceDetails)
-                    .FirstOrDefaultAsync(i => i.SalesInvoiceId == id);
-
-                if (existingInvoice == null)
-                {
-                    return NotFound();
-                }
-
-                // Update properties
-                existingInvoice.CustomerId = invoice.CustomerId;
-                existingInvoice.InvoiceDate = invoice.InvoiceDate; // Make sure to update the date
-                existingInvoice.TotalAmount = 0; // Reset total amount to recalculate
-
-                // Process invoice details and update existingInvoice.SalesInvoiceDetails if necessary...
-
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            catch (DbUpdateException ex)
-            {
-                Console.WriteLine($"Error saving data: {ex.InnerException?.Message}");
-                ModelState.AddModelError(string.Empty, "Error saving data. Please check your input and try again.");
-                PopulateViewBag(); // Ensure this method populates your ViewBag
-                return View(invoice);
-            }
-        }
-
 
         private bool SalesInvoiceExists(int id)
         {
             return _context.SalesInvoices.Any(e => e.SalesInvoiceId == id);
-        }
-
-
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var invoice = await _context.SalesInvoices
-                .Include(i => i.Employee)
-                .Include(i => i.Customer)
-                .Include(i => i.SalesInvoiceDetails)
-                    .ThenInclude(d => d.Product)
-                    .ThenInclude(p => p.Manufacturer)
-                .FirstOrDefaultAsync(i => i.SalesInvoiceId == id);
-
-            if (invoice == null)
-            {
-                return NotFound();
-            }
-
-            return View("Details", invoice);
-        }
-
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            // Tải hóa đơn cùng thông tin khách hàng, chi tiết hóa đơn và sản phẩm liên quan
-            var invoice = await _context.SalesInvoices
-                .Include(i => i.Customer)
-                .Include(i => i.SalesInvoiceDetails)
-                    .ThenInclude(d => d.Product)
-                .Include(i => i.Employee) // Bao gồm thông tin nhân viên bán hàng
-                .FirstOrDefaultAsync(i => i.SalesInvoiceId == id);
-
-            if (invoice == null)
-            {
-                return NotFound();
-            }
-
-            return View("Delete", invoice);
-        }
-
-
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int salesInvoiceId)
-        {
-            var invoice = await _context.SalesInvoices
-                .Include(i => i.SalesInvoiceDetails)
-                .ThenInclude(d => d.Product)
-                .FirstOrDefaultAsync(i => i.SalesInvoiceId == salesInvoiceId);
-
-            if (invoice == null)
-            {
-                return NotFound();
-            }
-
-            foreach (var detail in invoice.SalesInvoiceDetails)
-            {
-                if (detail.Product != null)
-                {
-                    detail.Product.Quantity += detail.Quantity;
-                    _context.Update(detail.Product);
-                }
-            }
-
-            _context.SalesInvoiceDetails.RemoveRange(invoice.SalesInvoiceDetails);
-            _context.SalesInvoices.Remove(invoice);
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
     }
 }

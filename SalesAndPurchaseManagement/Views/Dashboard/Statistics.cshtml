@@ -18,6 +18,11 @@
         </div>
     </div>
 
+    <!-- Hiển thị tổng doanh thu bên trên -->
+    <div class="total-revenue-container text-center mt-3 mb-4">
+        <h4>Tổng doanh thu: <span id="total-revenue">@ViewBag.TotalRevenue.ToString("N0")</span></h4>
+    </div>
+
     <div class="card mt-3">
         <div class="card-header">
             <h3 class="card-title">Danh sách hóa đơn bán từ <span id="start-date">@ViewBag.StartDate</span> đến <span id="end-date">@ViewBag.EndDate</span></h3>
@@ -28,10 +33,6 @@
                 @Html.Partial("_SalesInvoiceTable", Model)
             </div>
         </div>
-    </div>
-
-    <div class="mt-4">
-        <h4>Tổng doanh thu: <span id="total-revenue">@ViewBag.TotalRevenue.ToString("N0")</span> VND</h4>
     </div>
 </div>
 
@@ -55,8 +56,21 @@
                         endDate: end.format('YYYY-MM-DD HH:mm')
                     },
                     success: function (response) {
+                        // Destroy existing DataTable instance before replacing content
+                        if ($.fn.DataTable.isDataTable('#example1')) {
+                            $('#example1').DataTable().destroy();
+                        }
+
                         // Update the table with new data
                         $('#sales-invoice-container').html(response.htmlTable);
+
+                        // Reinitialize DataTable on the new content
+                        $('#example1').DataTable({
+                            paging: true,
+                            searching: true,
+                            ordering: true,
+                            autoWidth: false
+                        });
 
                         // Update the total revenue
                         $('#total-revenue').text(response.totalRevenue.toLocaleString() + ' VND');
@@ -73,3 +87,19 @@
         });
     </script>
 }
+
+<style>
+    /* CSS cho tổng doanh thu */
+    .total-revenue-container h4 {
+        font-size: 1.5rem;
+        color: #ff5733;
+        font-weight: bold;
+    }
+
+    .total-revenue-container {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        border: 1px solid #dee2e6;
+    }
+</style>
