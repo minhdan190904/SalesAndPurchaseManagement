@@ -10,8 +10,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IEmailService, EmailService>();
 
 builder.Services.AddDbContext<SAPManagementContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DANContext"))); // context connect
-
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DANContext"))); // if you use server azure
+                                                                                    // you must use QLBGContext
+                                                                                    // or use DANContext for SQL Server
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {

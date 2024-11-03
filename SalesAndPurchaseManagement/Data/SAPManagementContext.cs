@@ -8,8 +8,15 @@ namespace SalesAndPurchaseManagement.Data
     {
         public SAPManagementContext(DbContextOptions<SAPManagementContext> options) : base(options)
         {
-            Database.EnsureCreated();
-            SeedDatabase();
+            try
+            {
+                Database.EnsureCreated();
+                SeedDatabase();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error initializing database: " + ex.Message);
+            }
         }
 
         public DbSet<Category> Categories { get; set; }
