@@ -304,7 +304,7 @@ namespace SalesAndPurchaseManagement.Controllers
         }
 
         // POST: SalesInvoice/DeleteConfirmed/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int salesInvoiceId)
         {

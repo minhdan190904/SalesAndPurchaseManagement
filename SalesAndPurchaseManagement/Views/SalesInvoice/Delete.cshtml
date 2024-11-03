@@ -6,15 +6,14 @@
     Layout = "~/Views/Shared/MyLayoutHelper.cshtml";
 }
 
-
 @section Styles {
     <link rel="stylesheet" href="~/css/Invoice.css" />
 }
 
-
 <section>
     <div id="printableInvoice">
         <div class="invoice">
+            <!-- Thông tin hóa đơn như logo, khách hàng, nhân viên, và tổng tiền -->
             <div class="invoice_info">
                 <div class="i_row">
                     <div class="i_logo">
@@ -77,6 +76,7 @@
                 </div>
             </div>
 
+            <!-- Bảng chi tiết sản phẩm -->
             <div class="invoice_table">
                 <table class="table">
                     <thead>
@@ -108,13 +108,17 @@
         </div>
     </div>
 
+    <!-- Cảnh báo xóa hóa đơn -->
     <div class="alert alert-warning">
         <strong>Cảnh báo!</strong> Bạn có chắc chắn muốn xóa hóa đơn này? Tất cả thông tin chi tiết và số lượng sản phẩm sẽ được cộng lại vào kho.
     </div>
 
-    <form asp-action="DeleteConfirmed" method="post">
+    <!-- Form xóa hóa đơn -->
+    @using (Html.BeginForm("DeleteConfirmed", "SalesInvoice", FormMethod.Post))
+
+    {
         <input type="hidden" name="salesInvoiceId" value="@Model.SalesInvoiceId" />
         <button type="submit" class="btn btn-danger">Xóa hóa đơn</button>
         <a href="@Url.Action("Index", "SalesInvoice")" class="btn btn-secondary">Hủy</a>
-    </form>
+    }
 </section>
