@@ -523,3 +523,23 @@ VALUES
 (10, 3, 1, 900000, 10),
 (10, 4, 3, 600000, 0),
 (10, 5, 1, 800000, 20);
+
+UPDATE si
+SET si.TotalAmount = t.TotalAmount
+FROM SalesInvoices si
+JOIN (
+    SELECT SalesInvoiceId,
+           SUM(Quantity * UnitPrice * (1 - Discount / 100.0)) AS TotalAmount
+    FROM SalesInvoiceDetails
+    GROUP BY SalesInvoiceId
+) AS t ON si.SalesInvoiceId = t.SalesInvoiceId;
+
+UPDATE pi
+SET pi.TotalAmount = t.TotalAmount
+FROM PurchaseInvoices pi
+JOIN (
+    SELECT PurchaseInvoiceId,
+           SUM(Quantity * UnitPrice * (1 - Discount / 100.0)) AS TotalAmount
+    FROM PurchaseInvoiceDetails
+    GROUP BY PurchaseInvoiceId
+) AS t ON pi.PurchaseInvoiceId = t.PurchaseInvoiceId;
