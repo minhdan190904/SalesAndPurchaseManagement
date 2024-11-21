@@ -19,6 +19,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LoginPath = "/Access/Login";
         options.ExpireTimeSpan = TimeSpan.FromMinutes(AppDefaults.TimeOut);
     });
+//
 
 builder.Services.AddHttpContextAccessor();
 
